@@ -1,11 +1,20 @@
 import React from 'react'
+import FormToFromComponent from './component/form-to-from/form-to-from.component'
+import VoucherComponent from './component/voucher/voucher.component'
 
 const HomeComponent = () => {
     return (
-        <div className='text-red-500'>
-            HomeComponent hi
-            <h3 className='text-green-500'>xin chao</h3>
+        <div >
+            <div className='w-[1128px] m-auto '>
+                <div>
+                    <FormToFromComponent />
+                </div>
+                <div>
+                    <VoucherComponent />
+                </div>
+            </div>
         </div>
+
     )
 }
 
