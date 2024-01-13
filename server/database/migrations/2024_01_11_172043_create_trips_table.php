@@ -1,0 +1,42 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('trips', function (Blueprint $table) {
+            $table->id();
+            $table->number('car_id');
+            $table->number('drive_id');
+            $table->number('assistant_car_id');
+            $table->string('start_date');
+            $table->string('start_time');
+            $table->string('start_location');
+            $table->number('status');
+            $table->float('trip_price');
+            $table->string('end_location');
+            $table->string('interval_trip');
+            $table->number('route_id');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('trips');
+    }
+};
