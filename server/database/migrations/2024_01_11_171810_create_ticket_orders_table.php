@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('ticket_orders', function (Blueprint $table) {
             $table->id();
             $table->string('code_ticket');
-            $table->number('bill_id');
+            $table->integer('bill_id');
             $table->string('code_seat');
             $table->string('pickup_location');
             $table->string('pay_location');

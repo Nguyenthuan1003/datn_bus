@@ -16,12 +16,12 @@ return new class extends Migration
         Schema::create('cars', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable(false);
-            $table->number('id_type_car')->nullable(false);
+            $table->integer('id_type_car')->nullable(false);
             $table->string('color');
             $table->string('image', 255);
             $table->text('description');
             $table->string('license_plate');
-            $table->number('status');
+            $table->integer('status');
             $table->timestamps();
         });
     }

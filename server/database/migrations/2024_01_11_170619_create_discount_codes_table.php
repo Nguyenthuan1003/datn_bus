@@ -15,10 +15,10 @@ return new class extends Migration
     {
         Schema::create('discount_codes', function (Blueprint $table) {
             $table->id();
-            $table->number('id_type_discount_code')->nullable(false);
+            $table->integer('id_type_discount_code')->nullable(false);
             $table->string('name');
-            $table->number('quantity');
-            $table->number('quantity_used');
+            $table->integer('quantity');
+            $table->integer('quantity_used');
             $table->string('start_time');
             $table->string('value');
             $table->string('code');

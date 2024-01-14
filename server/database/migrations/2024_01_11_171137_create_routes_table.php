@@ -20,11 +20,11 @@ return new class extends Migration
             $table->string('end_location');
             $table->string('start_time');
             $table->string('interval_trip');
-            $table->number('drive_id');
-            $table->number('assistant_car_id');
-            $table->number('car_id');
+            $table->integer('drive_id');
+            $table->integer('assistant_car_id');
+            $table->integer('car_id');
             $table->float('trip_price');
-            $table->number('status');
+            $table->integer('status');
             $table->text('description');
             $table->timestamps();
         });

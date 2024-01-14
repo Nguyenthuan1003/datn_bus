@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name')->unique();
             $table->string('image', 255);
             $table->text('description');
-            $table->number('parent_locations_id')->nullable(false);
+            $table->integer('parent_locations_id')->nullable(false);
             $table->timestamps();
         });
     }

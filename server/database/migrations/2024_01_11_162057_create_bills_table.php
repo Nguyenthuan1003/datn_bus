@@ -15,15 +15,15 @@ return new class extends Migration
     {
         Schema::create('bills', function (Blueprint $table) {
             $table->id();
-            $table->number('discount_code_id')->nullable(false);
-            $table->number('seat_id')->nullable(false);
-            $table->number('trip_id')->nullable(false);
-            $table->number('user_id')->nullable(false);
-            $table->number('status_pay')->nullable(false)->default(0);
+            $table->integer('discount_code_id')->nullable(false);
+            $table->integer('seat_id')->nullable(false);
+            $table->integer('trip_id')->nullable(false);
+            $table->integer('user_id')->nullable(false);
+            $table->integer('status_pay')->nullable(false)->default(0);
             $table->float('total_money')->nullable(false)->default(0);
             $table->float('total_money_after_discount')->nullable(false)->default(0);
             $table->string('type_pay')->nullable(false);
-            $table->number('total_seat')->nullable(false);
+            $table->integer('total_seat')->nullable(false);
             $table->string('code_bill')->nullable(false);
             $table->timestamps();
         });

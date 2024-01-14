@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description');
-            $table->number('total_seat');
+            $table->integer('total_seat');
             $table->string('type_seats');
             $table->timestamps();
         });

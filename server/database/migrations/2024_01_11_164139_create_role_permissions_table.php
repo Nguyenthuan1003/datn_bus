@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('role_permissions', function (Blueprint $table) {
             $table->id();
-            $table->number('permissions_id')->nullable(false);
-            $table->number('role_id')->nullable(false);
+            $table->integer('permissions_id')->nullable(false);
+            $table->integer('role_id')->nullable(false);
             $table->timestamps();
             $table->softDeletes();
         });

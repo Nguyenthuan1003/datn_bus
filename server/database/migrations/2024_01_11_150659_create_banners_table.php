@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('banners', function (Blueprint $table) {
             $table->id();
             $table->string('image, 255')->nullable(false);
-            $table->number('status')->default(0);
+            $table->integer('status')->default(0);
             $table->timestamps();
         });
     }
