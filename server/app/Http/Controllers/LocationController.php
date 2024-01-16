@@ -27,9 +27,13 @@ class LocationController extends Controller
 
         $location = new Location();
         $location->name = $request->input('name');
-        $location->image = $request->input('image');
         $location->description = $request->input('description');
         $location->parent_location_id = $request->input('parent_location_id');
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imagePath = $image->store('images', 'public');
+            $location->image = $imagePath;
+        }
         $location->save();
 
         return response()->json($location, 201);
@@ -64,9 +68,13 @@ class LocationController extends Controller
         }
 
         $location->name = $request->input('name');
-        $location->image = $request->input('image');
         $location->description = $request->input('description');
         $location->parent_location_id = $request->input('parent_location_id');
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imagePath = $image->store('images', 'public');
+            $location->image = $imagePath;
+        }
         $location->save();
 
         return response()->json($location);

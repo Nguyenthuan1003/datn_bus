@@ -28,9 +28,9 @@ Route::group(['prefix' => 'parent-location'], function () {
 });
 
 Route::group(['prefix' => 'locations'], function () {
-    Route::get('', [ParentLocationController::class, 'index']);
-    Route::post('store', [ParentLocationController::class, 'store']);
-    Route::get('edit/{id}', [ParentLocationController::class, 'show']);
-    Route::put('update/{id}', [ParentLocationController::class, 'update']);
-    Route::delete('delete/{id}', [ParentLocationController::class, 'destroy']);
+    Route::get('', [LocationController::class, 'index']);
+    Route::post('store', [LocationController::class, 'store']);
+    Route::get('edit/{id}', [LocationController::class, 'show']);
+    Route::put('update/{id}', [LocationController::class, 'update']);
+    Route::delete('delete/{id}', [LocationController::class, 'destroy']);
 });
