@@ -37,14 +37,15 @@ class ParentLocationController extends Controller
         return response()->json($parentLocation);
     }
 
-    public function update(Request $request, ParentLocation $parentLocation)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'name' => 'required|string|max:255',
         ]);
+        $parentLocation = ParentLocation::find($id);
         $parentLocation->name = $request->input('name');
         $parentLocation->save();
-        return response()->json($parentLocation);
+        return response()->json(['message' => 'Parent location update successfully']);
     }
 
     public function destroy($id)
