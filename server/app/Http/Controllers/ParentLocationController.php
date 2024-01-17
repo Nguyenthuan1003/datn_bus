@@ -45,7 +45,7 @@ class ParentLocationController extends Controller
         $parentLocation = ParentLocation::find($id);
         $parentLocation->name = $request->input('name');
         $parentLocation->save();
-        return response()->json(['message' => 'Parent location update successfully']);
+        return response()->json(['message' => ['Parent location update successfully', $parentLocation]], 200);
     }
 
     public function destroy($id)
