@@ -12,7 +12,6 @@ class LocationController extends Controller
         $locations = Location::with('parentLocation')
             ->select('id', 'name', 'image', 'description', 'parent_location_id')
             ->get();
-        dd($locations);
         return response()->json($locations);
     }
 
@@ -32,6 +31,7 @@ class LocationController extends Controller
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imagePath = $image->store('images', 'public');
+            // dd($imagePath);
             $location->image = $imagePath;
         }
         $location->save();
