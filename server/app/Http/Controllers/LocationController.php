@@ -31,7 +31,6 @@ class LocationController extends Controller
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imagePath = $image->store('images', 'public');
-            // dd($imagePath);
             $location->image = $imagePath;
         }
         $location->save();
