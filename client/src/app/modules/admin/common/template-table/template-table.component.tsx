@@ -30,6 +30,7 @@ const TemplateTable:FC<ITemplateTable> = (
     const [type,setType]=useState('CREATE')
     const [defaultValue,setDefaultValue]=useState<any>(null)
     const [form] = Form.useForm()
+
     const showModal = (typeAction: string, recordTable?: any) => {
         setIsModalOpen(true);
         setType(typeAction)
@@ -55,19 +56,29 @@ const TemplateTable:FC<ITemplateTable> = (
              } )
         }
 
-        if(type=='CHANGE'){
-            form.validateFields().then((value:any)=>{
-                changeFunc(value,defaultValue.id).then((res:any)=>{
-                    if(res){
-                        callBack(res.data)
-                       message.success("cập nhật thành công") 
-                    }            
-                })
-             form.resetFields()})
-        }
-        setIsModalOpen(false);
+        if (type === 'CHANGE') {
+            form.validateFields().then((value: any) => {
+              // Kiểm tra xem dữ liệu có thay đổi hay không
+              const isDataChanged = Object.keys(value).some(key => value[key] !== defaultValue[key]);
+              if (isDataChanged) {
+                // Nếu có thay đổi, thực hiện cập nhật
+                changeFunc(value, defaultValue.id).then((res: any) => {
+                  if (res) {
+                    callBack(res.data);
+                    message.success('Cập nhật thành công');
+                    
+                  }
+                });
+              } else {
+                // Nếu không có thay đổi, hiển thị thông báo
+                message.warning('Cập nhật không có thay đổi');
+              }
+              form.resetFields();
+            });
+          }
         
-    };
+          setIsModalOpen(false);
+        };
 
     const handleCancel = () => {
         setIsModalOpen(false);
@@ -87,6 +98,13 @@ const TemplateTable:FC<ITemplateTable> = (
         }) 
     };
     const columns:any = [
+        {
+            title: 'STT', // Tiêu đề cột số thứ tự
+            dataIndex: 'stt', // Khai báo dataIndex, giá trị này sẽ được sử dụng trong render
+            render: (text: any, record: any, index: number) => {
+              return index + 1; // Sử dụng index để tạo số thứ tự, bắt đầu từ 1
+            },
+          },
        ...columnTable,
         {
             title: 'Thao tác',
@@ -101,13 +119,19 @@ const TemplateTable:FC<ITemplateTable> = (
                             onCancel={cancel}
                             okText="Yes"
                             cancelText="No"
-                        ><button className='text-[23px] text-red-600'>
+                        >       <button 
+                                className='text-[23px] text-red-600'
+                                title={`Xoá theo ID: ${record.id}`}
+                                >
                                 <MdDeleteForever />
                             </button>
                         </Popconfirm>
 
                         <div className='px-6'>
-                            <button className='text-[23px] text-blue-600'onClick={() => showModal('CHANGE', record)}>
+                            <button 
+                                className='text-[23px] text-blue-600'onClick={() => showModal('CHANGE', record)}
+                                title={`Cập nhật tên tỉnh : ${record.name}`}
+                                >
                                 <MdOutlineBrowserUpdated />
                             </button>
                         </div>
@@ -134,12 +158,12 @@ const TemplateTable:FC<ITemplateTable> = (
                 {title}
             </div>
             <hr className='py-3' />
-            <div className='p-3 bg-success text-white w-[150px] text-center font-medium rounded-md' onClick={()=>showModal('CREATE')}>
+            <button className='p-3 bg-success text-white w-[150px] text-center font-medium rounded-md' onClick={()=>showModal('CREATE')}>
                 Thêm mới +
-            </div>
+            </button>
             <Table rowSelection={rowSelection} columns={columns} dataSource={dataTable} />
             <div className=''>
-                <TemplateModal title={title} isModalOpen={isModalOpen} handleOk={handleOk} handleCancel={handleCancel}>
+                <TemplateModal title={type === "CREATE" ? 'Thêm mới' : "Cập nhập"} isModalOpen={isModalOpen} handleOk={handleOk} handleCancel={handleCancel}>
                     <Form form={form} layout='vertical' name='form_in_modal'>
                         {formEdit}
                     </Form>

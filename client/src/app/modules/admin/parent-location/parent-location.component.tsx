@@ -7,7 +7,7 @@ const ParentLocaltion = () => {
     const [column, setColumn] = useState<any>([]);
     const [dataParent, setDataParen] = useState<any>([]);
     const [reset, setReset] = useState<any>([]);
-    console.log('reset',reset);
+    console.log('reset',column);
     useEffect(() => {
         getAllParent().then((res) => {
             if (res) {
@@ -18,10 +18,10 @@ const ParentLocaltion = () => {
 
     useEffect(() => {
         const columsTemp: any = []
-        const title = ['', 'Tên Tỉnh Thành ']
+        const title = ['STT','Tỉnh thành']
         if (dataParent.length > 0) {
             Object.keys(dataParent[0]).forEach((itemKey, key = 0) => {
-                if (!['id', 'created_at', 'updated_at'].includes(itemKey)) {
+                if (![ 'id','created_at', 'updated_at'].includes(itemKey)) {
                     columsTemp.push({
                         title: title[key++],
                         dataIndex: itemKey,
