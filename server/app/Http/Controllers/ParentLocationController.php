@@ -25,7 +25,7 @@ class ParentLocationController extends Controller
     {
         try {
             $request->validate([
-                'name' => 'required|string|max:255',
+                'name' => 'required|string|max:255|unique:parent-locations',
             ]);
             $parentLocation = new ParentLocation();
             $parentLocation->name = $request->input('name');
@@ -47,7 +47,7 @@ class ParentLocationController extends Controller
 
             return response()->json(['message' => 'Truy vấn dữ liệu địa điểm thành công','parent_location' => $parentLocation], 200);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Có lỗi trong quá trình truy vấn dữ liệu','error' => $e->getMessage()]);
+            return response()->json(['message' => 'Có lỗi trong quá trình lấy dữ liệu','error' => $e->getMessage()]);
         }
     }
 
@@ -55,7 +55,7 @@ class ParentLocationController extends Controller
     {
         try {
             $request->validate([
-                'name' => 'required|string|max:255',
+                'name' => 'required|string|max:255|unique:parent-locations',
             ]);
             $parentLocation = ParentLocation::find($id);
             $parentLocation->name = $request->input('name');
@@ -72,12 +72,12 @@ class ParentLocationController extends Controller
             $parentLocation = ParentLocation::find($id);
 
         if (!$parentLocation) {
-            return response()->json(['message' => 'Không tồn tại địa điểm cần xóa', 'status' => false], 404);
+            return response()->json(['message' => 'Không tồn tại địa điểm cần xóa'], 404);
         }
 
         $parentLocation->delete();
 
-        return response()->json(['message' => 'Xóa địa điểm thành công', 'status' => true]);
+        return response()->json(['message' => 'Xóa địa điểm thành công']);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Đã xảy ra lỗi khi xóa địa điểm', 'error' => $e->getMessage()]);
         }
