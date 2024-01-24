@@ -11,13 +11,8 @@ class User extends Model
 
     protected $table = 'users';
 
-    public function role()
+    public function typeUser()
     {
-        return $this->belongsTo(Role::class);
-    }
-
-    public function userType()
-    {
-        return $this->belongsTo(UserType::class);
+        return $this->belongsTo(TypeUser::class, 'user_type_id');
     }
 }

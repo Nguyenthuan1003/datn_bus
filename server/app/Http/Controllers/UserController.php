@@ -10,28 +10,20 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::with('role', 'userType')->get();
+        $users = User::with('typeUser')->get();
 
-        $formattedUsersData = [];
-
-        foreach ($users as $user) {
-            $formattedUsersData[] = $this->formatUserData($user);
-        }
-
-        return response()->json($formattedUsersData);
+        return response()->json($users);
     }
 
     public function show($userId)
     {
-        $user = User::with('role', 'userType')->find($userId);
+        $user = User::with('typeUser')->find($userId);
 
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
 
-        $formattedUserData = $this->formatUserData($user);
-
-        return response()->json($formattedUserData);
+        return response()->json($user);
     }
 
     public function store(Request $request)
@@ -49,9 +41,7 @@ class UserController extends Controller
 
         $user = User::create($validatedData);
 
-        $formattedUserData = $this->formatUserData($user);
-
-        return response()->json($formattedUserData, 201);
+        return response()->json($user, 201);
     }
 
     public function update(Request $request, $userId)
@@ -79,9 +69,7 @@ class UserController extends Controller
 
         $user->update($validatedData);
 
-        $formattedUserData = $this->formatUserData($user);
-
-        return response()->json($formattedUserData);
+        return response()->json($user);
     }
 
     public function destroy($userId)
@@ -95,24 +83,6 @@ class UserController extends Controller
         $user->delete();
 
         return response()->json(['message' => 'User deleted']);
-    }
-
-    private function formatUserData($user)
-    {
-        return [
-            'id' => $user->id,
-            'user_type_id' => $user->user_type_id,
-            'email' => $user->email,
-            'name' => $user->name,
-            'phone_number' => $user->phone_number,
-            'address' => $user->address,
-            'description' => $user->description,
-            'location' => $user->location,
-            'created_at' => $user->created_at,
-            'updated_at' => $user->updated_at,
-            'role' => $user->role,
-            'user_type' => $user->userType,
-        ];
     }
 
     private function getValidationMessages()
