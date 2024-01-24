@@ -93,7 +93,7 @@ class LocationController extends Controller
     
             $location->name = $request->input('name');
             $location->description = $request->input('description');
-            $location->parent_location_id = $request->input('parent_location_id');
+            $location->parent_locations_id = $request->input('parent_locations_id');
             if ($request->has('image')) {
                 $imageData = $request->input('image');
                 $imageData = str_replace('data:image/jpeg;base64,', '', $imageData);
