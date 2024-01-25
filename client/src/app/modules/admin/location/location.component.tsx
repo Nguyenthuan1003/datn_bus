@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import TemplateTable from '../common/template-table/template-table.component'
-import { getAllLocaltion } from './service/location.service';
-import image from '../../../../../../server/public/media/1706029012.jpg'
+import { addLocaltion, deleteLocaltion, getAllLocaltion, updateLocaltion } from './service/location.service';
+
+import { Form, Input, Upload } from 'antd';
 const LocaltionComponent = () => {
     const [column, setColumn] = useState<any>([]);
     const [dataLocation, setDataLocation] = useState<any>([]);
@@ -18,8 +19,8 @@ const LocaltionComponent = () => {
                         key: itemKey,
                         render:(text:any,record:any,index:any)=>{
                             if(itemKey=='image'){
-                                console.log(`../../../../../.${record?.image}`)
-                                return <img src={`../../../../../.${record?.image}`} alt="" />
+                                const image = record?.image
+                                return <img src={image} alt="" />
                             }
                             return text
                         }
@@ -50,9 +51,28 @@ const LocaltionComponent = () => {
          callBack={handelGetList}
          dataTable={dataLocation}
          columnTable={column}
-        //  deleteFunc={deleteParent}
-        //  createFunc={addParent}
-        //  changeFunc={updateParent}
+         deleteFunc={deleteLocaltion}
+         createFunc={addLocaltion}
+         changeFunc={updateLocaltion}
+         formEdit={
+            <Fragment>
+                <Form.Item label='Name' name='name' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+                    <Input />
+                </Form.Item>
+                {/* <Form.Item label='image' name='image' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+       <input type="file" />
+                </Form.Item> */}
+
+                <Form.Item label='description' name='description' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+                    <Input />
+                </Form.Item>
+
+
+                <Form.Item label='parent_locations_id' name='parent_locations_id' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+                    <Input />
+                </Form.Item>                
+            </Fragment>
+        }
         />
     </div>
   )
