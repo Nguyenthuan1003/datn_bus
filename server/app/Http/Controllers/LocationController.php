@@ -30,26 +30,9 @@ class LocationController extends Controller
             ]);
             $location = new Location();
             $location->name = $request->input('name');
+            $location->image = $request->input('image');
             $location->description = $request->input('description');
             $location->parent_locations_id = $request->input('parent_locations_id');
-            if ($request->has('image')) {
-                $imageData = $request->input('image');
-                $imageData = str_replace('data:image/jpeg;base64,', '', $imageData);
-                $imageData = str_replace(' ', '+', $imageData);
-                $imageName = time() . '.jpg';
-        
-                $directory = 'media';
-                $directoryPath = public_path($directory);
-                if (!File::exists($directoryPath)) {
-                    File::makeDirectory($directoryPath, 0777, true);
-                }
-                // Save the image to the storage disk
-                $imagePath = $directory . '/' . $imageName;
-                file_put_contents(public_path($imagePath), base64_decode($imageData));
-    
-                // Set the image path in the 'image' column
-                $location->image = './server/public/'.$imagePath;
-            }
             $location->save();
     
             return response()->json(['message' => 'Thêm mới địa điểm thành công', 'Location' => $location ]);
@@ -92,26 +75,9 @@ class LocationController extends Controller
             }
     
             $location->name = $request->input('name');
+            $location->image = $request->input('image');
             $location->description = $request->input('description');
             $location->parent_locations_id = $request->input('parent_locations_id');
-            if ($request->has('image')) {
-                $imageData = $request->input('image');
-                $imageData = str_replace('data:image/jpeg;base64,', '', $imageData);
-                $imageData = str_replace(' ', '+', $imageData);
-                $imageName = time() . '.jpg';
-        
-                $directory = 'media';
-                $directoryPath = public_path($directory);
-                if (!File::exists($directoryPath)) {
-                    File::makeDirectory($directoryPath, 0777, true);
-                }
-                // Save the image to the storage disk
-                $imagePath = $directory . '/' . $imageName;
-                file_put_contents(public_path($imagePath), base64_decode($imageData));
-    
-                // Set the image path in the 'image' column
-                $location->image = './server/public/'.$imagePath;
-            }
             $location->save();
     
             return response()->json(['message' => 'Cập nhật địa điểm thành công', 'Location' => $location ]);
