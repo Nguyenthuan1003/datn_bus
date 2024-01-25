@@ -2,8 +2,13 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+<<<<<<< HEAD
 use App\Http\Controllers\ParentLocationController;
 use App\Http\Controllers\LocationController;
+=======
+use App\Http\Controllers\TypeDiscountCodeController;
+use App\Http\Controllers\TripController;
+>>>>>>> e738184559b0888c3377d38f85af6a8903b07626
 
 /*
 |--------------------------------------------------------------------------
@@ -33,4 +38,11 @@ Route::group(['prefix' => 'locations'], function () {
     Route::get('edit/{id}', [LocationController::class, 'show']);
     Route::put('update/{id}', [LocationController::class, 'update']);
     Route::delete('delete/{id}', [LocationController::class, 'destroy']);
+
+Route::group(['prefix' => 'trip'], function () {
+    Route::get('', [TripController::class, 'index']);
+    Route::post('store', [TripController::class, 'store']);
+    Route::get('edit/{id}', [TripController::class, 'show']);
+    Route::put('update/{id}', [TripController::class, 'update']);
+    Route::delete('delete/{id}', [TripController::class, 'destroy']);
 });
