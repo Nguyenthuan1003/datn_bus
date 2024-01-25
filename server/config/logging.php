@@ -58,6 +58,7 @@ return [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
+            'formatter' => env('LOG_FORMATTER', \Monolog\Formatter\LineFormatter::class)
         ],
 
         'daily' => [
