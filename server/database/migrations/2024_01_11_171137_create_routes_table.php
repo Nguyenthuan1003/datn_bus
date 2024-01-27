@@ -18,12 +18,6 @@ return new class extends Migration
             $table->string('name');
             $table->string('start_location');
             $table->string('end_location');
-            $table->string('start_time');
-            $table->string('interval_trip');
-            $table->string('drive_id');
-            $table->string('assistant_car_id');
-            $table->string('car_id');
-            $table->float('trip_price');
             $table->integer('status');
             $table->text('description');
             $table->timestamps();
