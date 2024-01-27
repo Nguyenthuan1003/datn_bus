@@ -18,4 +18,8 @@ class Car extends Model
     public function trip () {
         return $this->hasMany(Trip::class);
     }
+
+    public function seat() {
+        return $this->hasMany(Seat::class);
+    }
 }

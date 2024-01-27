@@ -26,4 +26,8 @@ class Bill extends Model
     public function user() {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function ticketOrder() {
+        return $this->hasMany(TicketOrder::class);
+    }
 }
