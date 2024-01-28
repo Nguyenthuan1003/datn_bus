@@ -25,7 +25,7 @@ class ParentLocationController extends Controller
     {
         try {
             $request->validate([
-                'name' => 'required|string|max:255|unique:parent-locations',
+                'name' => 'required|string|max:255|unique:parent_locations',
             ]);
             $parentLocation = new ParentLocation();
             $parentLocation->name = $request->input('name');
@@ -55,7 +55,7 @@ class ParentLocationController extends Controller
     {
         try {
             $request->validate([
-                'name' => 'required|string|max:255|unique:parent-locations',
+                'name' => 'required|string|max:255|unique:parent_locations',
             ]);
             $parentLocation = ParentLocation::find($id);
             $parentLocation->name = $request->input('name');

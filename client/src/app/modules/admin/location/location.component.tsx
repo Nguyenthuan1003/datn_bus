@@ -1,26 +1,47 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import TemplateTable from '../common/template-table/template-table.component'
 import { addLocaltion, deleteLocaltion, getAllLocaltion, updateLocaltion } from './service/location.service';
-
-import { Form, Input, Upload } from 'antd';
+import { getAllParent } from '../parent-location/service/parent-location.service'
+import { Form, Input, Select, Space, Upload } from 'antd';
+import { Option } from 'antd/es/mentions';
 const LocaltionComponent = () => {
+    
     const [column, setColumn] = useState<any>([]);
     const [dataLocation, setDataLocation] = useState<any>([]);
-
+    const [dataParentLocation, setDataParentLocation] = useState<any>([]);
+    
+    console.log(dataParentLocation);
+    
+    useEffect(() => {
+        getAllParent().then((res) => {
+            if (res) {
+                setDataParentLocation(res.data?.parent_location)
+            }
+        })
+    }, [])
     useEffect(() => {
         const columsTemp: any = []
-        const title = ['STT','tên','ảnh','description','parent_locations_id']
+        const title = ['STT', 'tên', 'ảnh', 'description', 'parent_locations_id']
+        console.log('s', columsTemp);
+        console.log('h', dataParentLocation);
         if (dataLocation.length > 0) {
             Object.keys(dataLocation[0]).forEach((itemKey, key = 0) => {
-                if (![ 'id','created_at', 'updated_at'].includes(itemKey)) {
+                if (!['id', 'created_at', 'updated_at'].includes(itemKey)) {
                     columsTemp.push({
                         title: title[key++],
                         dataIndex: itemKey,
                         key: itemKey,
-                        render:(text:any,record:any,index:any)=>{
-                            if(itemKey=='image'){
+                        render: (text: any, record: any, index: any) => {
+                            if (itemKey == 'image') {
                                 const image = record?.image
-                                return <img src={image} alt="" />
+                                return <img src={image} alt="" className='w-[100px]' />
+                            }
+                            if (itemKey === 'parent_locations_id') {
+                                // Find the corresponding parent_location object
+                                const parentLocation = dataParentLocation.find((parent: any) => parent.id === text);
+
+                                // Render the name if found
+                                return <h2>{parentLocation ? parentLocation.name : 'Chưa phân loại'}</h2>;
                             }
                             return text
                         }
@@ -30,7 +51,7 @@ const LocaltionComponent = () => {
         }
         setColumn(columsTemp)
     }, [dataLocation])
-    
+
     const [reset, setReset] = useState<any>([]);
     useEffect(() => {
         getAllLocaltion().then((res) => {
@@ -44,38 +65,43 @@ const LocaltionComponent = () => {
     const handelGetList = () => {
         setReset(!reset)
     }
-  return (
-    <div>
-        <TemplateTable
-         title={`Danh sách tỉnh thành `}
-         callBack={handelGetList}
-         dataTable={dataLocation}
-         columnTable={column}
-         deleteFunc={deleteLocaltion}
-         createFunc={addLocaltion}
-         changeFunc={updateLocaltion}
-         formEdit={
-            <Fragment>
-                <Form.Item label='Name' name='name' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                    <Input />
-                </Form.Item>
-                {/* <Form.Item label='image' name='image' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-       <input type="file" />
-                </Form.Item> */}
+    return (
+        <div>
+            <TemplateTable
+                title={`Danh sách tỉnh thành `}
+                callBack={handelGetList}
+                dataTable={dataLocation}
 
-                <Form.Item label='description' name='description' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                    <Input />
-                </Form.Item>
+                columnTable={column}
+                deleteFunc={deleteLocaltion}
+                createFunc={addLocaltion}
+                changeFunc={updateLocaltion}
+                formEdit={
+                    <Fragment>
+                        <Form.Item label='Name' name='name' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+                            <Input />
+                        </Form.Item>
+                        <Form.Item label='Copy link ảnh' name='image' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+                            {/* <input type="file" /> */}
+                            <Input />
+                        </Form.Item>
 
+                        <Form.Item label='description' name='description' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+                            <Input />
+                        </Form.Item>
+                        <Form.Item label='parent_locations_id' name='parent_locations_id' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+                            <Select placeholder="lựa chọn trạng thái">
+                                {dataParentLocation?.map((item: any, index: any) => (
+                                    <Option value={item?.id} key={item?.id}>{item?.name}</Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
 
-                <Form.Item label='parent_locations_id' name='parent_locations_id' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                    <Input />
-                </Form.Item>                
-            </Fragment>
-        }
-        />
-    </div>
-  )
+                    </Fragment>
+                }
+            />
+        </div >
+    )
 }
 
 export default LocaltionComponent
