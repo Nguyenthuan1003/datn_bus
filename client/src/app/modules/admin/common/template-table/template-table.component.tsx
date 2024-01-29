@@ -44,6 +44,13 @@ const TemplateTable:FC<ITemplateTable> = (
     };
 
     const handleOk = () => {
+        // if (form.getFieldValue('image')) {
+        //     const dataList = [...form.getFieldValue('image')].map((item: any) => (console.log(item)))
+      
+        //     form.setFieldsValue({
+        //       images: dataList
+        //     })
+        //   }
         if(type=='CREATE'){
             form.validateFields().then((value:any)=>{
                 createFunc(value).then((res:any)=>{

@@ -28,6 +28,11 @@ export const menuDashBoard =[
         key: '/admin/parent-location',
         icon: <PiFlagBannerDuotone />,
         label: 'Tỉnh Thành'
+    },
+    {
+        key: '/admin/location',
+        icon: <PiFlagBannerDuotone />,
+        label: 'location'
     }
 ]
 

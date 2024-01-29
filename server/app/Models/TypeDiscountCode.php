@@ -11,7 +11,7 @@ class TypeDiscountCode extends Model
 
     protected $table = 'type_discount_codes';
 
-    public function typeDiscountCode() {
+    public function discountCode() {
         return $this->hasMany(DiscountCode::class);
     }
 }
