@@ -1,13 +1,12 @@
 import { Controller, useForm } from 'react-hook-form';
-import ButtonRadiusCompoennt from '~/app/component/parts/button/button.component';
+import ButtonRadiusCompoennt from '../../../component/parts/button/button.component';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { validateLogin } from '../../../utils/validateForm';
 import { css } from '@emotion/react';
-import { Link } from 'react-router-dom';
 import { FaFacebook } from "react-icons/fa";
 import { FaGoogle } from "react-icons/fa";
 
-const LoginComponent = () => {
+const ChangeComponent = () => {
     const { handleSubmit, control, formState: { errors } } = useForm({
         resolver: yupResolver(validateLogin)
     })
@@ -19,21 +18,21 @@ const LoginComponent = () => {
             </div>
 
             <div className='pl-[10px]'>
-                <h2 className='font-bold text-[20px]'>Sign In</h2>
+                <h2 className='font-bold text-[20px]'>Thay đổi mật khẩu</h2>
 
                 <form onSubmit={handleSubmit(onSubmit)} className='w-[400px] m-auto mt-4'>
-                    <div className=''>
+                <div className='my-5'>
                         <Controller
                             control={control}
-                            name='email'
+                            name='password'
                             render={({ field: { onChange, value, ref }, fieldState: { error } }) => (
                                 <div>
-                                    <label>Email</label>
-                                    <input placeholder='Vui lòng nhập Email' className='' type='email' value={value} onChange={onChange} ref={ref} />
+                                    <label>Mật khẩu cũ</label>
+                                    <input placeholder='Vui lòng nhập mật khẩu cũ' className='' type='password' value={value} onChange={onChange} ref={ref} />
                                 </div>
                             )}
                         />
-                        {errors && <span className='text-red-600'>{errors.email?.message}</span>}
+                        {errors && <span className='text-red-600'>{errors.password?.message}</span>}
                     </div>
 
 
@@ -43,8 +42,22 @@ const LoginComponent = () => {
                             name='password'
                             render={({ field: { onChange, value, ref }, fieldState: { error } }) => (
                                 <div>
-                                    <label>Password</label>
-                                    <input placeholder='Vui lòng nhập Password' className='' type='password' value={value} onChange={onChange} ref={ref} />
+                                    <label>Mật khẩu mới</label>
+                                    <input placeholder='Vui lòng nhập mật khẩu mới' className='' type='password' value={value} onChange={onChange} ref={ref} />
+                                </div>
+                            )}
+                        />
+                        {errors && <span className='text-red-600'>{errors.password?.message}</span>}
+                    </div>
+
+                    <div className='my-5'>
+                        <Controller
+                            control={control}
+                            name='password'
+                            render={({ field: { onChange, value, ref }, fieldState: { error } }) => (
+                                <div>
+                                    <label>Xác nhận mật khẩu</label>
+                                    <input placeholder='Vui lòng xác nhận mật khẩu' className='' type='password' value={value} onChange={onChange} ref={ref} />
                                 </div>
                             )}
                         />
@@ -57,15 +70,13 @@ const LoginComponent = () => {
                             <p className='px-2'> Đồng ý các điều khoản</p>
                         </div>
 
-                        <a href="/forgot-pass">Quên mật khẩu?</a>
+                        <a href='/forgot-pass' className='text-blue-500 underline'>
+                            Quên mật khẩu?
+                        </a>
                     </div>
 
                     <div className='text-center my-3'>
-                        <ButtonRadiusCompoennt type="submit" content='Đăng nhập ' />
-                    </div>
-
-                    <div className='text-center'>
-                        <p>Bạn chưa có tài khoản? <span className='text-blue-500'><Link to={"/register"}>Register</Link></span></p>
+                        <ButtonRadiusCompoennt type="submit" content='Đổi mật khẩu ' />
                     </div>
 
                     <div className="w-full relative my-6 flex items-center py-3">
@@ -73,7 +84,6 @@ const LoginComponent = () => {
 
                         <span className="subtitle-4 text-[#666666] bg-white absolute top-[3px] w-[12%] left-[44%] text-center"> OR </span>
                     </div>
-
                     <div className='flex flex-col gap-y-4'>
                         <button className='border border-gray-500 rounded-md px-12 py-2'>
                             <FaFacebook className='text-blue-600 -mb-[20px] ml-[35px]' /> 
@@ -90,7 +100,7 @@ const LoginComponent = () => {
     )
 }
 
-export default LoginComponent
+export default ChangeComponent
 
 const loginCss = css`
 input {
