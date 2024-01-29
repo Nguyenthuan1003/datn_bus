@@ -27,7 +27,7 @@ class CarController extends Controller
             'id_type_car' => 'required|integer|exists:id_type_car',
         ]);
 
-        $car = new Location();
+        $car = new Car();
         $car->name = $request->input('name');
         $car->color = $request->input('color');
         $car->description = $request->input('description');
@@ -46,7 +46,7 @@ class CarController extends Controller
 
     public function show($id)
     {
-        $car = Location::with('type_cars')
+        $car = Car::with('type_cars')
             ->select('id','name', 'color', 'image', 'description','license_plate','status', 'id_type_car')
             ->find($id);
 

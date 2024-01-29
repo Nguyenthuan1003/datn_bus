@@ -30,7 +30,7 @@ class TypeCarController extends Controller
                 'total_seat' => 'required|integer',
                 'type_seats' => 'required|string|max:255'
             ]);
-            $typeCar = new ParentLocation();
+            $typeCar = new TypeCar();
             $typeCar->name = $request->input('name');
             $typeCar->description = $request->input('description');
             $typeCar->total_seat = $request->input('total_seat');
@@ -66,7 +66,7 @@ class TypeCarController extends Controller
                 'total_seat' => 'required|integer',
                 'type_seats' => 'required|string|max:255'
             ]);
-            $parentLocation = ParentLocation::find($id);
+            $typeCar = TypeCar::find($id);
             $typeCar->name = $request->input('name');
             $typeCar->description = $request->input('description');
             $typeCar->total_seat = $request->input('total_seat');

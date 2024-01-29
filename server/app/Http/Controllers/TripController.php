@@ -19,23 +19,7 @@ class TripController extends Controller
     public function index()
     {
         try {
-            $trips = Trip::with(['car', 'driver', 'assistant', 'route'])
-                ->select(
-                    'id',
-                    'car_id',
-                    'drive_id',
-                    'assistant_car_id',
-                    'start_date',
-                    'start_time',
-                    'start_location',
-                    'status',
-                    'trip_price',
-                    'end_location',
-                    'interval_trip',
-                    'route_id',
-                    'created_at',
-                    'updated_at'
-                )
+            $trips = Trip::with(['car', 'route'])
                 ->get();
 
             return response()->json([
@@ -61,8 +45,6 @@ class TripController extends Controller
         try {
             $request->validate([
                 'car_id' => 'required|integer|max:255|exists:cars,id',
-                'drive_id' => 'required|integer|max:255|exists:users,id',
-                'assistant_car_id' => 'required|integer|max:255|exists:users,id',
                 'start_date' => 'required|date|after_or_equal:today',
                 'start_time' => 'required|date_format:H:i',
                 'start_location' => 'required|string|max:255',
@@ -74,7 +56,6 @@ class TripController extends Controller
                 'loop' => 'nullable|numeric|min:1'
             ]);
 
-//            thiết kế db sai + nhiều bất cập
             $route = Route::find($request->input('route_id'));
 
             if (
