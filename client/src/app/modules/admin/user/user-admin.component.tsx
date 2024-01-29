@@ -4,7 +4,7 @@ import TemplateTable from '../common/template-table/template-table.component'
 const UserAdminComponent = () => {
     return (
         <div>
-            <TemplateTable />
+            {/* <TemplateTable /> */}
         </div>
     )
 }

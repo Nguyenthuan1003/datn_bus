@@ -23,6 +23,11 @@ export const menuDashBoard =[
         key: '/admin/banner',
         icon: <PiFlagBannerDuotone />,
         label: 'Banner'
+    },
+    {
+        key: '/admin/parent-location',
+        icon: <PiFlagBannerDuotone />,
+        label: 'Tỉnh Thành'
     }
 ]
 
