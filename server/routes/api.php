@@ -7,6 +7,8 @@ use App\Http\Controllers\LocationController;
 use App\Http\Controllers\TypeDiscountCodeController;
 use App\Http\Controllers\TripController;
 use App\Http\Controllers\DiscountCodeController;
+use App\Http\Controllers\CarController;
+use App\Http\Controllers\TypeCarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,13 +46,6 @@ Route::group(['prefix' => 'trip'], function () {
     Route::put('update/{id}', [TripController::class, 'update']);
     Route::delete('delete/{id}', [TripController::class, 'destroy']);
 });
-//Route::group(['prefix' => 'parent-location'], function () {
-//    Route::get('', [ParentLocationController::class, 'index']);
-//    Route::post('store', [ParentLocationController::class, 'store']);
-//    Route::get('edit/{id}', [ParentLocationController::class, 'show']);
-//    Route::put('update/{id}', [ParentLocationController::class, 'update']);
-//    Route::delete('delete/{id}', [ParentLocationController::class, 'destroy']);
-//});
 
 Route::group(['prefix' => 'type-discount-code'], function () {
     Route::get('', [TypeDiscountCodeController::class, 'index']);
@@ -66,4 +61,20 @@ Route::group(['prefix' => 'discount-code'], function () {
     Route::get('edit/{id}', [DiscountCodeController::class, 'show']);
     Route::put('update/{id}', [DiscountCodeController::class, 'update']);
     Route::delete('delete/{id}', [DiscountCodeController::class, 'destroy']);
+});
+
+Route::group(['prefix' => 'type-car'], function () {
+    Route::get('', [TypeCarController::class, 'index']);
+    Route::post('store', [TypeCarController::class, 'store']);
+    Route::get('edit/{id}', [TypeCarController::class, 'show']);
+    Route::put('update/{id}', [TypeCarController::class, 'update']);
+    Route::delete('delete/{id}', [TypeCarController::class, 'destroy']);
+});
+
+Route::group(['prefix' => 'cars'], function () {
+    Route::get('', [CarController::class, 'index']);
+    Route::post('store', [CarController::class, 'store']);
+    Route::get('edit/{id}', [CarController::class, 'show']);
+    Route::put('update/{id}', [CarController::class, 'update']);
+    Route::delete('delete/{id}', [CarController::class, 'destroy']);
 });
