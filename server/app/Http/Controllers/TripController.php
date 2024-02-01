@@ -59,23 +59,11 @@ class TripController extends Controller
             $route = Route::find($request->input('route_id'));
 
             if (
-                $request->input('start_time') != $route->start_time ||
                 $request->input('start_location') != $route->start_location ||
-                $request->input('trip_price') != $route->trip_price ||
-                $request->input('end_location') != $route->end_location ||
-                $request->input('end_time') != $route->end_time ||
-                !in_array($request->input('car_id'), json_decode($route->car_id, true))
+                $request->input('end_location') != $route->end_location
             ) {
                 return response()->json([
                     'message' => 'Thông tin về tuyến đường không trùng khớp!'
-                ]);
-            }
-
-            if (
-                $request->input('status') == 0
-            ) {
-                return response()->json([
-                    'message' => 'Tuyến đường này không hoạt động.'
                 ]);
             }
 
@@ -201,12 +189,8 @@ class TripController extends Controller
                 $route = Route::find($request->input('route_id'));
 
                 if (
-                    $request->input('start_time') != $route->start_time ||
                     $request->input('start_location') != $route->start_location ||
-                    $request->input('trip_price') != $route->trip_price ||
-                    $request->input('end_location') != $route->end_location ||
-                    $request->input('end_time') != $route->end_time ||
-                    !in_array($request->input('car_id'), json_decode($route->car_id, true))
+                    $request->input('end_location') != $route->end_location
                 ) {
                     return response()->json([
                         'message' => 'Thông tin về tuyến đường không trùng khớp!'
@@ -221,7 +205,7 @@ class TripController extends Controller
                     ]);
                 }
 
-                if ($trip->bills()->exists() || $trip->comments()->exists()) {
+                if ($trip->bill()->exists() || $trip->comment()->exists()) {
                     $trip->save();
 
                     return response()->json([
@@ -272,13 +256,13 @@ class TripController extends Controller
                 ]);
             }
 
-            if ($trip->bills()->exists()) {
+            if ($trip->bill()->exists()) {
                 return response()->json([
                     'message' => 'Chuyến đi đã được đặt vé, không được xóa. Nếu có thể hãy hủy/xóa vé để có thể xóa chuyến xe này.'
                 ]);
             }
 
-            if ($trip->comments()->exists()) {
+            if ($trip->comment()->exists()) {
                 return response()->json([
                     'message' => 'Chuyến đi đã được đánh giá/bình luận, không được xóa. Nếu có thể hãy hủy/xóa bình luận để có thể xóa chuyến xe này.'
                 ]);

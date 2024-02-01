@@ -22,4 +22,8 @@ class Trip extends Model
     public function bill() {
         return $this->hasMany(Bill::class);
     }
+
+    public function comment() {
+        return $this->hasMany(Comment::class);
+    }
 }
