@@ -46,12 +46,12 @@ class TripController extends Controller
             $request->validate([
                 'car_id' => 'required|integer|max:255|exists:cars,id',
                 'start_date' => 'required|date|after_or_equal:today',
-                'start_time' => 'required|date_format:H:i',
+                'start_time' => 'required|date_format:Y-m-d H:i:s',
                 'start_location' => 'required|string|max:255',
                 'status' => 'required|numeric',
                 'trip_price' => 'required|numeric|max:99999999',
                 'end_location' => 'required|string|max:255',
-                'interval_trip' => 'required|string|max:255',
+                'end_time' => 'required|date_format:Y-m-d H:i:s',
                 'route_id' => 'required|integer|max:255|exists:routes,id',
                 'loop' => 'nullable|numeric|min:1'
             ]);
@@ -63,10 +63,8 @@ class TripController extends Controller
                 $request->input('start_location') != $route->start_location ||
                 $request->input('trip_price') != $route->trip_price ||
                 $request->input('end_location') != $route->end_location ||
-                $request->input('interval_trip') != $route->interval_trip ||
-                !in_array($request->input('car_id'), json_decode($route->car_id, true)) ||
-                !in_array($request->input('drive_id'), json_decode($route->drive_id, true)) ||
-                !in_array($request->input('assistant_car_id'), json_decode($route->assistant_car_id, true))
+                $request->input('end_time') != $route->end_time ||
+                !in_array($request->input('car_id'), json_decode($route->car_id, true))
             ) {
                 return response()->json([
                     'message' => 'Thông tin về tuyến đường không trùng khớp!'
@@ -86,14 +84,12 @@ class TripController extends Controller
                 for($i = 0; $i < $request->input('loop'); $i++) {
                     $trip = new Trip();
                     $trip->car_id = $request->input('car_id');
-                    $trip->drive_id = $request->input('drive_id');
-                    $trip->assistant_car_id = $request->input('assistant_car_id');
                     $trip->start_time = $request->input('start_time');
                     $trip->start_location = $request->input('start_location');
                     $trip->status = $request->input('status');
                     $trip->trip_price = $request->input('trip_price');
                     $trip->end_location = $request->input('end_location');
-                    $trip->interval_trip = $request->input('interval_trip');
+                    $trip->end_time = $request->input('end_time');
                     $trip->route_id = $request->input('route_id');
                     $trip->start_date = \Carbon\Carbon::parse($request->input('start_date'))
                         ->addDays($i)
@@ -109,14 +105,12 @@ class TripController extends Controller
             } else {
                 $trip = new Trip();
                 $trip->car_id = $request->input('car_id');
-                $trip->drive_id = $request->input('drive_id');
-                $trip->assistant_car_id = $request->input('assistant_car_id');
                 $trip->start_time = $request->input('start_time');
                 $trip->start_location = $request->input('start_location');
                 $trip->status = $request->input('status');
                 $trip->trip_price = $request->input('trip_price');
                 $trip->end_location = $request->input('end_location');
-                $trip->interval_trip = $request->input('interval_trip');
+                $trip->end_time = $request->input('end_time');
                 $trip->route_id = $request->input('route_id');
                 $trip->start_date = $request->input('start_date');
                 $trip->save();
@@ -143,23 +137,7 @@ class TripController extends Controller
     public function show($id)
     {
         try {
-            $trip = Trip::with(['car', 'driver', 'assistant', 'route'])
-                ->select(
-                    'id',
-                    'car_id',
-                    'drive_id',
-                    'assistant_car_id',
-                    'start_date',
-                    'start_time',
-                    'start_location',
-                    'status',
-                    'trip_price',
-                    'end_location',
-                    'interval_trip',
-                    'route_id',
-                    'created_at',
-                    'updated_at'
-                )
+            $trip = Trip::with(['car', 'route'])
                 ->find($id);
 
             if (!$trip) {
@@ -210,15 +188,13 @@ class TripController extends Controller
             } else {
                 $request->validate([
                     'car_id' => 'required|integer|max:255|exists:cars,id',
-                    'drive_id' => 'required|integer|max:255|exists:users,id',
-                    'assistant_car_id' => 'required|integer|max:255|exists:users,id',
                     'start_date' => 'required|date|after_or_equal:today',
-                    'start_time' => 'required|date_format:H:i',
+                    'start_time' => 'required|date_format:Y-m-d H:i:s',
                     'start_location' => 'required|string|max:255',
                     'status' => 'required|numeric',
                     'trip_price' => 'required|numeric|max:99999999',
                     'end_location' => 'required|string|max:255',
-                    'interval_trip' => 'required|string|max:255',
+                    'end_time' => 'required|string|date_format:Y-m-d H:i:s',
                     'route_id' => 'required|integer|max:255|exists:routes,id'
                 ]);
 
@@ -229,10 +205,8 @@ class TripController extends Controller
                     $request->input('start_location') != $route->start_location ||
                     $request->input('trip_price') != $route->trip_price ||
                     $request->input('end_location') != $route->end_location ||
-                    $request->input('interval_trip') != $route->interval_trip ||
-                    !in_array($request->input('car_id'), json_decode($route->car_id, true)) ||
-                    !in_array($request->input('drive_id'), json_decode($route->drive_id, true)) ||
-                    !in_array($request->input('assistant_car_id'), json_decode($route->assistant_car_id, true))
+                    $request->input('end_time') != $route->end_time ||
+                    !in_array($request->input('car_id'), json_decode($route->car_id, true))
                 ) {
                     return response()->json([
                         'message' => 'Thông tin về tuyến đường không trùng khớp!'
@@ -248,8 +222,6 @@ class TripController extends Controller
                 }
 
                 if ($trip->bills()->exists() || $trip->comments()->exists()) {
-                    $trip->drive_id = $request->input('drive_id');
-                    $trip->assistant_car_id = $request->input('assistant_car_id');
                     $trip->save();
 
                     return response()->json([
@@ -259,14 +231,12 @@ class TripController extends Controller
                     ]);
                 } else {
                     $trip->car_id = $request->input('car_id');
-                    $trip->drive_id = $request->input('drive_id');
-                    $trip->assistant_car_id = $request->input('assistant_car_id');
                     $trip->start_time = $request->input('start_time');
                     $trip->start_location = $request->input('start_location');
                     $trip->status = $request->input('status');
                     $trip->trip_price = $request->input('trip_price');
                     $trip->end_location = $request->input('end_location');
-                    $trip->interval_trip = $request->input('interval_trip');
+                    $trip->end_time = $request->input('end_time');
                     $trip->route_id = $request->input('route_id');
                     $trip->start_date = $request->input('start_date');
                     $trip->save();
