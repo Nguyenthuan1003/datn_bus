@@ -83,7 +83,7 @@ class LocationController extends Controller
                 'name' => 'required|string|max:255',
                 'image' => 'nullable',
                 'description' => 'nullable|string',
-                'parent_locations_id' => 'required|integer|exists:parent_locations,id',
+                'parent_location_id' => 'required|integer|exists:parent_locations,id',
             ]);
     
             $location = Location::find($id);
@@ -95,7 +95,7 @@ class LocationController extends Controller
             $location->name = $request->input('name');
             $location->image = $request->input('image');
             $location->description = $request->input('description');
-            $location->parent_locations_id = $request->input('parent_locations_id');
+            $location->parent_location_id = $request->input('parent_location_id');
             $location->save();
     
             return response()->json(['message' => 'Cập nhật địa điểm thành công', 'Location' => $location ]);
