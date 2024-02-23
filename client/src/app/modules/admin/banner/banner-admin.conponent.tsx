@@ -6,6 +6,7 @@ const BannerAdmin = () => {
     return (
         <div>
             <TemplateTable
+            title={'Banner Admin'}
                 formEdit={
                     <Fragment>
                         <Form.Item
