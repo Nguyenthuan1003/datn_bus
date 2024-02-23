@@ -13,6 +13,7 @@ interface ITemplateTable {
     createFunc?:any
     callBack?:any
     changeFunc?:any
+    dataId?:any
 }
 const TemplateTable:FC<ITemplateTable> = (
     {
@@ -23,18 +24,22 @@ const TemplateTable:FC<ITemplateTable> = (
     createFunc,
     callBack,
     changeFunc,
-    title
+    title,
+    dataId
      }) => {
     const [selectedRowKeys,setSelectedRowKeys] = useState<React.Key[]>([])
     const [isModalOpen, setIsModalOpen ] = useState(false)
     const [type,setType]=useState('CREATE')
     const [defaultValue,setDefaultValue]=useState<any>(null)
     const [form] = Form.useForm()
-
+// const [current, setCurrent] = useState(null);
+// console.log(current)
     const showModal = (typeAction: string, recordTable?: any) => {
         setIsModalOpen(true);
         setType(typeAction)
         if(typeAction=="CHANGE"){
+            // setCurrent(recordTable)
+            dataId(recordTable)
             setDefaultValue(recordTable)
             form.setFieldsValue(recordTable)
         }

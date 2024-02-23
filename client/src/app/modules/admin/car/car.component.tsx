@@ -10,14 +10,12 @@ const CarComponent = () => {
     const [column, setColumn] = useState<any>([]);
     const [dataCar, setDataCar] = useState<any>([]);
     const [dataTypecar, setDataTypecar] = useState<any>([]); 
-    const [checked, setChecked] = useState(false); // Trạng thái ban đầu cho Switch
-
+    const [checked, setChecked] = useState<any>();
+    const [current, setCurrent] = useState<any>();
+    console.log(current)
     const handleChange = (value:any) => {
-      setChecked(value); // Cập nhật trạng thái khi Switch thay đổi
+        setCurrent(value); 
     };
-     
-    console.log('cc',dataCar);
-    console.log();
     
     
     useEffect(() => {
@@ -83,6 +81,9 @@ const CarComponent = () => {
     const handelGetList = () => {
         setReset(!reset)
     }
+  const  fomatCustomCurrent=(data:any)=>{
+setCurrent(data?.status === 1 ? true : false)
+  }
     return (
         <div>
             <TemplateTable
@@ -92,6 +93,7 @@ const CarComponent = () => {
                 columnTable={column}
                 deleteFunc={deleteCar}
                 createFunc={addCar}
+                dataId={fomatCustomCurrent}
                 changeFunc={updateCar}
                 formEdit={
                     <Fragment>
@@ -118,7 +120,7 @@ const CarComponent = () => {
                             </Select>
                         </Form.Item>
                         <Form.Item label='Trạng Thái' name='status' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                            <CustomSwitch checked={checked} onChange={handleChange} value={checked} />
+                            <CustomSwitch checked={current}  onChange={handleChange} value={checked} />
                         </Form.Item>
                     </Fragment>
                 }       

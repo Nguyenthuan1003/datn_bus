@@ -4,7 +4,7 @@ import { Switch } from 'antd';
 interface CustomSwitchProps {
   checked: any;
   onChange: any;
-  value: any;
+  value?: boolean;
 }
 
 const CustomSwitch: React.FC<CustomSwitchProps> = ({ checked, onChange, value }) => {
@@ -24,7 +24,7 @@ const CustomSwitch: React.FC<CustomSwitchProps> = ({ checked, onChange, value })
       onChange={onChange}
       checkedChildren={<span style={checkedStyle}>Đang hoạt động</span>}
       unCheckedChildren={<span style={uncheckedStyle}>Ngừng hoạt động</span>}
-      value={value} 
+      // value={value} 
     />
   );
 };
