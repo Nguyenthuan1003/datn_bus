@@ -9,7 +9,7 @@ class CarController extends Controller
 {
     public function index()
     {
-        $cars = Car::with('type_cars')
+        $cars = Car::with('typeCar')
             ->select('id','name', 'color', 'image', 'description','license_plate','status', 'id_type_car')
             ->get();
         return response()->json($cars);
@@ -21,24 +21,21 @@ class CarController extends Controller
             'name' => 'required|string|max:255',
             'image' => 'nullable|string',
             'color' => 'nullable|string',
-            'description' => 'nullable|string',
+            'description' => 'string',
             'license_plate' => 'required|string',
-            'status' => 'required|string',
-            'id_type_car' => 'required|integer|exists:id_type_car',
+            'status' => 'required',
+            'id_type_car' => 'required|integer|exists:type_cars,id',
         ]);
 
-        $car = new Location();
+        $car = new Car();
         $car->name = $request->input('name');
         $car->color = $request->input('color');
         $car->description = $request->input('description');
-        $car->license_plate = $request->input('license_plate');
+        $car->id_type_car = $request->input('id_type_car');
         $car->license_plate = $request->input('license_plate');
         $car->status = $request->input('status');
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imagePath = $image->store('images', 'public');
-            $car->image = $imagePath;
-        }
+        $car->image = $request->input('image');
+        
         $car->save();
 
         return response()->json($car, 201);
@@ -46,7 +43,7 @@ class CarController extends Controller
 
     public function show($id)
     {
-        $car = Location::with('type_cars')
+        $car = Car::with('typeCar')
             ->select('id','name', 'color', 'image', 'description','license_plate','status', 'id_type_car')
             ->find($id);
 
@@ -65,8 +62,8 @@ class CarController extends Controller
             'color' => 'nullable|string',
             'description' => 'nullable|string',
             'license_plate' => 'required|string',
-            'status' => 'required|string',
-            'id_type_car' => 'required|integer|exists:id_type_car',
+            'status' => 'required',
+            'id_type_car' => 'required|integer|exists:type_cars,id',
         ]);
 
         $car = Car::find($id);
@@ -78,14 +75,11 @@ class CarController extends Controller
         $car->name = $request->input('name');
         $car->color = $request->input('color');
         $car->description = $request->input('description');
-        $car->license_plate = $request->input('license_plate');
+        $car->id_type_car = $request->input('id_type_car');
         $car->license_plate = $request->input('license_plate');
         $car->status = $request->input('status');
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imagePath = $image->store('images', 'public');
-            $car->image = $imagePath;
-        }
+        $car->image = $request->input('image');
+        
         $car->save();
 
         return response()->json($car);
