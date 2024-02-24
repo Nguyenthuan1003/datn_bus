@@ -32,6 +32,7 @@ class BillController extends Controller
                 'type_pay' => 'required',
                 'total_seat' => 'required',
                 'code_bill' => 'required',
+                'phone_number' => 'required',
             ]);
     
             $bill = new Bill();
@@ -45,6 +46,7 @@ class BillController extends Controller
             $bill->type_pay = $request->input('type_pay');
             $bill->total_seat = $request->input('total_seat');
             $bill->code_bill = $request->input('code_bill');
+            $bill->phone_number = $request->input('phone_number');
             $bill->save();
     
             return response()->json(['message' => 'Thêm mới đơn hàng thành công','$bill' => $bill]);
@@ -83,6 +85,7 @@ class BillController extends Controller
                 'type_pay' => 'required',
                 'total_seat' => 'required',
                 'code_bill' => 'required',
+                'phone_number' => 'required',
             ]);
     
             $bill = Bill::find($id);
@@ -101,6 +104,7 @@ class BillController extends Controller
             $bill->type_pay = $request->input('type_pay');
             $bill->total_seat = $request->input('total_seat');
             $bill->code_bill = $request->input('code_bill');
+            $bill->phone_number = $request->input('phone_number');
             $bill->save();
     
             return response()->json(['message' => 'Cập nhật đơn hàng thành công','$bill' => $bill]);
