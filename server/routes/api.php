@@ -24,4 +24,5 @@ Route::group(['prefix' => 'bill'], function () {
     Route::get('edit/{id}', [BillController::class, 'show']);
     Route::put('update/{id}', [BillController::class, 'update']);
     Route::delete('delete/{id}', [BillController::class, 'destroy']);
+    Route::post('checkin', [BillController::class, 'checkin']);
 });

@@ -127,4 +127,21 @@ class BillController extends Controller
         }
         
     }
+
+    public function checkin (Request $request) {
+        if($request->code_bill) {
+            $bill = Bill::with('ticketOrder')->where('code_bill', $request->code_bill)->get();
+            if(!$bill) {
+                return response()->json(['message' => 'Mã hóa đơn không tồn tại']);
+            }
+            foreach($bill as $billItem) {
+                foreach($billItem->ticketOrder as $ticket) {
+                    $ticket->status = 1;
+                    $ticket->save();
+                }
+            }
+            return response()->json(['message' => 'Checkin hóa đơn thành công']);
+        }
+        return response()->json(['message' => 'Mã hóa đơn không tồn tại']);
+    }
 }
