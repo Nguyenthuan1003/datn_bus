@@ -42,6 +42,7 @@ class TicketOrderController extends Controller
         $ticketOrder->code_seat = $request->input('code_seat');
         $ticketOrder->pickup_location = $request->input('start_location');
         $ticketOrder->pay_location = $request->input('pay_location');
+        $ticketOrder->status = 0;
         $ticketOrder->save();
         $newTicket = [$ticketOrder];
 
@@ -52,6 +53,7 @@ class TicketOrderController extends Controller
             $ticketOrderRound->code_seat = $request->input('code_seat');
             $ticketOrderRound->pay_location = $request->input('pay_location');
             $ticketOrderRound->pickup_location = $request->input('end_location');
+            $ticketOrder->status = 0;
             $ticketOrderRound->save();
             array_push($newTicket, $ticketOrderRound);
         }
