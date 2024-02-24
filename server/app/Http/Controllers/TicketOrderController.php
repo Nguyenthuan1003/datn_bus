@@ -46,7 +46,7 @@ class TicketOrderController extends Controller
         $ticketOrder->save();
         $newTicket = [$ticketOrder];
 
-        if($request->round_trip == true) {
+        if ($request->round_trip == true) {
             $ticketOrderRound = new TicketOrder;
             $ticketOrderRound->code_ticket = Str::uuid();
             $ticketOrderRound->bill_id = $request->input('bill_id');
@@ -73,5 +73,35 @@ class TicketOrderController extends Controller
 
         return response()->json(['message' => 'Ticket Order deleted']);
     }
+
+    public function checkin(Request $request)
+    {
+        // Get the phone number from the request
+        $phoneNumber = $request->input('phone_number');
+
+        // Get the code ticket from the request
+        $codeTicket = $request->input('code_ticket');
+
+        // Find the ticket order with the given code ticket
+        $ticketOrder = TicketOrder::where('code_ticket', $codeTicket)->first();
+
+        // Check if ticket order was found
+        if ($ticketOrder) {
+            // Get the associated bill
+            $bill = $ticketOrder->bill;
+
+            // Check if the phone number matches
+            if ($bill && $bill->phone_number === $phoneNumber) {
+                // Update the status of the ticket order
+                // status 1 = chưa checkin, 0 = đã checkin
+                $ticketOrder->update(['status' => 0]);
+
+                return response()->json(['message' => 'Cập nhật thành công! (^__ ^ ")'], 200);
+            } else {
+                return response()->json(['error' => 'Thông tin không tồn tại'], 404);
+            }
+        } else {
+            return response()->json(['error' => 'Thông tin không tồn tại'], 404);
+        }
+    }
 }
-?>
