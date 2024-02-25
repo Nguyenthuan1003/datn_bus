@@ -26,14 +26,12 @@ class TripController extends Controller
             !$matchingTrips->count()
         ) {
             return response()->json([
-                'data' => null,
-                'status' => false
-            ]);
+                'error' => 'Lỗi tìm kiếm'
+            ], 404);
         }
 
         return response()->json([
-            'data' => $matchingTrips,
-            'status' => true
-        ]);
+            'message' => $matchingTrips,
+        ], 200);
     }
 }
