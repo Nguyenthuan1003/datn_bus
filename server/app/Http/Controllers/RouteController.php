@@ -35,7 +35,6 @@ class RouteController extends Controller
     {
         try {
             $request->validate([
-                'name' => 'required|string',
                 'start_location' => 'required|string',
                 'end_location' => 'required|string',
                 'status' => 'required',
@@ -43,7 +42,7 @@ class RouteController extends Controller
             ]);
 
             $route = new Route();
-            $route->name = $request->input('name');
+            $route->name = $request->input('start_location') .'-'. $request->input('end_location');
             $route->start_location = $request->input('start_location');
             $route->end_location = $request->input('end_location');
             $route->status = $request->input('status');
@@ -62,7 +61,6 @@ class RouteController extends Controller
     {
         try {
             $request->validate([
-                'name' => 'required|string',
                 'start_location' => 'required|string',
                 'end_location' => 'required|string',
                 'status' => 'required',
@@ -70,7 +68,7 @@ class RouteController extends Controller
             ]);
     
             $route = Route::with('trip')->find($id);
-            $route->name = $request->input('name');
+            $route->name = $request->input('start_location') .'-'. $request->input('end_location');
             $route->start_location = $request->input('start_location');
             $route->end_location = $request->input('end_location');
             $route->status = $request->input('status');
