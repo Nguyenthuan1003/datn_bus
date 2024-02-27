@@ -47,6 +47,7 @@ class UserController extends Controller
                 'phone_number' => 'nullable',
                 'address' => 'nullable',
                 'description' => 'nullable',
+                'avatar' => 'nullable',
                 'location' => 'nullable',
             ], $this->getValidationMessages());
     
@@ -58,6 +59,7 @@ class UserController extends Controller
             $user->phone_number = $request->input('phone_number');
             $user->address = $request->input('address');
             $user->description = $request->input('description');
+            $user->avatar = $request->input('avatar');
             $user->location = $request->input('location');
             $user->save();
     
@@ -82,6 +84,7 @@ class UserController extends Controller
                 'phone_number' => 'nullable',
                 'address' => 'nullable',
                 'description' => 'nullable',
+                'avatar' => 'nullable',
                 'location' => 'nullable',
             ], $this->getValidationMessages());
     
@@ -98,6 +101,7 @@ class UserController extends Controller
             $user->phone_number = $request->input('phone_number');
             $user->address = $request->input('address');
             $user->description = $request->input('description');
+            $user->avatar = $request->input('avatar');
             $user->location = $request->input('location');
             $user->save();
     
