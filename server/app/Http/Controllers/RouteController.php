@@ -38,10 +38,10 @@ class RouteController extends Controller
                 'name' => 'required|string',
                 'start_location' => 'required|string',
                 'end_location' => 'required|string',
-                'status' => 'required|string',
+                'status' => 'required',
                 'description' => 'nullable|string',
             ]);
-    
+
             $route = new Route();
             $route->name = $request->input('name');
             $route->start_location = $request->input('start_location');
@@ -65,7 +65,7 @@ class RouteController extends Controller
                 'name' => 'required|string',
                 'start_location' => 'required|string',
                 'end_location' => 'required|string',
-                'status' => 'required|string',
+                'status' => 'required',
                 'description' => 'nullable|string',
             ]);
     
