@@ -21,7 +21,7 @@ const LocaltionComponent = () => {
     }, [])
     useEffect(() => {
         const columsTemp: any = []
-        const title = ['STT', 'tên', 'ảnh', 'description', 'parent_location_id']
+        const title = ['STT', 'tên', 'ảnh', 'Mô tả', 'Tỉnh thành']
         console.log('s', columsTemp);
         console.log('h', dataParentLocation);
         if (dataLocation.length > 0) {
@@ -69,7 +69,7 @@ const LocaltionComponent = () => {
     return (
         <div>
             <TemplateTable
-                title={`Danh sách tỉnh thành `}
+                title={`Danh sách Địa điểm `}
                 callBack={handelGetList}
                 dataTable={dataLocation}
 

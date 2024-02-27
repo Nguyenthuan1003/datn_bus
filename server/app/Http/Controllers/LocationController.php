@@ -4,14 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Location;
-use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class LocationController extends Controller
 {
     public function index()
-    {   
-
+    {
         try {
             $locations = Location::with('parentLocation')->get();
             return response()->json(['message' => 'Lấy địa điểm thành công', 'Locations' => $locations]);
@@ -21,39 +20,22 @@ class LocationController extends Controller
     }
 
     public function store(Request $request)
-    {   
-
+    {
         try {
-            $validator = Validator::make(
-                $request->all(),
-                [
-                    'name' => 'required|string|max:255|unique:locations',
-                    'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048|',
-                    'description' => 'required|nullable|string',
-                    'parent_location_id' => 'required|integer|exists:parent_locations,id',
-                ],
-                [
-                    'name.required' => "Tên không được để trống.",
-                    'name.unique' => "Tên đã tồn tại.",
-                    'description.required' => 'Mô tả không được để trống.',
-                    'parent_location_id.required' => 'Vị trí không được để trống.',
-                ]
-            );
-            if ($validator->passes()) {
-                if ($request->hasFile('image')) {
-                    $fileName = time() . '.' . $request->image->extension();
-                    $request->image->storeAs('public/media', $fileName);
-                }
-                $data = Location::create([
-                    'name' => $request->name,
-                    'description' => $request->description,
-                    'image' => asset('storage/media/' . $fileName) ?? '',
-                    'parent_location_id' => $request->parent_location_id
-                    
-                ]);
-             return response()->json(['message' => 'Thêm mới địa điểm thành công', 'data' => $data ]);
-            };
-            return response()->json(['message' => array_combine($validator->errors()->keys(), $validator->errors()->all()),]);
+            $request->validate([
+                'name' => 'required|string|max:255|',
+                'image' => 'nullable',
+                'description' => 'nullable|string',
+                'parent_location_id' => 'required|integer|exists:parent_locations,id',
+            ]);
+            $location = new Location();
+            $location->name = $request->input('name');
+            $location->image = $request->input('image');
+            $location->description = $request->input('description');
+            $location->parent_location_id = $request->input('parent_location_id');
+            $location->save();
+    
+            return response()->json(['message' => 'Thêm mới địa điểm thành công', 'Location' => $location ]);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Có lỗi trong quá trình thêm mới địa điểm','error' => $e->getMessage()]);
         }
