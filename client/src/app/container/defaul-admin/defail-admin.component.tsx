@@ -7,7 +7,7 @@ import { Layout, Menu, Button, theme } from 'antd';
 import { css } from '@emotion/react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { menuDashBoard } from '~/app/modules/admin/constance/menu-dashboard';
-
+import logo from "~/assets/img/logo_book_bus.png"
 const { Header, Sider, Content } = Layout;
 
 const DefaulAdmin = () => {
@@ -23,8 +23,8 @@ const DefaulAdmin = () => {
     return (
         <Layout style={{ height: '100vh' }}>
             <Sider trigger={null} collapsible collapsed={collapsed}>
-                <div css={cssLogoAdmin}>
-                    <h3 className='text-black'> logo</h3>
+                <div css={cssLogoAdmin} className='flex justify-center'>
+                  <img src={logo} alt="" width={70} height={70} />
                 </div>
                 <div className="demo-logo-vertical" />
                 <Menu
