@@ -121,11 +121,16 @@ class UserController extends Controller
                 return response()->json(['message' => 'Người dùng không tồn tại'], 404);
             }
 
+            // Check if the user is trying to delete themselves
+            if ($user->id === Auth::user()->id) {
+                return response()->json(['message' => 'Bạn không thể xóa chính mình'], 403);
+            }
+
             $user->delete();
 
             return response()->json(['message' => 'Xóa người dùng thành công']);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Xóa người dùng thất bại','error' => $e->getMessage()]);
+            return response()->json(['message' => 'Xóa người dùng thất bại', 'error' => $e->getMessage()]);
         }
     }
 
