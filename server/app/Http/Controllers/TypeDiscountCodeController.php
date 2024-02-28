@@ -17,9 +17,7 @@ class TypeDiscountCodeController extends Controller
     public function index()
     {
         try {
-            $typeDiscounts = TypeDiscountCode::
-            select('id', 'name', 'created_at', 'updated_at')
-                ->get();
+            $typeDiscounts = TypeDiscountCode::all();
 
             return response()->json([
                 'message' => 'Truy vấn dữ liệu thành công',
@@ -77,7 +75,7 @@ class TypeDiscountCodeController extends Controller
     public function show($id)
     {
         try {
-            $typeDiscount = TypeDiscountCode::select('id', 'name', 'created_at', 'updated_at')->find($id);
+            $typeDiscount = TypeDiscountCode::find($id);
 
             if (!$typeDiscount) {
                 return response()->json([

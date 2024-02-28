@@ -3,6 +3,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\DiscountCode;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
 
 class DiscountCodeController extends Controller
 {
@@ -14,9 +16,7 @@ class DiscountCodeController extends Controller
     public function index()
     {
         try {
-            $discounts = DiscountCode::
-            select('id', 'name', 'quantity', 'quantity_used', 'start_time', 'value', 'code', 'end_time', 'type_discount_code_id', 'created_at', 'updated_at')
-                ->get();
+            $discounts = DiscountCode::all();
 
             return response()->json([
                 'status' => true,
@@ -48,7 +48,7 @@ class DiscountCodeController extends Controller
                 'start_time' => 'required|date|after:' . now()->addSecond(),
                 'end_time' => 'required|date|after:start_time',
                 'value' => 'required|string|max:255',
-                'type_discount_code_id' => 'required|integer|max:255|exists:type_discount_codes,id'
+                'id_type_discount_code' => 'required|integer|max:255|exists:type_discount_codes,id'
             ]);
 
             $discount = new DiscountCode();
@@ -59,7 +59,7 @@ class DiscountCodeController extends Controller
             $discount->start_time = $request->input('start_time');
             $discount->end_time = $request->input('end_time');
             $discount->value = $request->input('value');
-            $discount->type_discount_code_id = $request->input('type_discount_code_id');
+            $discount->id_type_discount_code = $request->input('id_type_discount_code');
             $discount->save();
 
             return response()->json([
@@ -83,8 +83,7 @@ class DiscountCodeController extends Controller
     public function show($id)
     {
         try {
-            $discount = DiscountCode::select('id', 'name', 'quantity', 'quantity_used', 'start_time', 'value', 'code', 'end_time', 'type_discount_code_id', 'created_at', 'updated_at')
-                ->find($id);
+            $discount = DiscountCode::find($id);
 
             if (!$discount) {
                 return response()->json([
@@ -137,7 +136,7 @@ class DiscountCodeController extends Controller
                 'start_time' => 'required|date|after_or_equal:old_start_time',
                 'end_time' => 'required|date|after:start_time',
                 'value' => 'required|string|max:255',
-                'type_discount_code_id' => 'required|integer|max:255|exists:type_discount_codes,id'
+                'id_type_discount_code' => 'required|integer|max:255|exists:type_discount_codes,id'
             ]);
             $discount = DiscountCode::find($id);
 
@@ -155,7 +154,7 @@ class DiscountCodeController extends Controller
 //            $discount->start_time = $request->input('start_time');
 //            $discount->end_time = $request->input('end_time');
 //            $discount->value = $request->input('value');
-//            $discount->type_discount_code_id = $request->input('type_discount_code_id');
+//            $discount->id_type_discount_code = $request->input('id_type_discount_code');
             $discount->save();
 
             return response()->json([
