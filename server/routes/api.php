@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RouteController;
 use App\Http\Controllers\ParentLocationController;
@@ -99,3 +100,6 @@ Route::group(['prefix' => 'type-user'], function () {
     Route::put('update/{id}', [TypeUserController::class, 'update']);
     Route::delete('delete/{id}', [TypeUserController::class, 'destroy']);
 });
+
+Route::get('search/trip', [TripController::class, 'searchTrip']);
+
