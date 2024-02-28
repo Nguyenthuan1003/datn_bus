@@ -1,11 +1,15 @@
 import { RouteObject } from "react-router-dom";
 import DashboardComponent from "./dashboard/dashboard.component";
-import UserAdminComponent from "./user/user-admin.component";
 import BannerAdmin from "./banner/banner-admin.conponent";
+<<<<<<< HEAD
 import ParentLocaltion from "./parent-location/parent-location.component";
 import LocaltionComponent from "./location/location.component";
 import RouteComponent from "./route/route.component";
 
+=======
+import TypeCarComponent from "./type_car/typeCar.component";
+import CarComponent from "./car/car.component";
+>>>>>>> 19457ca1de6331d8841437e3343401d4d7b34e33
 export const adminRouter: RouteObject[] = [
     {
         path: '',
@@ -13,8 +17,8 @@ export const adminRouter: RouteObject[] = [
         children: [],
     },
     {
-        path: 'user',
-        element: <div><UserAdminComponent /></div>,
+        path: 'type-car',
+        element: <div><TypeCarComponent /></div>,
         children: [],
     },
     {
@@ -35,6 +39,12 @@ export const adminRouter: RouteObject[] = [
         path: 'route',
         element: <RouteComponent />,
         children: []
-    }
+    },
+    {
+        path: 'car',
+        element: <div><CarComponent /></div>,
+        children: [],
+    },
+ 
 
 ]

@@ -15,11 +15,12 @@ export const menuDashBoard =[
         label: 'Bảng điều kiển'
     },
     {
-        key: '/admin/user',
-        icon: <UserOutlined />,
-        label: 'Người dùng'
+        key: '/admin/type-car',
+        icon: <SiAdminer />,
+        label: 'Loại xe'
     },
     {
+<<<<<<< HEAD
         key: '/admin/banner',
         icon: <PiFlagBannerDuotone />,
         label: 'Banner'
@@ -39,5 +40,11 @@ export const menuDashBoard =[
         icon: <PiFlagBannerDuotone />,
         label: 'Tuyến đường '
     }
+=======
+        key: '/admin/car',
+        icon: <SiAdminer />,
+        label: 'Xe'
+    },
+>>>>>>> 19457ca1de6331d8841437e3343401d4d7b34e33
 ]
 

@@ -75,7 +75,7 @@ class CarController extends Controller
         $car->name = $request->input('name');
         $car->color = $request->input('color');
         $car->description = $request->input('description');
-        $car->license_plate = $request->input('license_plate');
+        $car->id_type_car = $request->input('id_type_car');
         $car->license_plate = $request->input('license_plate');
         $car->status = $request->input('status');
         $car->image = $request->input('image');
