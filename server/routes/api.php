@@ -13,6 +13,7 @@ use App\Http\Controllers\TypeCarController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TypeUserController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\BillController;
 
 /*
 |--------------------------------------------------------------------------
@@ -106,4 +107,12 @@ Route::get('search/trip', [TripController::class, 'searchTrip']);
 
 Route::group(['prefix' => 'payment'], function () {
     Route::post('/', [PaymentController::class, 'create']);
+});
+Route::group(['prefix' => 'bill'], function () {
+    Route::get('', [BillController::class, 'index']);
+    Route::post('store', [BillController::class, 'store']);
+    Route::get('edit/{id}', [BillController::class, 'show']);
+    Route::put('update/{id}', [BillController::class, 'update']);
+    Route::delete('delete/{id}', [BillController::class, 'destroy']);
+    Route::post('checkin', [BillController::class, 'checkin']);
 });
