@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-<<<<<<< HEAD
 use App\Http\Controllers\RouteController;
 use App\Http\Controllers\ParentLocationController;
 use App\Http\Controllers\LocationController;
@@ -10,10 +9,8 @@ use App\Http\Controllers\TripController;
 use App\Http\Controllers\DiscountCodeController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\TypeCarController;
-=======
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TypeUserController;
->>>>>>> 77dc92639147d616f84f379b1f425f78d40a77ae
 
 /*
 |--------------------------------------------------------------------------
