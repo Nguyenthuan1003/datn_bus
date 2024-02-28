@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RouteController;
 use App\Http\Controllers\ParentLocationController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\TypeDiscountCodeController;
@@ -20,9 +21,17 @@ use App\Http\Controllers\TypeCarController;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
+
+Route::group(['prefix' => 'route'], function () {
+    Route::get('', [RouteController::class, 'index']);
+    Route::post('store', [RouteController::class, 'store']);
+    Route::get('edit/{id}', [RouteController::class, 'show']);
+    Route::put('update/{id}', [RouteController::class, 'update']);
+    Route::delete('delete/{id}', [RouteController::class, 'destroy']);
+});
 Route::group(['prefix' => 'parent-location'], function () {
     Route::get('/', [ParentLocationController::class, 'index']);
     Route::post('store', [ParentLocationController::class, 'store']);

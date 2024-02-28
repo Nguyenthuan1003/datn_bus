@@ -33,6 +33,11 @@ export const menuDashBoard =[
         key: '/admin/location',
         icon: <PiFlagBannerDuotone />,
         label: 'location'
+    },
+    {
+        key: '/admin/route',
+        icon: <PiFlagBannerDuotone />,
+        label: 'Tuyến đường '
     }
 ]
 

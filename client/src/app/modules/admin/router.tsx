@@ -4,6 +4,7 @@ import UserAdminComponent from "./user/user-admin.component";
 import BannerAdmin from "./banner/banner-admin.conponent";
 import ParentLocaltion from "./parent-location/parent-location.component";
 import LocaltionComponent from "./location/location.component";
+import RouteComponent from "./route/route.component";
 
 export const adminRouter: RouteObject[] = [
     {
@@ -29,6 +30,10 @@ export const adminRouter: RouteObject[] = [
     {
         path: 'location',
         element: <LocaltionComponent />,
+    },
+    {
+        path: 'route',
+        element: <RouteComponent />,
         children: []
     }
 
