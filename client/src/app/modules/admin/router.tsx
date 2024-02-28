@@ -1,8 +1,8 @@
 import { RouteObject } from "react-router-dom";
 import DashboardComponent from "./dashboard/dashboard.component";
-import UserAdminComponent from "./user/user-admin.component";
 import BannerAdmin from "./banner/banner-admin.conponent";
-
+import TypeCarComponent from "./type_car/typeCar.component";
+import CarComponent from "./car/car.component";
 export const adminRouter: RouteObject[] = [
     {
         path: '',
@@ -10,14 +10,15 @@ export const adminRouter: RouteObject[] = [
         children: [],
     },
     {
-        path: 'user',
-        element: <div><UserAdminComponent /></div>,
+        path: 'type-car',
+        element: <div><TypeCarComponent /></div>,
         children: [],
     },
     {
-        path: 'banner',
-        element: <BannerAdmin />,
-        children: []
-    }
+        path: 'car',
+        element: <div><CarComponent /></div>,
+        children: [],
+    },
+ 
 
 ]

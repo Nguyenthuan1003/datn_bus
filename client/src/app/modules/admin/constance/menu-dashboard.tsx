@@ -15,14 +15,14 @@ export const menuDashBoard =[
         label: 'Bảng điều kiển'
     },
     {
-        key: '/admin/user',
-        icon: <UserOutlined />,
-        label: 'Người dùng'
+        key: '/admin/type-car',
+        icon: <SiAdminer />,
+        label: 'Loại xe'
     },
     {
-        key: '/admin/banner',
-        icon: <PiFlagBannerDuotone />,
-        label: 'Banner'
-    }
+        key: '/admin/car',
+        icon: <SiAdminer />,
+        label: 'Xe'
+    },
 ]
 
