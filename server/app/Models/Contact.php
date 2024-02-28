@@ -5,13 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Route extends Model
+class Contact extends Model
 {
     use HasFactory;
 
-    protected $table = 'routes';
-
-    public function trip() {
-        return $this->hasMany(Trip::class);
-    }
+    protected $tableName = 'contacts';
 }
