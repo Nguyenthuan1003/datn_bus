@@ -22,6 +22,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'trip'], function () {
     Route::get('', [TripController::class, 'index']);
+    Route::get('create', [TripController::class, 'create']);
+    Route::get('locations-for-route/{routeId}', [TripController::class, 'getLocationsForRoute']);
     Route::post('store', [TripController::class, 'store']);
     Route::get('edit/{id}', [TripController::class, 'show']);
     Route::put('update/{id}', [TripController::class, 'update']);
