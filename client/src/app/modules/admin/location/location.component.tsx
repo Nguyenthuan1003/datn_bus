@@ -21,7 +21,7 @@ const LocaltionComponent = () => {
     }, [])
     useEffect(() => {
         const columsTemp: any = []
-        const title = ['STT', 'tên', 'ảnh', 'description', 'parent_locations_id']
+        const title = ['STT', 'tên', 'ảnh', 'Mô tả', 'Tỉnh thành']
         console.log('s', columsTemp);
         console.log('h', dataParentLocation);
         if (dataLocation.length > 0) {
@@ -34,9 +34,10 @@ const LocaltionComponent = () => {
                         render: (text: any, record: any, index: any) => {
                             if (itemKey == 'image') {
                                 const image = record?.image
+                                console.log('link image',image);
                                 return <img src={image} alt="" className='w-[100px]' />
                             }
-                            if (itemKey === 'parent_locations_id') {
+                            if (itemKey === 'parent_location_id') {
                                 // Find the corresponding parent_location object
                                 const parentLocation = dataParentLocation.find((parent: any) => parent.id === text);
 
@@ -68,7 +69,7 @@ const LocaltionComponent = () => {
     return (
         <div>
             <TemplateTable
-                title={`Danh sách tỉnh thành `}
+                title={`Danh sách Địa điểm `}
                 callBack={handelGetList}
                 dataTable={dataLocation}
 
@@ -89,7 +90,7 @@ const LocaltionComponent = () => {
                         <Form.Item label='description' name='description' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
                             <Input />
                         </Form.Item>
-                        <Form.Item label='parent_locations_id' name='parent_locations_id' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+                        <Form.Item label='parent_location_id' name='parent_location_id' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
                             <Select placeholder="lựa chọn trạng thái">
                                 {dataParentLocation?.map((item: any, index: any) => (
                                     <Option value={item?.id} key={item?.id}>{item?.name}</Option>
