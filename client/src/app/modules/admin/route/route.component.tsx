@@ -86,9 +86,6 @@ const Route = () => {
                 dataId={fomatCustomCurrent}
                 formEdit={
                     <Fragment>
-                        <Form.Item label='Name' name='name' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                            <Input />
-                        </Form.Item>
                         <Form.Item label='Điểm bắt đầu' name='start_location' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
                         <Select placeholder="lựa chọn trạng thái">
                                 {dataParentLocation?.map((item: any, index: any) => (
