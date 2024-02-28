@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+<<<<<<< HEAD
 use App\Http\Controllers\RouteController;
 use App\Http\Controllers\ParentLocationController;
 use App\Http\Controllers\LocationController;
@@ -9,6 +10,10 @@ use App\Http\Controllers\TripController;
 use App\Http\Controllers\DiscountCodeController;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\TypeCarController;
+=======
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\TypeUserController;
+>>>>>>> 77dc92639147d616f84f379b1f425f78d40a77ae
 
 /*
 |--------------------------------------------------------------------------
@@ -21,8 +26,12 @@ use App\Http\Controllers\TypeCarController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['prefix' => 'user'], function () {
+    Route::get('', [UserController::class, 'index']);
+    Route::post('store', [UserController::class, 'store']);
+    Route::get('edit/{id}', [UserController::class, 'show']);
+    Route::put('update/{id}', [UserController::class, 'update']);
+    Route::delete('delete/{id}', [UserController::class, 'destroy']);
 });
 
 Route::group(['prefix' => 'route'], function () {
@@ -85,4 +94,11 @@ Route::group(['prefix' => 'cars'], function () {
     Route::get('edit/{id}', [CarController::class, 'show']);
     Route::put('update/{id}', [CarController::class, 'update']);
     Route::delete('delete/{id}', [CarController::class, 'destroy']);
+});
+Route::group(['prefix' => 'type-user'], function () {
+    Route::get('', [TypeUserController::class, 'index']);
+    Route::post('store', [TypeUserController::class, 'store']);
+    Route::get('edit/{id}', [TypeUserController::class, 'show']);
+    Route::put('update/{id}', [TypeUserController::class, 'update']);
+    Route::delete('delete/{id}', [TypeUserController::class, 'destroy']);
 });
