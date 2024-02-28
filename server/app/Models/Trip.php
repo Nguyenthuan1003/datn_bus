@@ -5,14 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DiscountCode extends Model
+class Trip extends Model
 {
     use HasFactory;
 
-    protected $table = 'discount_codes';
+    protected $table = 'trips';
 
-    public function typeDiscountCode() {
-        return $this->belongsTo(TypeDiscountCode::class, 'id_discount_code');
+    public function route() {
+        return $this->belongsTo(Route::class, 'route_id');
+    }
+
+    public function car() {
+        return $this->belongsTo(Car::class, 'car_id');
     }
 
     public function bill() {

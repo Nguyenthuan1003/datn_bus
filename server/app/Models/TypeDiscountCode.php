@@ -9,8 +9,9 @@ class TypeDiscountCode extends Model
 {
     use HasFactory;
 
-    public function discountCodes()
-    {
+    protected $table = 'type_discount_codes';
+
+    public function typeDiscountCode() {
         return $this->hasMany(DiscountCode::class);
     }
 }
