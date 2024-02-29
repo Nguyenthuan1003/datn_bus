@@ -1,0 +1,7 @@
+{
+    "The :attribute must contain at least one letter.": "Trường :attribute phải chứa ít nhất một chữ cái.",
+    "The :attribute must contain at least one number.": "Trường :attribute phải chứa ít nhất một số.",
+    "The :attribute must contain at least one symbol.": "Trường :attribute phải chứa ít nhất một ký tự đặc biệt.",
+    "The :attribute must contain at least one uppercase and one lowercase letter.": "Trường :attribute phải chứa ít nhất một chữ in hoa và một chữ thường.",
+    "The given :attribute has appeared in a data leak. Please choose a different :attribute.": ":attribute đã xuất hiện trong một sự cố rò rỉ dữ liệu. Vui lòng chọn một :attribute khác."
+}
