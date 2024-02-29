@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer('status');
             $table->float('trip_price');
             $table->string('end_location');
-            $table->string('end_time');
+            $table->float('interval_trip');
             $table->integer('route_id');
             $table->timestamps();
         });
