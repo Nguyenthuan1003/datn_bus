@@ -48,7 +48,7 @@ class DiscountCodeController extends Controller
                 'start_time' => 'required|date|after:' . now()->addSecond(),
                 'end_time' => 'required|date|after:start_time',
                 'value' => 'required|string|max:255',
-                'id_type_discount_code' => 'required|integer|max:255|exists:type_discount_codes,id'
+                'id_type_discount_code' => 'required|integer|exists:type_discount_codes,id'
             ]);
 
             $discount = new DiscountCode();
@@ -136,7 +136,7 @@ class DiscountCodeController extends Controller
                 'start_time' => 'required|date|after_or_equal:old_start_time',
                 'end_time' => 'required|date|after:start_time',
                 'value' => 'required|string|max:255',
-                'id_type_discount_code' => 'required|integer|max:255|exists:type_discount_codes,id'
+                'id_type_discount_code' => 'required|integer|exists:type_discount_codes,id'
             ]);
             $discount = DiscountCode::find($id);
 
