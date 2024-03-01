@@ -28,7 +28,7 @@ class SeatController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'car_id' => 'required|exists:cars,id',
+            'car_id' => 'required|string',
             'code_seat' => 'required|string',
         ]);
 
@@ -43,7 +43,7 @@ class SeatController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'car_id' => 'required|exists:cars,id',
+            'car_id' => 'required|string',
             'code_seat' => ['required', 'string', Rule::unique('seats')->ignore($id)],
         ]);
 
