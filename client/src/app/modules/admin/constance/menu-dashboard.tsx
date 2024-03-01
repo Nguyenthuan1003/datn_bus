@@ -20,9 +20,14 @@ export const menuDashBoard =[
         label: 'Người dùng'
     },
     {
+        key: '/admin/type-user',
+        icon: <UserOutlined />,
+        label: 'Khách hàng'
+    },
+    {
         key: '/admin/banner',
         icon: <PiFlagBannerDuotone />,
         label: 'Banner'
-    }
+    },
 ]
 

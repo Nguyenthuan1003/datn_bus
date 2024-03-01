@@ -41,15 +41,15 @@ class UserController extends Controller
     {
         try {
             $request->validate([
-                'user_type_id' => 'required|exists:type_users,id|numeric',
                 'email' => 'required|email|unique:users',
                 'name' => 'required',
                 'role_id' => 'required|numeric',
                 'password' => 'required',
                 'phone_number' => 'nullable',
                 'address' => 'nullable',
+                'user_type_id' => 'required|exists:type_users,id|numeric',
                 'description' => 'nullable',
-                'avatar' => 'nullable',
+                // 'avatar' => 'nullable',
                 'location' => 'nullable',
             ], $this->getValidationMessages());
     
@@ -62,7 +62,7 @@ class UserController extends Controller
             $user->phone_number = $request->input('phone_number');
             $user->address = $request->input('address');
             $user->description = $request->input('description');
-            $user->avatar = $request->input('avatar');
+            // $user->avatar = $request->input('avatar');
             $user->location = $request->input('location');
             $user->save();
     
@@ -76,20 +76,20 @@ class UserController extends Controller
     {
         try {
             $request->validate([
-                'user_type_id' => 'required|exists:type_users,id|numeric',
+                'name' => 'required',
                 'email' => [
                     'required',
                     'email',
                     Rule::unique('users')->ignore($userId),
                 ],
-                'name' => 'required',
-                'role_id' => 'required|numeric',
-                'password' => 'required',
                 'phone_number' => 'nullable',
                 'address' => 'nullable',
+                'password' => 'required',
                 'description' => 'nullable',
-                'avatar' => 'nullable',
+                // 'avatar' => 'nullable',
                 'location' => 'nullable',
+                'user_type_id' => 'required|exists:type_users,id|numeric',
+                'role_id' => 'required|numeric',
             ], $this->getValidationMessages());
     
             $user = User::find($userId);
@@ -97,16 +97,16 @@ class UserController extends Controller
             if (!$user) {
                 return response()->json(['message' => 'User not found'], 404);
             }
-    
-            $user->user_type_id = $request->input('user_type_id');
-            $user->email = $request->input('email');
-            $user->role_id = $request->input('role_id');
+
             $user->name = $request->input('name');
-            $user->password = $request->input('password');
+            $user->email = $request->input('email');
             $user->phone_number = $request->input('phone_number');
             $user->address = $request->input('address');
+            $user->role_id = $request->input('role_id');
+            $user->user_type_id = $request->input('user_type_id');
+            $user->password = $request->input('password');
             $user->description = $request->input('description');
-            $user->avatar = $request->input('avatar');
+            // $user->avatar = $request->input('avatar');
             $user->location = $request->input('location');
             $user->save();
     
