@@ -5,7 +5,7 @@ import BooktickitsComponent from "./book-tickets/book-tickets.component";
 import LoginComponent from "./login/login.component";
 import RegisterComponent from "./register/register.component";
 import BusSearchResults from "./bus-search-results/bus-search-results.component";
-// import AboutComponent from "./about/about.component"
+import PaymentComponent from "./payment/payment.component"
 
 export const clientRouter: RouteObject[] = [
     {
@@ -28,10 +28,10 @@ export const clientRouter: RouteObject[] = [
         path: "/register",
         element: <RegisterComponent />
     },
-    // {
-    //     path: "/about",
-    //     element: <AboutComponent />
-    // },
+    {
+        path: "/payment",
+        element: <PaymentComponent />
+    },
     {
         path: "/buy-search-results",
         element: <BusSearchResults />
