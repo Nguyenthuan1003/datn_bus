@@ -2,12 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-<<<<<<< HEAD
 use App\Http\Controllers\SeatController;
-=======
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\TypeCarController;
->>>>>>> 425f1d00c7ad910e51ec6bb8aee30cd1546ed16f
 
 /*
 |--------------------------------------------------------------------------

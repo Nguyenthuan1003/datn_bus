@@ -5,6 +5,7 @@ import  { getAllTypeCar } from '../type_car/service/typeCar.service'
 import { Form, Input, Select, Switch } from 'antd';
 import { Option } from 'antd/es/mentions';
 import CustomSwitch from './component/CustomSwitch'; 
+import { log } from 'console';
 const CarComponent = () => {
     
     const [column, setColumn] = useState<any>([]);
@@ -12,7 +13,7 @@ const CarComponent = () => {
     const [dataTypecar, setDataTypecar] = useState<any>([]); 
     const [checked, setChecked] = useState<any>();
     const [current, setCurrent] = useState<any>();
-    console.log(current)
+    console.log(dataCar)
     const handleChange = (value:any) => {
         setCurrent(value); 
     };
@@ -83,7 +84,10 @@ const CarComponent = () => {
     }
   const  fomatCustomCurrent=(data:any)=>{
 setCurrent(data?.status === 1 ? true : false)
+    console.log('dsss',data);
+    
   }
+  
     return (
         <div>
             <TemplateTable

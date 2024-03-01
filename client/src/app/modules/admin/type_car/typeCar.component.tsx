@@ -8,7 +8,7 @@ const TypeCarComponent = () => {
     
     const [column, setColumn] = useState<any>([]);
     const [dataTypecar, setDataTypecar] = useState<any>([]);
-    // const [dataParentLocation, setDataParentLocation] = useState<any>([]);    
+    const [dataCurrent, setDataCurrent] = useState<any>({});    
     useEffect(() => {
         getAllTypeCar().then((res) => {
             if (res) {
@@ -48,13 +48,16 @@ const TypeCarComponent = () => {
     const handelGetList = () => {
         setReset(!reset)
     }
+    const  fomatCustomCurrent=(data:any)=>{
+        setDataCurrent(data)
+          }
     return (
         <div>
             <TemplateTable
                 title={`Danh sách Loại xe `}
                 callBack={handelGetList}
                 dataTable={dataTypecar}
-
+dataId={fomatCustomCurrent}
                 columnTable={column}
                 deleteFunc={deleteTypeCar}
                 createFunc={addTypeCar}

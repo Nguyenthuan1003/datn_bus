@@ -3,6 +3,7 @@ import DashboardComponent from "./dashboard/dashboard.component";
 import BannerAdmin from "./banner/banner-admin.conponent";
 import TypeCarComponent from "./type_car/typeCar.component";
 import CarComponent from "./car/car.component";
+import SeatComponent from "./seat/seat.component";
 export const adminRouter: RouteObject[] = [
     {
         path: '',
@@ -17,6 +18,11 @@ export const adminRouter: RouteObject[] = [
     {
         path: 'car',
         element: <div><CarComponent /></div>,
+        children: [],
+    },
+    {
+        path: 'seat',
+        element: <div><SeatComponent /></div>,
         children: [],
     },
  
