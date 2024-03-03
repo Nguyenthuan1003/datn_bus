@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -43,6 +44,7 @@ class UserController extends Controller
                 'user_type_id' => 'required|exists:type_users,id|numeric',
                 'email' => 'required|email|unique:users',
                 'name' => 'required',
+                'role_id' => 'required|numeric',
                 'password' => 'required',
                 'phone_number' => 'nullable',
                 'address' => 'nullable',
@@ -54,6 +56,7 @@ class UserController extends Controller
             $user = new User();
             $user->user_type_id = $request->input('user_type_id');
             $user->email = $request->input('email');
+            $user->role_id = $request->input('role_id');
             $user->name = $request->input('name');
             $user->password = $request->input('password');
             $user->phone_number = $request->input('phone_number');
@@ -80,6 +83,7 @@ class UserController extends Controller
                     Rule::unique('users')->ignore($userId),
                 ],
                 'name' => 'required',
+                'role_id' => 'required|numeric',
                 'password' => 'required',
                 'phone_number' => 'nullable',
                 'address' => 'nullable',
@@ -96,6 +100,7 @@ class UserController extends Controller
     
             $user->user_type_id = $request->input('user_type_id');
             $user->email = $request->input('email');
+            $user->role_id = $request->input('role_id');
             $user->name = $request->input('name');
             $user->password = $request->input('password');
             $user->phone_number = $request->input('phone_number');
