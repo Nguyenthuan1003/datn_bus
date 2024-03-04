@@ -5,15 +5,14 @@ const RouteScheduleComponent = () => {
     return (
         <div css={cssRouteSchedule} className="w-[1128px] m-auto">
             <h3 className="text-4xl font-bold text-center">Route Schedule</h3>
-            <h2 className='flex justify-end'>hhh</h2>
             <div className="overflow-x-auto">
                 <div className="mt-6 flex w-full flex-col gap-4 overflow-auto">
                     <div className='ant-row schedule-card'>
                         <div className='ant-col ant-col-6'>Tuyến xe</div>
                         <div className="ant-col ant-col-2">Loại xe</div>
-                        <div className="ant-col ant-col-3">Quãng đường</div>
+                        {/* <div className="ant-col ant-col-3">Quãng đường</div>
                         <div className="ant-col ant-col-4">Thời gian hành trình </div>
-                        <div className="ant-col ant-col-2">Giá vé</div>
+                        <div className="ant-col ant-col-2">Giá vé</div> */}
                     </div>
                     <div className='schedule-card flex w-full flex-col gap-[6px] text-left'>
                         <div className='ant-row items-center'>
@@ -26,12 +25,12 @@ const RouteScheduleComponent = () => {
                                 </div>
                             </div>
                             <div className="ant-col ant-col-2">Limoshine</div>
-                            <div className="ant-col ant-col-3">100km</div>
+                            {/* <div className="ant-col ant-col-3">100km</div>
                             <div className="ant-col ant-col-4">2 giờ </div>
-                            <div className="ant-col ant-col-2">250.000đ</div>
+                            <div className="ant-col ant-col-2">250.000đ</div> */}
                             <div className="ant-col ant-col-6 ">
                                <div className='flex justify-end'>
-                               <button className="bg-blue-500 ">
+                               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
                                     <span>Tìm tuyến xe</span>
                                 </button>
                                </div>
