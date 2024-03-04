@@ -24,5 +24,10 @@ export const menuDashBoard =[
         icon: <SiAdminer />,
         label: 'Xe'
     },
+    {
+        key: '/admin/seat',
+        icon: <SiAdminer />,
+        label: 'Chỗ ngồi '
+    },
 ]
 
