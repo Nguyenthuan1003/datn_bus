@@ -28,12 +28,12 @@ class SeatController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'car_id' => 'required|exists:cars,id',
+            'car_id' => 'required',
             'code_seat' => 'required|string',
         ]);
-
+        // dd($request);
         $seat = new Seat;
-        $seat->car_id = $request->input('car_id');
+        $seat->car_id = json_encode($request->input('car_id'));
         $seat->code_seat = $request->input('code_seat');
         $seat->save();
 
@@ -43,7 +43,7 @@ class SeatController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'car_id' => 'required|exists:cars,id',
+            'car_id' => 'required',
             'code_seat' => ['required', 'string', Rule::unique('seats')->ignore($id)],
         ]);
 
@@ -53,7 +53,7 @@ class SeatController extends Controller
             return response()->json(['error' => 'Seat not found'], 404);
         }
 
-        $seat->car_id = $request->input('car_id');
+        $seat->car_id = json_encode($request->input('car_id'));
         $seat->code_seat = $request->input('code_seat');
         $seat->save();
         
