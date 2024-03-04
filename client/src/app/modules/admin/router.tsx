@@ -1,15 +1,12 @@
 import { RouteObject } from "react-router-dom";
 import DashboardComponent from "./dashboard/dashboard.component";
 import BannerAdmin from "./banner/banner-admin.conponent";
-<<<<<<< HEAD
 import ParentLocaltion from "./parent-location/parent-location.component";
 import LocaltionComponent from "./location/location.component";
 import RouteComponent from "./route/route.component";
 
-=======
 import TypeCarComponent from "./type_car/typeCar.component";
 import CarComponent from "./car/car.component";
->>>>>>> 19457ca1de6331d8841437e3343401d4d7b34e33
 export const adminRouter: RouteObject[] = [
     {
         path: '',
