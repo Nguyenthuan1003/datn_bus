@@ -23,6 +23,12 @@ export const menuDashBoard =[
         key: '/admin/banner',
         icon: <PiFlagBannerDuotone />,
         label: 'Banner'
+    },
+    {
+        key: '/admin/trip',
+        icon: <PiFlagBannerDuotone />,
+        label: 'Trip'
     }
+
 ]
 

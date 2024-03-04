@@ -154,7 +154,7 @@ class TripController extends Controller
             }
 
 //          Save data:
-            if ($request->input('loop') && $request->input('loop') > 1) {
+            if ($request->input('loop') && $request->input('loop') > 1 && $request->input('interval_trip') < 12 ) {
                 $trips = [];
                 for($i = 0; $i < $request->input('loop'); $i++) {
                     $trip = new Trip();

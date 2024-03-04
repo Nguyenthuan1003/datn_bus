@@ -2,6 +2,7 @@ import { RouteObject } from "react-router-dom";
 import DashboardComponent from "./dashboard/dashboard.component";
 import UserAdminComponent from "./user/user-admin.component";
 import BannerAdmin from "./banner/banner-admin.conponent";
+import TripComponent from "./trip/trip.component";
 
 export const adminRouter: RouteObject[] = [
     {
@@ -17,6 +18,11 @@ export const adminRouter: RouteObject[] = [
     {
         path: 'banner',
         element: <BannerAdmin />,
+        children: []
+    },
+    {
+        path: 'trip',
+        element: <TripComponent />,
         children: []
     }
 
