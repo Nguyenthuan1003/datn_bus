@@ -20,7 +20,6 @@ export const menuDashBoard =[
         label: 'Loại xe'
     },
     {
-<<<<<<< HEAD
         key: '/admin/banner',
         icon: <PiFlagBannerDuotone />,
         label: 'Banner'
@@ -39,12 +38,11 @@ export const menuDashBoard =[
         key: '/admin/route',
         icon: <PiFlagBannerDuotone />,
         label: 'Tuyến đường '
-    }
-=======
+    },
+    {
         key: '/admin/car',
         icon: <SiAdminer />,
         label: 'Xe'
     },
->>>>>>> 19457ca1de6331d8841437e3343401d4d7b34e33
 ]
 
