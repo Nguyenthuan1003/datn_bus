@@ -18,4 +18,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::resource('role', App\Http\Controllers\RoleController::class)->except('create', 'edit');
+Route::post('/upload', [App\Http\Controllers\RoleController::class, 'upload']);

@@ -193,6 +193,7 @@ return [
         'description' => 'mô tả',
         'roles' => 'vai trò',
         'password_current' => 'mật khẩu hiện tại',
+        'image' => 'ảnh'
     ]
 
 ];
