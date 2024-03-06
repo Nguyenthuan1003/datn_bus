@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TypeDiscountCodeController;
+use App\Http\Controllers\TripController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,4 +18,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::group(['prefix' => 'trip'], function () {
+    Route::get('', [TripController::class, 'index']);
+    Route::get('create', [TripController::class, 'create']);
+    Route::get('locations-for-route/{routeId}', [TripController::class, 'getLocationsForRoute']);
+    Route::post('store', [TripController::class, 'store']);
+    Route::get('edit/{id}', [TripController::class, 'show']);
+    Route::put('update/{id}', [TripController::class, 'update']);
+    Route::delete('delete/{id}', [TripController::class, 'destroy']);
 });
