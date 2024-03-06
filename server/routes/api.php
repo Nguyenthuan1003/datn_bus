@@ -25,4 +25,5 @@ Route::group(['prefix' => 'ticket'], function () {
     Route::get('edit/{id}', [TicketOrderController::class, 'show']);
     Route::delete('delete/{id}', [TicketOrderController::class, 'destroy']);
     Route::post('checkin', [TicketOrderController::class, 'checkin']);
+    Route::get('find-ticket', [TicketOrderController::class, 'findTicket']);
 });
