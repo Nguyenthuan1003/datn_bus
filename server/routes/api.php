@@ -28,4 +28,5 @@ Route::group(['prefix' => 'trip'], function () {
     Route::get('edit/{id}', [TripController::class, 'show']);
     Route::put('update/{id}', [TripController::class, 'update']);
     Route::delete('delete/{id}', [TripController::class, 'destroy']);
+    Route::get('trip-select/{id}', [TripController::class, 'tripSelect']);
 });

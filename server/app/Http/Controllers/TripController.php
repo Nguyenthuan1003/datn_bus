@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Location;
 use App\Models\ParentLocation;
+use App\Models\Seat;
+use App\Models\TicketOrder;
 use Illuminate\Http\Request;
 use App\Models\Trip;
 use App\Models\Car;
@@ -380,6 +382,60 @@ class TripController extends Controller
 
             return response()->json([
                 'message' => 'Xóa chuyến đi thành công'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Get trip data frontend for select trip.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function tripSelect($id)
+    {
+        try {
+            $tripData = Trip::with(['car', 'route'])->find($id);
+
+//            validate thêm start_date || $tripData->start_time
+            if (!$tripData) {
+                return response()->json([
+                    'message' => 'Chuyến đi không tồn tại'
+                ]);
+            }
+
+//seats and status seats
+            $seats = Seat::where('car_id', $tripData->car_id)->get()->toArray();
+            $orderedSeats = TicketOrder::join('bills', 'ticket_orders.bill_id', '=', 'bills.id')
+                ->join('trips', 'bills.trip_id', '=', 'trips.id')
+                ->where('trips.id', 2)
+                ->pluck('ticket_orders.code_seat')
+                ->toArray();
+
+            foreach ($seats as &$seat) {
+                $seat['status'] = 0;
+                foreach ($orderedSeats as $code_seat) {
+                    if ($seat['code_seat'] == $code_seat) {
+                        $seat['status'] = 1;
+                    }
+                }
+            }
+
+//  get locations for router
+//            $pickupLocations = ParentLocation::with('location')->where('name', $tripData->route->start_location)->first();
+//            $payLocation = ParentLocation::with('location')->where('name', $tripData->route->end_location)->first();
+
+            return response()->json([
+                'message' => 'Truy vấn dữ liệu thành công',
+                'trip' => $tripData,
+                'seats' => $seats,
+//                'pickup-location' => $pickupLocations,
+//                'pay-location' => $payLocation
             ]);
         } catch (\Exception $e) {
             return response()->json([
