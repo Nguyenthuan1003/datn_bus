@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bill;
+use App\Mail\SendEmail;
 use Illuminate\Http\Request;
 
 class BillController extends Controller
@@ -48,6 +49,8 @@ class BillController extends Controller
             $bill->code_bill = $request->input('code_bill');
             $bill->phone_number = $request->input('phone_number');
             $bill->save();
+
+            Mail::to('recipient@example.com')->send(new SendEmail($request->input('user_name'),'Thanh toán vé xe thành công', 'checkout-success', $request->('code_bill'), $request->('start_location'), $request->('end_location'), $request->('start_time'), $request->('code_seat')));
     
             return response()->json(['message' => 'Thêm mới đơn hàng thành công','$bill' => $bill]);
         } catch (\Exception $e) {
