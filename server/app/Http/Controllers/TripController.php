@@ -427,15 +427,15 @@ class TripController extends Controller
             }
 
 //  get locations for router
-//            $pickupLocations = ParentLocation::with('location')->where('name', $tripData->route->start_location)->first();
-//            $payLocation = ParentLocation::with('location')->where('name', $tripData->route->end_location)->first();
+            $pickupLocations = ParentLocation::with('location')->where('name', $tripData->route->start_location)->first();
+            $payLocation = ParentLocation::with('location')->where('name', $tripData->route->end_location)->first();
 
             return response()->json([
                 'message' => 'Truy vấn dữ liệu thành công',
                 'trip' => $tripData,
                 'seats' => $seats,
-//                'pickup-location' => $pickupLocations,
-//                'pay-location' => $payLocation
+                'pickup-location' => $pickupLocations,
+                'pay-location' => $payLocation
             ]);
         } catch (\Exception $e) {
             return response()->json([
