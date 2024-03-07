@@ -4,6 +4,8 @@ import ButtonRadiusCompoennt from '~/app/component/parts/button/button.component
 import { useTripRedux } from '../../../redux/hook/useTripReducer'
 import moment from 'moment';
 import 'moment/locale/vi'; // Import locale của bạn nếu cần thiết
+import LocationScheduleComponent from '../location-schedule/location-schedule.component';
+import { Link } from 'react-router-dom';
 const MainSearchResults = () => {
     const { data: { trips }, actions } = useTripRedux()
     const [activeData, setActiveData] = useState<any>({})
@@ -106,15 +108,18 @@ const MainSearchResults = () => {
                                     <div className={`font-medium px-3 ${activeData[item.id] == 2 ? 'active' : ''}`} onClick={() => setActiveToTrips(item.id, 2)}>
                                         Lịch trình
                                     </div>
-                                    <div className={`font-medium ${activeData[item.id] == 3 ? 'active' : ''}`} onClick={() => setActiveToTrips(item.id, 3)}>
+                                    {/* <div className={`font-medium ${activeData[item.id] == 3 ? 'active' : ''}`} onClick={() => setActiveToTrips(item.id, 3)}>
                                         Trung chuyển
-                                    </div>
+                                    </div> */}
                                     <div className={`font-medium px-3 ${activeData[item.id] == 4 ? 'active' : ''}`} onClick={() => setActiveToTrips(item.id, 4)}>
                                         Chính sách
                                     </div>
                                 </div>
                                 <div>
-                                    <ButtonRadiusCompoennt content='chọn chuyến' />
+                                    <Link to={'/book-tickets'}>
+                                        <ButtonRadiusCompoennt content='chọn chuyến'  />
+                                    </Link>
+                                    
                                 </div>
 
                             </div>
@@ -122,8 +127,11 @@ const MainSearchResults = () => {
                         <div>
                             {/* {activeData == null && <> */}
                             {activeData[item.id] === 1 && <div>một</div>}
-                            {activeData[item.id] === 2 && <div>hai</div>}
-                            {activeData[item.id] === 3 && <div>ba</div>}
+                            {activeData[item.id] === 2 && 
+                     
+                                <LocationScheduleComponent />
+                                }
+                            {/* {activeData[item.id] === 3 && <div>ba</div>} */}
                             {activeData[item.id] === 4 &&
                                 <div>
                                     <div className='ant-tabs-content ant-tabs-content-top'>
