@@ -4,12 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Trip;
-use App\Models\Car;
 use App\Models\Route;
-use App\Models\TypeCar;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
+use Illuminate\Validation\ValidationException;
 
 class TripController extends Controller
 {
@@ -285,60 +282,76 @@ class TripController extends Controller
 
     public function searchTrip(Request $request)
     {
-        $startLocation = $request->input('start_location');
-        $endLocation = $request->input('end_location');
-        $startTime = $request->input('start_time');
-        $ticketCount = $request->input('ticket_count');
+        try {
+            // Validate the incoming request data
+            $request->validate([
+                'start_location' => 'required|string',
+                'end_location' => 'required|string',
+                'start_time' => 'required',
+                'ticket_count' => 'required'
+            ]);
 
-        $matchingTrips = Trip::where('status', '=', true)
-            ->where('start_location', '=', $startLocation)
-            ->where('end_location', '=', $endLocation)
-            ->where(function ($query) use ($startTime) {
-                // Convert start_time to datetime using STR_TO_DATE
-                $query->whereRaw("STR_TO_DATE(start_time, '%Y-%m-%dT%H:%i') >= ?", [$startTime]);
-            })
-            ->with(['car' => function ($query) {
-                $query->with(['typeCar' => function ($query) {
-                    // Select the total_seat from the associated type_car relationship
-                    $query->select('id', 'name', 'total_seat', 'type_seats');
-                }]);
-            }])
-            ->with(['bill' => function ($query) {
-                // Select the total_seat from the associated bill relationship
-                $query->select('trip_id', 'total_seat as total_seat_used', 'seat_id as seat_code_used', 'created_at')
-                    ->where('bills.created_at', '>=', 'trips.start_time');
-            }])
-            ->get();
+            $startLocation = $request->input('start_location');
+            $endLocation = $request->input('end_location');
+            $startTime = $request->input('start_time');
+            $ticketCount = $request->input('ticket_count');
+
+            $matchingTrips = Trip::where('status', '=', true)
+                ->where('start_location', '=', $startLocation)
+                ->where('end_location', '=', $endLocation)
+                ->where(function ($query) use ($startTime) {
+                    // Convert start_time to datetime using STR_TO_DATE
+                    $query->whereRaw("STR_TO_DATE(start_time, '%Y-%m-%dT%H:%i') >= ?", [$startTime]);
+                })
+                ->with(['car' => function ($query) {
+                    $query->with(['typeCar' => function ($query) {
+                        // Select the total_seat from the associated type_car relationship
+                        $query->select('id', 'name', 'total_seat', 'type_seats');
+                    }]);
+                }])
+                ->with(['bill' => function ($query) {
+                    // Select the total_seat from the associated bill relationship
+                    $query->select('trip_id', 'total_seat as total_seat_used', 'seat_id as seat_code_used', 'created_at')
+                        ->where('bills.created_at', '>=', 'trips.start_time');
+                }])
+                ->get();
 
 
-        $filteredTrips = $matchingTrips->map(function ($trip) use ($ticketCount) {
-            $trip['total_seat'] = optional(optional($trip->car)->typeCar)->total_seat;
-            $trip['total_seat_used'] = collect($trip->bill)->sum('total_seat_used') ?? 0;
-            // Check if totalSeat and totalSeatUsed are not null before comparing
-            if ($trip['total_seat'] !== null && $trip['total_seat_used'] !== null) {
-                // Calculate the available seats
-                $trip['total_seat_available'] =  $trip['total_seat'] - $trip['total_seat_used'];
+            $filteredTrips = $matchingTrips->map(function ($trip) use ($ticketCount) {
+                $trip['total_seat'] = optional(optional($trip->car)->typeCar)->total_seat;
+                $trip['total_seat_used'] = collect($trip->bill)->sum('total_seat_used') ?? 0;
+                // Check if totalSeat and totalSeatUsed are not null before comparing
+                if ($trip['total_seat'] !== null && $trip['total_seat_used'] !== null) {
+                    // Calculate the available seats
+                    $trip['total_seat_available'] =  $trip['total_seat'] - $trip['total_seat_used'];
 
-                if ($trip['total_seat_available'] >= $ticketCount) {
-                    return $trip;
-                };
+                    if ($trip['total_seat_available'] >= $ticketCount) {
+                        return $trip;
+                    };
 
+                    return;
+                }
                 return;
+            })->filter();
+
+
+
+            if (!$filteredTrips) {
+                return response()->json([
+                    'error' => 'Lỗi tìm kiếm'
+                ], 404);
             }
 
-            return;
-        })->filter();
-
-
-        if (!$filteredTrips) {
             return response()->json([
-                'error' => 'Lỗi tìm kiếm'
-            ], 404);
+                'message' => 'ok',
+                'data' => $filteredTrips,
+            ], 200);
+        } catch (ValidationException $e) {
+            // Return validation error messages if validation fails
+            return response()->json(['error' => $e->errors()], 422);
+        } catch (QueryException $e) {
+            // Return an error response if database operation fails
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-
-        return response()->json([
-            'message' => 'ok',
-            'data' => $filteredTrips,
-        ], 200);
     }
 }
