@@ -11,19 +11,23 @@ class Trip extends Model
 
     protected $table = 'trips';
 
-    public function route() {
+    public function route()
+    {
         return $this->belongsTo(Route::class, 'route_id');
     }
 
-    public function car() {
+    public function car()
+    {
         return $this->belongsTo(Car::class, 'car_id');
     }
 
-    public function bill() {
+    public function bill()
+    {
         return $this->hasMany(Bill::class);
     }
 
-    public function comment() {
+    public function comment()
+    {
         return $this->hasMany(Comment::class);
     }
 }
