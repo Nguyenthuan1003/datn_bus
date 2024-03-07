@@ -119,3 +119,4 @@ Route::group(['prefix' => 'bill'], function () {
     Route::delete('delete/{id}', [BillController::class, 'destroy']);
     Route::post('checkin', [BillController::class, 'checkin']);
 });
+Route::resource('role', App\Http\Controllers\RoleController::class)->except('create', 'edit');
