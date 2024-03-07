@@ -38,9 +38,9 @@ const TemplateTable:FC<ITemplateTable> = (
         setIsModalOpen(true);
         setType(typeAction)
         if(typeAction=="CHANGE"){
-            // setCurrent(recordTable)
-            dataId(recordTable)
+            // setCurrent(recordTable
             setDefaultValue(recordTable)
+            dataId(recordTable)
             form.setFieldsValue(recordTable)
         }
         else{
