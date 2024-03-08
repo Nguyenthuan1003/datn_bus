@@ -316,10 +316,16 @@ class TripController extends Controller
                 }])
                 ->get();
 
-
             $filteredTrips = $matchingTrips->map(function ($trip) use ($ticketCount) {
                 $trip['total_seat'] = optional(optional($trip->car)->typeCar)->total_seat;
                 $trip['total_seat_used'] = collect($trip->bill)->sum('total_seat_used') ?? 0;
+                // Pluck 'seat_code_used' from each bill and flatten the array
+                $seatCodes = collect($trip->bill)->pluck('seat_code_used')->flatten()->toArray();
+                // Decode JSON strings to arrays
+                $seatCodes = array_map('json_decode', $seatCodes);
+                // Flatten again to merge all seat codes into a single array
+                $trip['array_seat_code_used'] = collect($seatCodes)->flatten()->toArray();
+
                 // Check if totalSeat and totalSeatUsed are not null before comparing
                 if ($trip['total_seat'] !== null && $trip['total_seat_used'] !== null) {
                     // Calculate the available seats
@@ -333,7 +339,6 @@ class TripController extends Controller
                 }
                 return;
             })->filter();
-
 
 
             if (!$filteredTrips) {
