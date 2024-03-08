@@ -158,11 +158,11 @@ class TripController extends Controller
             //          Save data:
             if ($request->input('loop') && $request->input('loop') > 1 && $request->input('interval_trip') < 12) {
                 $trips = [];
-                for($i = 0; $i < $request->input('loop'); $i++) {
+                for ($i = 0; $i < $request->input('loop'); $i++) {
                     $trip = new Trip();
                     $trip->car_id = $request->input('car_id');
-//                    $trip->drive_id = $request->input('drive_id');
-//                    $trip->assistant_car_id = $request->input('assistant_car_id');
+                    //                    $trip->drive_id = $request->input('drive_id');
+                    //                    $trip->assistant_car_id = $request->input('assistant_car_id');
                     $trip->start_location = $request->input('start_location');
                     $trip->status = $request->input('status');
                     $trip->trip_price = $request->input('trip_price');
@@ -183,8 +183,8 @@ class TripController extends Controller
             } else {
                 $trip = new Trip();
                 $trip->car_id = $request->input('car_id');
-//                $trip->drive_id = $request->input('drive_id');
-//                $trip->assistant_car_id = $request->input('assistant_car_id');
+                //                $trip->drive_id = $request->input('drive_id');
+                //                $trip->assistant_car_id = $request->input('assistant_car_id');
                 $trip->start_location = $request->input('start_location');
                 $trip->status = $request->input('status');
                 $trip->trip_price = $request->input('trip_price');
@@ -267,10 +267,10 @@ class TripController extends Controller
 
                 $request->validate([
                     'car_id' => 'required|integer|max:255|exists:cars,id',
-//                    'drive_id' => 'required|integer|max:255|exists:users,id',
-//                    'assistant_car_id' => 'required|integer|max:255|exists:users,id',
-//                    'start_date' => 'required|date|after_or_equal:today',
-//                    'start_time' => 'required|date_format:H:i',
+                    //                    'drive_id' => 'required|integer|max:255|exists:users,id',
+                    //                    'assistant_car_id' => 'required|integer|max:255|exists:users,id',
+                    //                    'start_date' => 'required|date|after_or_equal:today',
+                    //                    'start_time' => 'required|date_format:H:i',
                     'start_time' => 'required|date|after:' . now()->addSecond(),
                     'start_location' => 'required|string|max:255|exists:locations,name',
                     'status' => 'required|integer',
@@ -401,6 +401,7 @@ class TripController extends Controller
     {
         try {
             $tripData = Trip::with(['car', 'route'])->find($id);
+
             //            validate thêm start_date || $tripData->start_time
             if (!$tripData) {
                 return response()->json([
