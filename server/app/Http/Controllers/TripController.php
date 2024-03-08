@@ -434,8 +434,8 @@ class TripController extends Controller
                 'message' => 'Truy vấn dữ liệu thành công',
                 'trip' => $tripData,
                 'seats' => $seats,
-                'pickup-location' => $pickupLocations,
-                'pay-location' => $payLocation
+                'pickup_location' => $pickupLocations,
+                'pay_location' => $payLocation
             ]);
         } catch (\Exception $e) {
             return response()->json([
