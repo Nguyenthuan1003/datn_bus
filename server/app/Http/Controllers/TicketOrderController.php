@@ -104,4 +104,47 @@ class TicketOrderController extends Controller
             return response()->json(['error' => 'Thông tin không tồn tại'], 404);
         }
     }
+
+    /**
+     * Find all data for ticket
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function findTicket(Request $request)
+    {
+        try {
+            $request->validate([
+                'phone_number' => 'required|digits:11|exists:bills,phone_number',
+                'code_ticket' => 'required|string|exists:ticket_orders,code_ticket'
+            ]);
+
+            $ticket = TicketOrder::join('bills', 'ticket_orders.bill_id', '=', 'bills.id')
+                ->join('trips', 'bills.trip_id', '=', 'trips.id')
+                ->join('routes', 'trips.route_id', '=', 'routes.id')
+                ->join('cars', 'trips.car_id', '=', 'cars.id')
+//                ->select('bills.phone_number', 'bills.status_pay', 'ticket_orders.code_ticket', 'routes.name as route_name', 'trips.start_time', 'cars.license_plate', 'ticket_orders.code_seat', 'bills.total_money_after_discount', 'bills.total_seat', 'ticket_orders.pickup_location', 'ticket_orders.pay_location')
+                ->select('bills.phone_number', 'bills.status_pay', 'ticket_orders.code_ticket', 'routes.name as route_name', 'trips.start_time', 'cars.license_plate', 'ticket_orders.code_seat', 'ticket_orders.pickup_location', 'ticket_orders.pay_location')
+                ->selectRaw('bills.total_money_after_discount / bills.total_seat as ticket_money')
+                ->where('ticket_orders.code_ticket', $request->input('code_ticket'))
+                ->where('bills.phone_number', $request->input('phone_number'))
+                ->first();
+
+            if (!$ticket) {
+                return response()->json([
+                    'message' => 'Vé này không tồn tại'
+                ]);
+            }
+
+            return response()->json([
+                'message' => 'Truy vấn dữ liệu thành công',
+                'ticket' => $ticket
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
 }

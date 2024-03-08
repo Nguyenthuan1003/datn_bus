@@ -14,6 +14,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\TypeUserController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\BillController;
+use App\Http\Controllers\TicketOrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,11 +58,14 @@ Route::group(['prefix' => 'locations'], function () {
     Route::delete('delete/{id}', [LocationController::class, 'destroy']);
 });
 Route::group(['prefix' => 'trip'], function () {
-    Route::get('/', [TripController::class, 'index']);
+    Route::get('', [TripController::class, 'index']);
+    Route::get('create', [TripController::class, 'create']);
+    Route::get('locations-for-route/{routeId}', [TripController::class, 'getLocationsForRoute']);
     Route::post('store', [TripController::class, 'store']);
     Route::get('edit/{id}', [TripController::class, 'show']);
     Route::put('update/{id}', [TripController::class, 'update']);
     Route::delete('delete/{id}', [TripController::class, 'destroy']);
+    Route::get('trip-select/{id}', [TripController::class, 'tripSelect']);
 });
 
 Route::group(['prefix' => 'type-discount-code'], function () {
@@ -115,4 +119,13 @@ Route::group(['prefix' => 'bill'], function () {
     Route::put('update/{id}', [BillController::class, 'update']);
     Route::delete('delete/{id}', [BillController::class, 'destroy']);
     Route::post('checkin', [BillController::class, 'checkin']);
+});
+Route::resource('role', App\Http\Controllers\RoleController::class)->except('create', 'edit');
+Route::group(['prefix' => 'ticket'], function () {
+    Route::get('', [TicketOrderController::class, 'index']);
+    Route::post('store', [TicketOrderController::class, 'store']);
+    Route::get('edit/{id}', [TicketOrderController::class, 'show']);
+    Route::delete('delete/{id}', [TicketOrderController::class, 'destroy']);
+    Route::post('checkin', [TicketOrderController::class, 'checkin']);
+    Route::get('find-ticket', [TicketOrderController::class, 'findTicket']);
 });
