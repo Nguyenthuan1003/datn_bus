@@ -9,6 +9,7 @@ use App\Models\TicketOrder;
 use Illuminate\Http\Request;
 use App\Models\Trip;
 use App\Models\Route;
+use App\Models\Car;
 use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
 
@@ -105,15 +106,18 @@ class TripController extends Controller
     {
         try {
             $request->validate([
-                'car_id' => 'required|integer|max:255|exists:cars,id',
-                'start_date' => 'required|date|after_or_equal:today',
-                'start_time' => 'required|date_format:Y-m-d H:i:s',
-                'start_location' => 'required|string|max:255',
-                'status' => 'required|numeric',
+                'car_id' => 'required|integer|exists:cars,id',
+                //                'drive_id' => 'required|integer|exists:users,id',
+                //                'assistant_car_id' => 'required|integer|exists:users,id',
+                //                'start_date' => 'required|date|after_or_equal:today',
+                //                'start_time' => 'required|date_format:H:i',
+                'start_time' => 'required|date|after:' . now()->addSecond(),
+                'start_location' => 'required|string|max:255|exists:locations,name',
+                'status' => 'required|integer',
                 'trip_price' => 'required|numeric|max:99999999',
-                'end_location' => 'required|string|max:255',
-                'end_time' => 'required|date_format:Y-m-d H:i:s',
-                'route_id' => 'required|integer|max:255|exists:routes,id',
+                'end_location' => 'required|string|max:255|exists:locations,name', // data bảng locations phải lưu cả 1 tên parent-location nếu ko có location con không sẽ lỗi validate
+                'interval_trip' => 'required|numeric|min:0|max:100',
+                'route_id' => 'required|integer|exists:routes,id',
                 'loop' => 'nullable|numeric|min:1'
             ]);
 
@@ -154,15 +158,16 @@ class TripController extends Controller
             //          Save data:
             if ($request->input('loop') && $request->input('loop') > 1 && $request->input('interval_trip') < 12) {
                 $trips = [];
-                for ($i = 0; $i < $request->input('loop'); $i++) {
+                for($i = 0; $i < $request->input('loop'); $i++) {
                     $trip = new Trip();
                     $trip->car_id = $request->input('car_id');
-                    $trip->start_time = $request->input('start_time');
+//                    $trip->drive_id = $request->input('drive_id');
+//                    $trip->assistant_car_id = $request->input('assistant_car_id');
                     $trip->start_location = $request->input('start_location');
                     $trip->status = $request->input('status');
                     $trip->trip_price = $request->input('trip_price');
                     $trip->end_location = $request->input('end_location');
-                    $trip->end_time = $request->input('end_time');
+                    $trip->interval_trip = $request->input('interval_trip');
                     $trip->route_id = $request->input('route_id');
                     $trip->start_time = \Carbon\Carbon::createFromFormat('Y-m-d\TH:i:sP', $request->input('start_time'))
                         ->addDays($i)
@@ -178,12 +183,13 @@ class TripController extends Controller
             } else {
                 $trip = new Trip();
                 $trip->car_id = $request->input('car_id');
-                $trip->start_time = $request->input('start_time');
+//                $trip->drive_id = $request->input('drive_id');
+//                $trip->assistant_car_id = $request->input('assistant_car_id');
                 $trip->start_location = $request->input('start_location');
                 $trip->status = $request->input('status');
                 $trip->trip_price = $request->input('trip_price');
                 $trip->end_location = $request->input('end_location');
-                $trip->end_time = $request->input('end_time');
+                $trip->interval_trip = $request->input('interval_trip');
                 $trip->route_id = $request->input('route_id');
                 $trip->start_time = $request->input('start_time');
                 $trip->save();
@@ -261,14 +267,17 @@ class TripController extends Controller
 
                 $request->validate([
                     'car_id' => 'required|integer|max:255|exists:cars,id',
-                    'start_date' => 'required|date|after_or_equal:today',
-                    'start_time' => 'required|date_format:Y-m-d H:i:s',
-                    'start_location' => 'required|string|max:255',
-                    'status' => 'required|numeric',
+//                    'drive_id' => 'required|integer|max:255|exists:users,id',
+//                    'assistant_car_id' => 'required|integer|max:255|exists:users,id',
+//                    'start_date' => 'required|date|after_or_equal:today',
+//                    'start_time' => 'required|date_format:H:i',
+                    'start_time' => 'required|date|after:' . now()->addSecond(),
+                    'start_location' => 'required|string|max:255|exists:locations,name',
+                    'status' => 'required|integer',
                     'trip_price' => 'required|numeric|max:99999999',
-                    'end_location' => 'required|string|max:255',
-                    'end_time' => 'required|string|date_format:Y-m-d H:i:s',
-                    'route_id' => 'required|integer|max:255|exists:routes,id'
+                    'end_location' => 'required|string|max:255|exists:locations,name', // data bảng locations phải lưu cả 1 tên parent-location nếu ko có location con không sẽ lỗi validate
+                    'interval_trip' => 'required|numeric|min:0|max:100',
+                    'route_id' => 'required|integer|exists:routes,id'
                 ]);
 
                 $route = Route::find($request->input('route_id'));
@@ -317,12 +326,11 @@ class TripController extends Controller
                     ]);
                 } else {
                     $trip->car_id = $request->input('car_id');
-                    $trip->start_time = $request->input('start_time');
                     $trip->start_location = $request->input('start_location');
                     $trip->status = $request->input('status');
                     $trip->trip_price = $request->input('trip_price');
                     $trip->end_location = $request->input('end_location');
-                    $trip->end_time = $request->input('end_time');
+                    $trip->interval_trip = $request->input('interval_trip');
                     $trip->route_id = $request->input('route_id');
                     $trip->start_time = $request->input('start_time');
                     $trip->save();
