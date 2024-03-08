@@ -4,7 +4,6 @@ import {getAllCar , deleteCar, addCar, updateCar } from './service/car.service';
 import  { getAllTypeCar } from '../type_car/service/typeCar.service'
 import { Form, Input, Select, Switch } from 'antd';
 import { Option } from 'antd/es/mentions';
-import CustomSwitch from './component/CustomSwitch'; 
 const CarComponent = () => {
     
     const [column, setColumn] = useState<any>([]);
@@ -81,9 +80,11 @@ const CarComponent = () => {
     const handelGetList = () => {
         setReset(!reset)
     }
-  const  fomatCustomCurrent=(data:any)=>{
-setCurrent(data?.status === 1 ? true : false)
-  }
+    const fomatCustomCurrent = (data: any) => {
+        setCurrent(data?.status === 1 ? 1 : 0)
+    }
+    const acctive = 1;
+    const inAcctive = 0
     return (
         <div>
             <TemplateTable
@@ -97,7 +98,7 @@ setCurrent(data?.status === 1 ? true : false)
                 changeFunc={updateCar}
                 formEdit={
                     <Fragment>
-                        <Form.Item label='Loại xe' name='name' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+                        <Form.Item label='Tên xe' name='name' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
                             <Input />
                         </Form.Item>
                         <Form.Item label='Màu xe' name='color' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
@@ -120,7 +121,16 @@ setCurrent(data?.status === 1 ? true : false)
                             </Select>
                         </Form.Item>
                         <Form.Item label='Trạng Thái' name='status' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                            <CustomSwitch checked={current}  onChange={handleChange} value={checked} />
+                        <Select placeholder='Chọn trạng thái' onChange={handleChange} value={`${current}`}>
+                                {[
+                                    { value: acctive, label: "Hoạt động" },
+                                    { value: inAcctive, label: "Không hoạt động" }
+                                ].map(option => (
+                                    <Option key={option?.value} value={option?.value}>
+                                        {option.label}
+                                    </Option>
+                                ))}
+                            </Select>
                         </Form.Item>
                     </Fragment>
                 }       

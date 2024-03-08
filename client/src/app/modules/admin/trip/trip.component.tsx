@@ -19,7 +19,8 @@ const TripComponent = () => {
     const [selectedRouteId, setSelectedRouteId] = useState<any>({});
     const [current, setCurrent] = useState<any>(null);
     const [checked, setChecked] = useState<any>(0);
-
+    console.log('dataTrip',dataTrip);
+    
     // const checkLocation = startLocations?.find((item:any) => item?.route_id ==  selectedRouteId );
     // console.log('checkLocation',checkLocation);
 
@@ -95,7 +96,7 @@ const TripComponent = () => {
 
     useEffect(() => {
         const columsTemp: any = []
-        const title = ['STT', 'Tên xe', 'Thời gian bắt đầu ', 'Địa điểm bắt đầu ', 'Trạng Thái', 'Giá chuyến đi', 'Địa điểm kết thúc ', 'Tổng thời gian chuyến đi', 'Tuyến đường ']
+        const title = ['STT', 'Tên xe' ,'Thời gian bắt đầu ', 'Địa điểm bắt đầu ', 'Trạng Thái', 'Giá chuyến đi', 'Địa điểm kết thúc ', 'Tổng thời gian chuyến đi', 'Tuyến đường ']
 
         if (dataTrip.length > 0) {
             Object.keys(dataTrip[0]).forEach((itemKey, key = 0) => {
@@ -232,12 +233,16 @@ const TripComponent = () => {
                                 ))}
                             </Select>
                         </Form.Item>
-                        <Form.Item label='chuyến xe' name='route_id' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                            <Select placeholder="lựa chọn xe" onChange={handleRouteChange} >
+                        <Form.Item label='chuyến Tuyến đường' name='route_id' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+                            <Select placeholder="Chọn tuyến đường" onChange={handleRouteChange} >
                                 {dataRouteTrip?.map((item: any) => (
                                     <Option value={item?.id} key={item?.id}>{item?.name}</Option>
                                 ))}
                             </Select>
+                        </Form.Item>
+                        <Form.Item label='Ngày bắt đầu' name='start_date' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+
+                            <Input />
                         </Form.Item>
                         <Form.Item label='Thời gian bắt đầu' name='start_time' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
                         {/* <DatePicker

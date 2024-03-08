@@ -10,6 +10,7 @@ const Route = () => {
     const [dataRoute, setRoute] = useState<any>([]);
     const [dataParentLocation, setDataParentLocation] = useState<any>([]);
     console.log('ss',dataParentLocation);
+    console.log('dataRoute',dataRoute);
     
     const [checked, setChecked] = useState<any>();
     const [current, setCurrent] = useState<any>(true);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Car;
 use App\Models\Location;
 use App\Models\ParentLocation;
 use App\Models\Seat;
