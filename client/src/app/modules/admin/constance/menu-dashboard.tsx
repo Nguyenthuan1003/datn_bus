@@ -44,5 +44,11 @@ export const menuDashBoard =[
         icon: <SiAdminer />,
         label: 'Xe'
     },
+    {
+        key: '/admin/trip',
+        icon: <PiFlagBannerDuotone />,
+        label: 'Trip'
+    }
+
 ]
 

@@ -20,12 +20,14 @@ return new class extends Migration
             $table->integer('trip_id')->nullable(false);
             $table->integer('user_id')->nullable(true);
             $table->integer('status_pay')->nullable(false)->default(0);
-            $table->float('total_money')->nullable(false)->default(0);
-            $table->float('total_money_after_discount')->nullable(false)->default(0);
+            $table->float('total_money', 12, 2)->nullable(false)->default(0);
+            $table->float('total_money_after_discount', 12, 2)->nullable(false)->default(0);
             $table->string('type_pay')->nullable(false);
             $table->integer('total_seat')->nullable(false);
             $table->string('code_bill')->nullable(false);
             $table->string('phone_number')->nullable(false);
+            $table->string('full_name')->nullable(false);
+            $table->string('email')->nullable(false);
             $table->timestamps();
         });
     }
