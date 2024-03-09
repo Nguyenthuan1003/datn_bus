@@ -194,4 +194,7 @@ return [
         // ...
     ])->toArray(),
 
+
+    'charset' => 'UTF-8',
+
 ];

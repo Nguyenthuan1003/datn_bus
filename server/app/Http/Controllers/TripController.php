@@ -9,10 +9,10 @@ use App\Models\TicketOrder;
 use App\Models\TypeCar;
 use Illuminate\Http\Request;
 use App\Models\Trip;
-use App\Models\Car;
 use App\Models\Route;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Log;
+use App\Models\Car;
+use Illuminate\Database\QueryException;
+use Illuminate\Validation\ValidationException;
 
 class TripController extends Controller
 {
@@ -24,8 +24,8 @@ class TripController extends Controller
     public function index()
     {
         try {
-//            $trips = Trip::with(['car', 'driver', 'assistant', 'route'])->get();
-            $trips = Trip::with(['car', 'route'])->get();
+            $trips = Trip::with(['car', 'route'])
+                ->get();
 
             return response()->json([
                 'message' => 'Truy vấn dữ liệu thành công',
@@ -79,8 +79,8 @@ class TripController extends Controller
                 ]);
             }
 
-//            $start_locations = ParentLocation::with('location')->find($route->start_location);
-//            $end_locations = ParentLocation::with('location')->find($route->end_location);
+            //            $start_locations = ParentLocation::with('location')->find($route->start_location);
+            //            $end_locations = ParentLocation::with('location')->find($route->end_location);
             $start_locations = ParentLocation::with('location')->where('name', $route->start_location)->first();
             $end_locations = ParentLocation::with('location')->where('name', $route->end_location)->first();
 
@@ -108,10 +108,10 @@ class TripController extends Controller
         try {
             $request->validate([
                 'car_id' => 'required|integer|exists:cars,id',
-//                'drive_id' => 'required|integer|exists:users,id',
-//                'assistant_car_id' => 'required|integer|exists:users,id',
-//                'start_date' => 'required|date|after_or_equal:today',
-//                'start_time' => 'required|date_format:H:i',
+                //                'drive_id' => 'required|integer|exists:users,id',
+                //                'assistant_car_id' => 'required|integer|exists:users,id',
+                //                'start_date' => 'required|date|after_or_equal:today',
+                //                'start_time' => 'required|date_format:H:i',
                 'start_time' => 'required|date|after:' . now()->addSecond(),
                 'start_location' => 'required|string|max:255|exists:locations,name',
                 'status' => 'required|integer',
@@ -145,7 +145,7 @@ class TripController extends Controller
                 ]);
             }
 
-//            validate tạm hạn chế trùng chuyến xe cùng 1 thời điểm
+            //            validate tạm hạn chế trùng chuyến xe cùng 1 thời điểm
             $isValid = Trip::where('car_id', $request->input('car_id'))
                 ->where('start_time', $request->input('start_time'))
                 ->first();
@@ -156,14 +156,14 @@ class TripController extends Controller
                 ]);
             }
 
-//          Save data:
-            if ($request->input('loop') && $request->input('loop') > 1 && $request->input('interval_trip') < 12 ) {
+            //          Save data:
+            if ($request->input('loop') && $request->input('loop') > 1 && $request->input('interval_trip') < 12) {
                 $trips = [];
-                for($i = 0; $i < $request->input('loop'); $i++) {
+                for ($i = 0; $i < $request->input('loop'); $i++) {
                     $trip = new Trip();
                     $trip->car_id = $request->input('car_id');
-//                    $trip->drive_id = $request->input('drive_id');
-//                    $trip->assistant_car_id = $request->input('assistant_car_id');
+                    //                    $trip->drive_id = $request->input('drive_id');
+                    //                    $trip->assistant_car_id = $request->input('assistant_car_id');
                     $trip->start_location = $request->input('start_location');
                     $trip->status = $request->input('status');
                     $trip->trip_price = $request->input('trip_price');
@@ -184,8 +184,8 @@ class TripController extends Controller
             } else {
                 $trip = new Trip();
                 $trip->car_id = $request->input('car_id');
-//                $trip->drive_id = $request->input('drive_id');
-//                $trip->assistant_car_id = $request->input('assistant_car_id');
+                //                $trip->drive_id = $request->input('drive_id');
+                //                $trip->assistant_car_id = $request->input('assistant_car_id');
                 $trip->start_location = $request->input('start_location');
                 $trip->status = $request->input('status');
                 $trip->trip_price = $request->input('trip_price');
@@ -255,9 +255,9 @@ class TripController extends Controller
                 ]);
             }
 
-//            chỉ được cập nhật thông tin trước giờ khởi hành
-//            đã có bill thì không được cập nhật thông tin nữa: nếu đổi xe sẽ ảnh hưởng vé. đổi cái khác thì ảnh hưởng tới khách hàng
-//            chưa có bill thì được đổi thông tin
+            //            chỉ được cập nhật thông tin trước giờ khởi hành
+            //            đã có bill thì không được cập nhật thông tin nữa: nếu đổi xe sẽ ảnh hưởng vé. đổi cái khác thì ảnh hưởng tới khách hàng
+            //            chưa có bill thì được đổi thông tin
 
             if (!(\Carbon\Carbon::parse($trip->start_time, 'Asia/Ho_Chi_Minh')->isAfter(\Carbon\Carbon::now('Asia/Ho_Chi_Minh')))) {
                 return response()->json([
@@ -268,10 +268,10 @@ class TripController extends Controller
 
                 $request->validate([
                     'car_id' => 'required|integer|max:255|exists:cars,id',
-//                    'drive_id' => 'required|integer|max:255|exists:users,id',
-//                    'assistant_car_id' => 'required|integer|max:255|exists:users,id',
-//                    'start_date' => 'required|date|after_or_equal:today',
-//                    'start_time' => 'required|date_format:H:i',
+                    //                    'drive_id' => 'required|integer|max:255|exists:users,id',
+                    //                    'assistant_car_id' => 'required|integer|max:255|exists:users,id',
+                    //                    'start_date' => 'required|date|after_or_equal:today',
+                    //                    'start_time' => 'required|date_format:H:i',
                     'start_time' => 'required|date|after:' . now()->addSecond(),
                     'start_location' => 'required|string|max:255|exists:locations,name',
                     'status' => 'required|integer',
@@ -304,7 +304,7 @@ class TripController extends Controller
                     ]);
                 }
 
-//            validate tạm hạn chế trùng chuyến xe cùng 1 thời điểm
+                //            validate tạm hạn chế trùng chuyến xe cùng 1 thời điểm
                 $isValid = Trip::where('car_id', $request->input('car_id'))
                     ->where('start_time', $request->input('start_time'))
                     ->whereNotIn('id', [$id])
@@ -373,7 +373,7 @@ class TripController extends Controller
                 ]);
             }
 
-            if ($trip->comments()->exists()) {
+            if ($trip->comment()->exists()) {
                 return response()->json([
                     'message' => 'Chuyến đi đã được đánh giá/bình luận, không được xóa. Nếu có thể hãy hủy/xóa bình luận để có thể xóa chuyến xe này.'
                 ]);
@@ -403,7 +403,7 @@ class TripController extends Controller
         try {
             $tripData = Trip::with(['car', 'route'])->find($id);
 
-//            validate thêm start_date || $tripData->start_time
+            //            validate thêm start_date || $tripData->start_time
             if (!$tripData) {
                 return response()->json([
                     'message' => 'Chuyến đi không tồn tại'
@@ -430,7 +430,7 @@ class TripController extends Controller
                 }
             }
 
-//  get locations for router
+            //  get locations for router
             $pickupLocations = ParentLocation::with('location')->where('name', $tripData->route->start_location)->first();
             $payLocation = ParentLocation::with('location')->where('name', $tripData->route->end_location)->first();
 
@@ -447,6 +447,86 @@ class TripController extends Controller
                 'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
                 'error' => $e->getMessage()
             ]);
+        }
+    }
+
+    public function searchTrip(Request $request)
+    {
+        try {
+            // Validate the incoming request data
+            $request->validate([
+                'start_location' => 'required|string',
+                'end_location' => 'required|string',
+                'start_time' => 'required',
+                'ticket_count' => 'required'
+            ]);
+
+            $startLocation = $request->input('start_location');
+            $endLocation = $request->input('end_location');
+            $startTime = $request->input('start_time');
+            $ticketCount = $request->input('ticket_count');
+
+            $matchingTrips = Trip::where('status', '=', true)
+                ->where('start_location', '=', $startLocation)
+                ->where('end_location', '=', $endLocation)
+                ->where(function ($query) use ($startTime) {
+                    // Convert start_time to datetime using STR_TO_DATE
+                    $query->whereRaw("STR_TO_DATE(start_time, '%Y-%m-%dT%H:%i') >= ?", [$startTime]);
+                })
+                ->with(['car' => function ($query) {
+                    $query->with(['typeCar' => function ($query) {
+                        // Select the total_seat from the associated type_car relationship
+                        $query->select('id', 'name', 'total_seat', 'type_seats');
+                    }]);
+                }])
+                ->with(['bill' => function ($query) {
+                    // Select the total_seat from the associated bill relationship
+                    $query->select('trip_id', 'total_seat as total_seat_used', 'seat_id as seat_code_used', 'created_at')
+                        ->where('bills.created_at', '>=', 'trips.start_time');
+                }])
+                ->get();
+
+            $filteredTrips = $matchingTrips->map(function ($trip) use ($ticketCount) {
+                $trip['total_seat'] = optional(optional($trip->car)->typeCar)->total_seat;
+                $trip['total_seat_used'] = collect($trip->bill)->sum('total_seat_used') ?? 0;
+                // Pluck 'seat_code_used' from each bill and flatten the array
+                $seatCodes = collect($trip->bill)->pluck('seat_code_used')->flatten()->toArray();
+                // Decode JSON strings to arrays
+                $seatCodes = array_map('json_decode', $seatCodes);
+                // Flatten again to merge all seat codes into a single array
+                $trip['array_seat_code_used'] = collect($seatCodes)->flatten()->toArray();
+
+                // Check if totalSeat and totalSeatUsed are not null before comparing
+                if ($trip['total_seat'] !== null && $trip['total_seat_used'] !== null) {
+                    // Calculate the available seats
+                    $trip['total_seat_available'] =  $trip['total_seat'] - $trip['total_seat_used'];
+
+                    if ($trip['total_seat_available'] >= $ticketCount) {
+                        return $trip;
+                    };
+
+                    return;
+                }
+                return;
+            })->filter();
+
+
+            if (!$filteredTrips) {
+                return response()->json([
+                    'error' => 'Lỗi tìm kiếm'
+                ], 404);
+            }
+
+            return response()->json([
+                'message' => 'ok',
+                'data' => $filteredTrips,
+            ], 200);
+        } catch (ValidationException $e) {
+            // Return validation error messages if validation fails
+            return response()->json(['error' => $e->errors()], 422);
+        } catch (QueryException $e) {
+            // Return an error response if database operation fails
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 }

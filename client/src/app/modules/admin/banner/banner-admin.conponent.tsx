@@ -5,7 +5,7 @@ const { Option } = Select
 const BannerAdmin = () => {
     return (
         <div>
-            <TemplateTable
+            {/* <TemplateTable
                 formEdit={
                     <Fragment>
                         <Form.Item
@@ -31,7 +31,7 @@ const BannerAdmin = () => {
 
                     </Fragment>
                 }
-            />
+            /> */}
         </div>
     )
 }

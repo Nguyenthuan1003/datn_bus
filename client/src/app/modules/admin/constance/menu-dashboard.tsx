@@ -15,14 +15,34 @@ export const menuDashBoard =[
         label: 'Bảng điều kiển'
     },
     {
-        key: '/admin/user',
-        icon: <UserOutlined />,
-        label: 'Người dùng'
+        key: '/admin/type-car',
+        icon: <SiAdminer />,
+        label: 'Loại xe'
     },
     {
         key: '/admin/banner',
         icon: <PiFlagBannerDuotone />,
         label: 'Banner'
+    },
+    {
+        key: '/admin/parent-location',
+        icon: <PiFlagBannerDuotone />,
+        label: 'Tỉnh Thành'
+    },
+    {
+        key: '/admin/location',
+        icon: <PiFlagBannerDuotone />,
+        label: 'location'
+    },
+    {
+        key: '/admin/route',
+        icon: <PiFlagBannerDuotone />,
+        label: 'Tuyến đường '
+    },
+    {
+        key: '/admin/car',
+        icon: <SiAdminer />,
+        label: 'Xe'
     },
     {
         key: '/admin/trip',

@@ -9,13 +9,20 @@ class TicketOrder extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'status', // Add the 'status' field to the fillable array
+        // Add other fillable fields if any
+    ];
+
     protected $table = 'ticket_orders';
 
-    public function bill() {
+    public function bill()
+    {
         return $this->belongsTo(Bill::class);
     }
 
-    public function seat() {
+    public function seat()
+    {
         return $this->belongsTo(Seat::class);
     }
 }

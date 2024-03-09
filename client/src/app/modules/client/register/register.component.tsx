@@ -108,17 +108,21 @@ const RegisterComponent = () => {
                     <div className='text-center my-3'>
                         <ButtonRadiusCompoennt type="submit" content='Đăng Ký ' />
                     </div>
+                    <div className="w-full relative my-6 flex items-center py-3">
+                        <hr className="bg-[#66666640] w-full h-[2px]" />
 
-                    <div className='text-center text-gray-400'>
-                        Hoặc đăng kí với tài khoản
+                        <span className="subtitle-4 text-[#666666] bg-white absolute top-[3px] w-[12%] left-[44%] text-center"> OR </span>
                     </div>
-                    <div className='flex  mt-3  justify-around'>
-                        <div className='border border-gray-500 rounded-md px-12 py-2'>
-                            <FaFacebook className='text-blue-600' />
-                        </div>
-                        <div className='border border-gray-500 rounded-md px-12 py-2'>
-                            <FaGoogle className='text-red-500' />
-                        </div>
+
+                    <div className='flex flex-col gap-y-4'>
+                        <button className='border border-gray-500 rounded-md px-12 py-2'>
+                            <FaFacebook className='text-blue-600 -mb-[20px] ml-[35px]' /> 
+                            Đăng nhập với Facebook
+                        </button>
+                        <button className='border border-gray-500 rounded-md px-12 py-2'>
+                            <FaGoogle className='text-red-500 -mb-[20px] ml-[45px]' /> 
+                            Đăng nhập với Google
+                        </button>
                     </div>
 
                     <div className='text-center mt-2'>
