@@ -6,6 +6,7 @@ use App\Models\Location;
 use App\Models\ParentLocation;
 use App\Models\Seat;
 use App\Models\TicketOrder;
+use App\Models\TypeCar;
 use Illuminate\Http\Request;
 use App\Models\Trip;
 use App\Models\Car;
@@ -409,6 +410,9 @@ class TripController extends Controller
                 ]);
             }
 
+// get data type car to each show seats
+            $type_car = TypeCar::find($tripData->car->id_type_car);
+
 //seats and status seats
             $seats = Seat::where('car_id', $tripData->car_id)->get()->toArray();
             $orderedSeats = TicketOrder::join('bills', 'ticket_orders.bill_id', '=', 'bills.id')
@@ -432,6 +436,7 @@ class TripController extends Controller
 
             return response()->json([
                 'message' => 'Truy vấn dữ liệu thành công',
+                'type_car' => $type_car,
                 'trip' => $tripData,
                 'seats' => $seats,
                 'pickup_location' => $pickupLocations,
