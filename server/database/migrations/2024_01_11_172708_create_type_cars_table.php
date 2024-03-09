@@ -19,6 +19,8 @@ return new class extends Migration
             $table->text('description')->nullable(true);
             $table->integer('total_seat');
             $table->string('type_seats');
+            $table->integer('total_floors');
+            $table->integer('total_rows');
             $table->timestamps();
         });
     }
