@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -28,13 +29,45 @@ class AuthController extends Controller
      */
     public function login()
     {
-        $credentials = request(['email', 'password']);
+        try {
+            // Validate the incoming request data
+            request()->validate([
+                'email' => 'required|email',
+                'password' => 'required|min:8',
+            ]);
+            $credentials = request(['email', 'password']);
 
-        if (!$token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            if (!$token = auth()->attempt($credentials)) {
+                return response()->json(['error' => 'Sai thông tin đăng nhập!'], 401);
+            }
+
+            $userData = User::where('email', '=', request()->email)
+                ->with('typeUser')
+                ->firstOrFail();
+
+            $userDataFormated = [
+                "name" => $userData->name,
+                "email" => $userData->email,
+                "phone_number" => $userData->phone_number,
+                "type_user" => $userData->typeUser->name,
+                "avatar" =>  request()->getHttpHost() . '/' . $userData->avatar,
+                "address" => $userData->address,
+                "description" => $userData->description,
+                "location" => $userData->location,
+                "created_at" => $userData->created_at
+            ];
+
+            return response()->json([
+                'message' => 'ok',
+                'data' => [
+                    'jwt' => $this->respondWithToken($token),
+                    'user' => $userDataFormated
+                ],
+            ], 200);
+        } catch (ValidationException $e) {
+            // Return validation error messages if validation fails
+            return response()->json(['error' => $e->errors()], 422);
         }
-
-        return $this->respondWithToken($token);
     }
 
     /**
@@ -44,20 +77,38 @@ class AuthController extends Controller
      */
     public function register()
     {
-        // Validate the request data, create a new user, and generate a token
-        $user = User::create([
-            'email' => request('email'),
-            'password' => bcrypt(request('password')),
-            'phone_number' => request('phone_number'),
-            'name' => 'user' . Carbon::now()->format('YmdHis'),
-            'user_type_id' => 2,
-            'role_id' => 2,
-            'avatar' => 'avatar/default_avt.jpg'
-        ]);
+        // Validate the request data
+        try {
+            // Validate the incoming request data
+            request()->validate([
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|min:8',
+                'phone_number' => 'required|regex:/^[0-9]{10}$/|unique:users,phone_number'
+            ]);
 
-        $token = auth()->login($user);
+            // Create a new user, and generate a token
+            $user = User::create([
+                'email' => request('email'),
+                'password' => bcrypt(request('password')),
+                'phone_number' => request('phone_number'),
+                'name' => 'user' . Carbon::now()->format('YmdHis'),
+                'user_type_id' => 2,
+                'role_id' => 2,
+                'avatar' => 'images/avatar/default_avt.jpg'
+            ]);
 
-        return $this->respondWithToken($token);
+            $token = auth()->login($user);
+
+            return response()->json([
+                'message' => 'ok',
+                'data' => [
+                    $this->respondWithToken($token)
+                ],
+            ], 200);
+        } catch (ValidationException $e) {
+            // Return validation error messages if validation fails
+            return response()->json(['error' => $e->errors()], 422);
+        }
     }
 
     /**
@@ -67,7 +118,26 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth()->user());
+        $userData = auth()->user();
+
+        $userDataFormated = [
+            "name" => $userData->name,
+            "email" => $userData->email,
+            "phone_number" => $userData->phone_number,
+            "type_user" => $userData->typeUser->name,
+            "avatar" =>  request()->getHttpHost() . '/' . $userData->avatar,
+            "address" => $userData->address,
+            "description" => $userData->description,
+            "location" => $userData->location,
+            "created_at" => $userData->created_at
+        ];
+
+        return response()->json([
+            'message' => 'ok',
+            'data' => [
+                'user' => $userDataFormated
+            ],
+        ], 200);
     }
 
     /**
@@ -79,7 +149,7 @@ class AuthController extends Controller
     {
         auth()->logout();
 
-        return response()->json(['message' => 'Successfully logged out']);
+        return response()->json(['message' => 'Đăng xuất thành công']);
     }
 
     /**
