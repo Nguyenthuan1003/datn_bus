@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Auth\Events\PasswordReset;
 
 class AuthController extends Controller
 {
@@ -19,7 +20,15 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', [
+            'except' => [
+                'login',
+                'register',
+                'forgotPasswordSubmit',
+                'newPassword',
+                'newPasswordSubmit'
+            ]
+        ]);
     }
 
     /**
@@ -176,5 +185,58 @@ class AuthController extends Controller
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60
         ]);
+    }
+
+    public function forgotPasswordSubmit(Request $request)
+    {
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+
+        return $status === Password::RESET_LINK_SENT
+            ? response()->json(
+                [
+                    'message' => 'ok',
+                    'data' => [
+                        'status' => __($status)
+                    ]
+                ]
+            )
+            : response()->json(['message' => __($status)], 422);
+    }
+
+    public function newPassword(string $token)
+    {
+        return view('pages.auth.create-new-password', compact('token'));
+    }
+
+    public function newPasswordSubmit(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function (User $user, string $password) {
+                $user->forceFill([
+                    'password' => bcrypt($password)
+                ]);
+
+                $user->save();
+
+                event(new PasswordReset($user));
+            }
+        );
+
+        if ($status === Password::PASSWORD_RESET) {
+
+            return redirect()->to('http://127.0.0.1:3000?notifyresetpassword=ok');
+        }
+
+        return back()->withErrors(['email' => [__($status)]]);
     }
 }
