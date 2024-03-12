@@ -15,11 +15,11 @@ const HeaderComponent = () => {
                     <nav>
                         <ul className='navMenu__list'>
                             <li className='navMenu__list-link hover-underline-animation underline-animation--active'><Link to={'/'} >Trang chủ</Link></li>
-                            <li className='navMenu__list-link hover-underline-animation'><Link to={'/'}>Lịch trinh</Link></li>
+                            <li className='navMenu__list-link hover-underline-animation'><Link to={'/route-schedule'}>Lịch trình</Link></li>
                             <li className='navMenu__list-link hover-underline-animation'><Link to={'/check-ticket'}>Tra cứu vé</Link></li>
                             <li className='navMenu__list-link hover-underline-animation'><Link to={'/'}>Hóa đơn</Link></li>
-                            <li className='navMenu__list-link hover-underline-animation'><Link to={'/'}>Liên hệ</Link></li>
-                            <li className='navMenu__list-link hover-underline-animation'><Link to={'/'}>Về chúng tôi</Link></li>
+                            <li className='navMenu__list-link hover-underline-animation'><Link to={'/contact'}>Liên hệ</Link></li>
+                            <li className='navMenu__list-link hover-underline-animation'><Link to={'/about'}>Về chúng tôi</Link></li>
                         </ul>
                     </nav>
                     <div className="header__user flex justify-end items-center ">

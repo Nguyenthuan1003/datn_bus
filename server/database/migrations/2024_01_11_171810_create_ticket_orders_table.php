@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('code_seat');
             $table->string('pickup_location');
             $table->string('pay_location');
+            $table->integer('status');
             $table->timestamps();
         });
     }

@@ -21,9 +21,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('password');
             $table->string('phone_number');
-            $table->string('address');
-            $table->text('description');
-            $table->string('location');
+            $table->string('address')->nullable(true);
+            $table->text('description')->nullable(true);
+            $table->string('location')->nullable(true);
+            $table->string('avatar')->nullable(true);
             $table->timestamps();
             $table->softDeletes();
         });

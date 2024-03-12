@@ -17,6 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('car_id');
             $table->string('code_seat');
+//            $table->integer('floor');
+//            $table->integer('row');
             $table->timestamps();
         });
     }

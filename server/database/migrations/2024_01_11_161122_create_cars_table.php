@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('id_type_car')->nullable(false);
             $table->string('color');
             $table->string('image', 255);
-            $table->text('description');
+            $table->text('description')->nullable(true);
             $table->string('license_plate');
             $table->integer('status');
             $table->timestamps();
