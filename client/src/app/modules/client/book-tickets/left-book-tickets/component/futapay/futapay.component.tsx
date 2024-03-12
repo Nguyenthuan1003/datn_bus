@@ -1,12 +1,13 @@
-import React from 'react'
+import React, { FC, useEffect, useState } from 'react'
+import { getTripId } from '~/app/api/trip/trip.api'
 import ButtonRadiusCompoennt from '~/app/component/parts/button/button.component'
 
-const FutapayComponent = () => {
+const FutapayComponent:FC<any> = ({dataPrice})=>{
     return (
         <div className='bg-white flex justify-between'>
             < div className='p-4'>
                 <p className='w-16 rounded-xl bg-[#00613D] py-1  text-center text-xs text-white'>FUTAPAY</p>
-                <b>0đ</b>
+                <b>{dataPrice}đ</b>
             </div >
 
             <div className='flex p-4'>

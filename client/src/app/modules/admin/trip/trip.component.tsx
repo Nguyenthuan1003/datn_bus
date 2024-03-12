@@ -240,10 +240,10 @@ const TripComponent = () => {
                                 ))}
                             </Select>
                         </Form.Item>
-                        <Form.Item label='Ngày bắt đầu' name='start_date' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+                        {/* <Form.Item label='Ngày bắt đầu' name='start_date' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
 
                             <Input />
-                        </Form.Item>
+                        </Form.Item> */}
                         <Form.Item label='Thời gian bắt đầu' name='start_time' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
                         {/* <DatePicker
                             // showTime={{ defaultValue: moment('00:00', 'HH:mm'), format: 'HH:mm' }}

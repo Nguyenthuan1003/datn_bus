@@ -1,6 +1,6 @@
 import { axiosPrivate } from "../configHTTp"
 
 
-// export const getAllTrip=async()=>{
-//     return await axiosPrivate.get("trip")
-// }
+export const getTripId=async()=>{
+    return await axiosPrivate.get("/trip/trip-select/1026")
+}

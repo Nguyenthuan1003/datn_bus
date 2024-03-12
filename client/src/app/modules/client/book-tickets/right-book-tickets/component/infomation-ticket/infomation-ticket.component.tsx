@@ -1,29 +1,45 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { css } from '@emotion/react'
-const Infomationticketcomponent = () => {
+import { getTripId } from '~/app/api/trip/trip.api'
+import moment from 'moment-timezone'
+
+const Infomationticketcomponent = ({selectData,dataPrice}:any) => {
+  const [dataTripTicket,setDataTripTicket]=useState<any>([])
+  const [dataSeat,setDataSeat]=useState<any>([])
+
+  useEffect(()=>{
+      getTripId().then((res:any)=>{
+        setDataTripTicket(res?.data?.trip)
+        setDataSeat(res?.data)
+      })
+  },[])
+
+  const routeName = dataTripTicket?.route?.name
+  const timeStart = moment(dataTripTicket?.start_time).format('DD/MM/YYYY HH:mm')
+  const  timeEnd = moment(dataTripTicket?.end_time).format('HH:mm')  
   return (
     <div css={cssInforTicket} className='info bg-white '>
         <h3 className='font-semibold text-[1.5rem] pb-2'>Thông tin lượt đi</h3>
         <div className="body__info">
           <div className='body__info__line'>
             <span className='body__info__text-right'>Tuyến xe </span>
-            <span className='body__info__text-left'>BX Mien Tay - BX An Nhon</span>
+            <span className='body__info__text-left'>{routeName}</span>
           </div>
           <div className='body__info__line'>
             <span className='body__info__text-right'>Thời gian</span>
-            <span className='body__info__text-left'>18:00 08-01-2024</span>
+            <span className='body__info__text-left'>{timeStart}</span>
           </div>
           <div className='body__info__line'>
             <span className='body__info__text-right'>số lượng</span>
-            <span className='body__info__text-left'>0 Ghế</span>
+            <span className='body__info__text-left'>{selectData.length} Ghế</span>
           </div>
           <div className='body__info__line'>
             <span className='body__info__text-right'>Số ghế</span>
-            <span className='body__info__text-left'></span>
+            <span className='body__info__text-left'>{selectData.join(', ')}</span>
           </div>
           <div className='body__info__line'>
             <span className='body__info__text-right'>Tổng tiền lượt đi</span>
-            <span className='body__info__text-left'>0đ</span>
+            <span className='body__info__text-left'>{dataPrice}</span>
           </div>
         </div>
     </div>

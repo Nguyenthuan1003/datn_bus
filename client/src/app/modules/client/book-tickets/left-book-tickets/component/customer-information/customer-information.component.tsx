@@ -1,21 +1,18 @@
-import React from 'react'
+import React, { FC } from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import ButtonRadiusCompoennt from '~/app/component/parts/button/button.component';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { validateTicket } from '~/app/utils/validateForm';
 import { css } from '@emotion/react';
 
-const CustomerInformation = () => {
-    const { handleSubmit, control, formState: { errors } } = useForm({
-        resolver: yupResolver(validateTicket)
-    })
-    const onSubmit = (data: any) => console.log(data)
+const CustomerInformation:FC<any> = ({control,errors}) => {
+   
     return (
         <div css={custommerCss} className='bg-white'>
             <div className='flex'>
                 <div className='px-4 w-[50%]'>
                     <h2 className='py-3 font-semibold text-[18px]'>Thông tin khách hàng</h2>
-                    <form onSubmit={handleSubmit(onSubmit)} >
+                    {/* <form onSubmit={handleSubmit(onSubmit)} > */}
 
                         <div className='my-1'>
                             <Controller
@@ -49,7 +46,7 @@ const CustomerInformation = () => {
                         <div className='my-5'>
                             <Controller
                                 control={control}
-                                name='ticket'
+                                name='email'
                                 render={({ field: { onChange, value, ref }, fieldState: { error } }) => (
 
                                     <div>
@@ -60,7 +57,7 @@ const CustomerInformation = () => {
                             />
                             {errors && <span className='text-red-600'>{errors.ticket?.message}</span>}
                         </div>
-                    </form>
+                    {/* </form> */}
                 </div>
 
                 <div className='w-[45%]'>

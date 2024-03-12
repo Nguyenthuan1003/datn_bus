@@ -5,7 +5,8 @@ import { addRoute, deleteRoute, getAllRoute, updateRoute } from './service/route
 import {getAllParent} from '../parent-location/service/parent-location.service'
 import CustomSwitchs from './component/CustomSwitchs.component'
 import { Option } from 'antd/es/mentions';
-const Route = () => {
+import { Link } from 'react-router-dom'
+const Route= () => {
     const [column, setColumn] = useState<any>([]);
     const [dataRoute, setRoute] = useState<any>([]);
     const [dataParentLocation, setDataParentLocation] = useState<any>([]);
@@ -39,10 +40,13 @@ const Route = () => {
 
     useEffect(() => {
         const columsTemp: any = []
+        console.log('columsTemp',columsTemp);
+        
         const title = ['STT','Tuyến Đường','Địa điểm bắt đầu','Địa điểm kết thúc', 'Trạng thái', 'Mô tả']
         if (dataRoute.length > 0) {
+            let columnIndex = 0
             Object.keys(dataRoute[0]).forEach((itemKey, key = 0) => {
-                if (![ 'id','created_at', 'updated_at'].includes(itemKey)) {
+                if (![ 'id','created_at', 'updated_at', 'trip'].includes(itemKey)) {
                     columsTemp.push({
                         title: title[key++],
                         dataIndex: itemKey,
@@ -56,8 +60,9 @@ const Route = () => {
                                         unCheckedChildren="Ngừng hoạt động"
                                         disabled
                                     />
+
                     }
-                    return text
+                             return text
                         }
                         
                     })
@@ -74,6 +79,8 @@ const Route = () => {
     const  fomatCustomCurrent=(data:any)=>{
         setCurrent(data?.status === 1 ? true : false)
           }
+          const acctive = 1;
+          const inAcctive = 0;
     return (
         <div>
             <TemplateTable
@@ -105,7 +112,16 @@ const Route = () => {
                             <Input />
                         </Form.Item>
                         <Form.Item label='Trạng Thái' name='status' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                            <CustomSwitchs checked={current}  onChange={handleChange} value={checked} />
+                        <Select placeholder='Chọn trạng thái' onChange={handleChange} value={`${current}`}>
+                                {[
+                                    { value: acctive, label: "Hoạt động" },
+                                    { value: inAcctive, label: "Không hoạt động" }
+                                ].map(option => (
+                                    <Option key={option?.value} value={option?.value}>
+                                        {option.label}
+                                    </Option>
+                                ))}
+                            </Select>
                         </Form.Item>
                     </Fragment>
                 } />

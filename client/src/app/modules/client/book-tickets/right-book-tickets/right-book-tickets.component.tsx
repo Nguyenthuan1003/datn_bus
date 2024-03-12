@@ -1,15 +1,15 @@
-import React from 'react'
+import React, { FC } from 'react'
 import Infomationticketcomponent from './component/infomation-ticket/infomation-ticket.component'
 import Costticketcomponent from './component/cost-ticket/cost-ticket.component'
 
-const RightBookTickets = () => {
+const RightBookTickets:FC<any> = ({selectData,dataPrice}) => {
     return (
         <>
         <div>
-            <Infomationticketcomponent />
+            <Infomationticketcomponent selectData={selectData} dataPrice={dataPrice}/>
         </div>
         <div className='mt-5'>
-            <Costticketcomponent />
+            <Costticketcomponent selectData={selectData} dataPrice={dataPrice} />
         </div>
         </>
         

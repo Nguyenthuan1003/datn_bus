@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import LeftBookTickets from './left-book-tickets/left-book-tickets.component'
 import RightBookTickets from './right-book-tickets/right-book-tickets.component'
 
 const BooktickitsComponent = () => {
+    const [selectData,setSelectData]=useState<any>([])
+    const [dataPrice,setDataPrice]=useState<any>(0)
     return (
         <div className='bg-[#f3f3f5]'>
            
@@ -10,11 +12,11 @@ const BooktickitsComponent = () => {
                 
                 <div className='w-[65%] '>
       
-                    <LeftBookTickets />
+                    <LeftBookTickets setSelectData={setSelectData} setDataPrice={setDataPrice} selectData={selectData} dataPrice={dataPrice}/>
                 </div>
 
                 <div className='w-[35%] py-4'>
-                    <RightBookTickets />
+                    <RightBookTickets selectData={selectData} dataPrice={dataPrice}/>
                 </div>
             </div>
         </div>

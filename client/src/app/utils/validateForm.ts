@@ -5,6 +5,7 @@ const emailregExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"
 export const validateTicket = yup.object().shape({
     phoneNumber: yup.string().length(10, "Độ dài số điện thoại là 10").matches(phoneRegExp, 'Số điện thoại không đúng định dạng').required('Bạn cần nhập đầy đủ thông tin'),
     ticket: yup.string().required('bạn cần nhập đầy đủ thông tin'),
+    email: yup.string().required('bạn cần nhập đầy đủ thông tin'),
 })
 
 export const validateLogin = yup.object().shape({

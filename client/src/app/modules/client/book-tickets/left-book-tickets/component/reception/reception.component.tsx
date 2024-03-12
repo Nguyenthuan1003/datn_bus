@@ -1,7 +1,47 @@
 import { css } from '@emotion/react'
+import { Button, Popover, Radio, RadioChangeEvent, Select } from 'antd';
+import { Option } from 'antd/es/mentions';
+import { useEffect, useState } from 'react';
 import { BsInfoLg } from "react-icons/bs";
-
+import { getTripId } from '~/app/api/trip/trip.api';
+import SelectSearch from '~/app/component/parts/Select/Select.component';
+import SelectLocationComponent from './component/SelectLocation.component';
+// const content = (
+//     <SelectLocationComponent />
+//   );
 const Reception = () => {
+    const [dataLocationStart, SetDataLocationStart] = useState<any>([]);
+    const [dataLocationEnd, SetDataLocationEnd] = useState<any>([]);
+    const [data, SetData] = useState<any>([]);
+
+    console.log('data', data);
+    console.log('dataLocationStart', dataLocationStart);
+    console.log('dataLocationEnd', dataLocationEnd);
+    useEffect(() => {
+        getTripId().then((res: any) => {
+            if (res) {
+                SetDataLocationStart(res.data?.pickuplocation?.location);
+                SetDataLocationEnd(res.data?.paylocation?.location);
+                SetData(res.data);
+            }
+        });
+    }, []);
+    const [value, setValue] = useState(1);
+
+    const onChange = (e: RadioChangeEvent) => {
+        console.log('radio checked', e.target.value);
+        setValue(e.target.value);
+    };
+    const [selectedOption, setSelectedOption] = useState<any>(null);
+    const handleSelect = (option: any) => {
+        setSelectedOption(option);
+        console.log('option', option);
+        console.log('selectedOption', selectedOption);
+        // Do something with the selected option
+    };
+    const firstLocationId = dataLocationStart && dataLocationStart.length > 0 ? dataLocationStart[0].id : '';
+
+
     return (
         <div css={receptioncss} className='bg-white px-4'>
             <div className=''>
@@ -12,23 +52,39 @@ const Reception = () => {
                 <div className='w-[340px]'>
                     <h2 className='text-[17px] font-medium'>Điểm đón</h2>
                     <div className='flex'>
-
-                        <div className='flex items-center'>
-                            <input type="radio" />
-                            <p className='px-2'>Điểm đón</p>
-                        </div>
-
-                        <div className='flex items-center'>
-                            <input type="radio" />
-                            <p className='px-2'>Trung chuyển</p>
-                        </div>
+                        <Radio.Group onChange={onChange} value={value}>
+                            <Radio value={1}>Điểm đón</Radio>
+                            <Radio value={2}>Trung chuyển</Radio>
+                        </Radio.Group>
                         <div>
                             <span><BsInfoLg className='text-orange-600 text-[20px]' /></span>
                         </div>
                     </div>
 
                     <div className='py-6'>
-                        <input type="text" className='w-[315px]' />
+
+                        {/* <Popover content={<span>{dataLocationStart?.map((item:any)=>(<div>{item?.name}</div>))}</span> 
+                        } placement="bottom" title="Title" trigger="click">
+                            <div className='input-form flex w-full cursor-pointer items-center justify-between border text-[15px] '>
+                                <span>{dataLocationStart[0]?.name}</span>
+                                <div className="icon-gray">
+                                    <img src="https://futabus.vn/images/icons/icon_form_droplist.svg" alt="dropdown" />
+                                </div>
+                            </div>
+                        </Popover> */}
+                        <SelectLocationComponent title="chọn chuyến đi" content={dataLocationStart} />
+
+                        {/* <SelectSearch
+                        placeholder={'chọn điểm đón'}
+                        options={dataLocationStart}
+                        searchable
+                        filterOption={false}
+                        getOptionLabel={(option: any) => option?.name || ''}
+                        getOptionValue={(option: any) => String(option.id)} // Assuming id is unique
+                        value={selectedOption}
+                        onChange={handleSelect}
+                    /> */}
+                        {/* <input type="text" value={selectedOption?.name}  readOnly/> */}
                     </div>
                 </div>
 
@@ -37,6 +93,7 @@ const Reception = () => {
                     <h2 className='text-[17px] font-medium'>Điểm trả</h2>
                     <div className='flex'>
 
+
                         <div className='flex items-center'>
                             <input type="radio" />
                             <p className='px-2'>Điểm đón</p>
@@ -53,7 +110,8 @@ const Reception = () => {
                     </div>
 
                     <div className='py-6'>
-                        <input type="text" className='w-[315px]' />
+                    <SelectLocationComponent title="chọn chuyến đi" content={dataLocationEnd} />
+
                     </div>
                 </div>
             </div>
@@ -73,5 +131,11 @@ input {
 }
 input:focus {
 border-color: black;
-
+}
+.input-form {
+    border-radius: 8px;
+    padding: 9px 16px;
+    height: 36px;
+    border-color: #dde2e8;
+}
 `
