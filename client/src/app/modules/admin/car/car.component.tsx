@@ -82,11 +82,11 @@ const CarComponent = () => {
     const handelGetList = () => {
         setReset(!reset)
     }
-  const  fomatCustomCurrent=(data:any)=>{
-setCurrent(data?.status === 1 ? true : false)
-    console.log('dsss',data);
-    
-  }
+    const fomatCustomCurrent = (data: any) => {
+        setCurrent(data?.status === 1 ? 1 : 0)
+    }
+    const acctive = 1;
+    const inAcctive = 0
   
     return (
         <div>
@@ -124,7 +124,16 @@ setCurrent(data?.status === 1 ? true : false)
                             </Select>
                         </Form.Item>
                         <Form.Item label='Trạng Thái' name='status' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                            <CustomSwitch checked={current}  onChange={handleChange} value={checked} />
+                        <Select onChange={handleChange} value={`${current}`}>
+                                {[
+                                    { value: acctive, label: "Hoạt động" },
+                                    { value: inAcctive, label: "Không hoạt động" }
+                                ].map(option => (
+                                    <Option key={option?.value} value={option?.value}>
+                                        {option.label}
+                                    </Option>
+                                ))}
+                            </Select>
                         </Form.Item>
                     </Fragment>
                 }       

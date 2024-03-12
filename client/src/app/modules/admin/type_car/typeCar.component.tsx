@@ -18,7 +18,7 @@ const TypeCarComponent = () => {
     }, [])
     useEffect(() => {
         const columsTemp: any = []
-        const title = ['STT', 'tên', 'description', 'total_seat', 'type_seats']
+        const title = ['STT', 'tên', 'Mô tả', 'Tổng chỗ ngồi', 'Kiểu ghế ngồi ']
         console.log('s', columsTemp);
         console.log('c', dataTypecar);
         if (dataTypecar.length > 0) {
@@ -57,7 +57,7 @@ const TypeCarComponent = () => {
                 title={`Danh sách Loại xe `}
                 callBack={handelGetList}
                 dataTable={dataTypecar}
-dataId={fomatCustomCurrent}
+                dataId={fomatCustomCurrent}
                 columnTable={column}
                 deleteFunc={deleteTypeCar}
                 createFunc={addTypeCar}
