@@ -5,6 +5,7 @@ import  { getAllTypeCar } from '../type_car/service/typeCar.service'
 import { Form, Input, Select, Switch } from 'antd';
 import { Option } from 'antd/es/mentions';
 import CustomSwitch from './component/CustomSwitch'; 
+import { log } from 'console';
 const CarComponent = () => {
     
     const [column, setColumn] = useState<any>([]);
@@ -12,7 +13,7 @@ const CarComponent = () => {
     const [dataTypecar, setDataTypecar] = useState<any>([]); 
     const [checked, setChecked] = useState<any>();
     const [current, setCurrent] = useState<any>();
-    console.log(current)
+    console.log(dataCar)
     const handleChange = (value:any) => {
         setCurrent(value); 
     };
@@ -81,9 +82,12 @@ const CarComponent = () => {
     const handelGetList = () => {
         setReset(!reset)
     }
-  const  fomatCustomCurrent=(data:any)=>{
-setCurrent(data?.status === 1 ? true : false)
-  }
+    const fomatCustomCurrent = (data: any) => {
+        setCurrent(data?.status === 1 ? 1 : 0)
+    }
+    const acctive = 1;
+    const inAcctive = 0
+  
     return (
         <div>
             <TemplateTable
@@ -120,7 +124,16 @@ setCurrent(data?.status === 1 ? true : false)
                             </Select>
                         </Form.Item>
                         <Form.Item label='Trạng Thái' name='status' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                            <CustomSwitch checked={current}  onChange={handleChange} value={checked} />
+                        <Select onChange={handleChange} value={`${current}`}>
+                                {[
+                                    { value: acctive, label: "Hoạt động" },
+                                    { value: inAcctive, label: "Không hoạt động" }
+                                ].map(option => (
+                                    <Option key={option?.value} value={option?.value}>
+                                        {option.label}
+                                    </Option>
+                                ))}
+                            </Select>
                         </Form.Item>
                     </Fragment>
                 }       

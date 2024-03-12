@@ -24,7 +24,7 @@ const LocaltionComponent = () => {
         const title = ['STT', 'tên', 'ảnh', 'Mô tả', 'Tỉnh thành']
         console.log('s', columsTemp);
         console.log('h', dataParentLocation);
-        if (dataLocation.length > 0) {
+        if (dataLocation?.length > 0) {
             Object.keys(dataLocation[0]).forEach((itemKey, key = 0) => {
                 if (!['id', 'created_at', 'updated_at'].includes(itemKey)) {
                     columsTemp.push({

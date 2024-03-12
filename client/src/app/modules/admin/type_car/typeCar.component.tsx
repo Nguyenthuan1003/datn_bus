@@ -8,7 +8,7 @@ const TypeCarComponent = () => {
     
     const [column, setColumn] = useState<any>([]);
     const [dataTypecar, setDataTypecar] = useState<any>([]);
-    // const [dataParentLocation, setDataParentLocation] = useState<any>([]);    
+    const [dataCurrent, setDataCurrent] = useState<any>({});    
     useEffect(() => {
         getAllTypeCar().then((res) => {
             if (res) {
@@ -18,7 +18,7 @@ const TypeCarComponent = () => {
     }, [])
     useEffect(() => {
         const columsTemp: any = []
-        const title = ['STT', 'tên', 'description', 'total_seat', 'type_seats']
+        const title = ['STT', 'tên', 'Mô tả', 'Tổng chỗ ngồi', 'Kiểu ghế ngồi ']
         console.log('s', columsTemp);
         console.log('c', dataTypecar);
         if (dataTypecar.length > 0) {
@@ -48,13 +48,16 @@ const TypeCarComponent = () => {
     const handelGetList = () => {
         setReset(!reset)
     }
+    const  fomatCustomCurrent=(data:any)=>{
+        setDataCurrent(data)
+          }
     return (
         <div>
             <TemplateTable
                 title={`Danh sách Loại xe `}
                 callBack={handelGetList}
                 dataTable={dataTypecar}
-
+                dataId={fomatCustomCurrent}
                 columnTable={column}
                 deleteFunc={deleteTypeCar}
                 createFunc={addTypeCar}

@@ -1,6 +1,6 @@
-import { axiosPrivate } from "../configHTTp"
+import { axiosPrivate } from "../confighHTTp"
 
 
-// export const getAllTrip=async()=>{
-//     return await axiosPrivate.get("trip")
-// }
+export const getAllTrip=async()=>{
+    return await axiosPrivate.get("trip")
+}

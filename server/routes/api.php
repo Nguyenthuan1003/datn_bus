@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SeatController;
 use App\Http\Controllers\RouteController;
 use App\Http\Controllers\ParentLocationController;
 use App\Http\Controllers\LocationController;
