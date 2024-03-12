@@ -4,6 +4,8 @@ import RightBookTickets from './right-book-tickets/right-book-tickets.component'
 
 const BooktickitsComponent = () => {
     const [selectData,setSelectData]=useState<any>([])
+    console.log(selectData,'ss');
+    
     const [dataPrice,setDataPrice]=useState<any>(0)
     return (
         <div className='bg-[#f3f3f5]'>

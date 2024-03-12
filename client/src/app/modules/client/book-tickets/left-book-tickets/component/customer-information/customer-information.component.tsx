@@ -17,7 +17,7 @@ const CustomerInformation:FC<any> = ({control,errors}) => {
                         <div className='my-1'>
                             <Controller
                                 control={control}
-                                name='ticket'
+                                name='full_name'
                                 render={({ field: { onChange, value, ref }, fieldState: { error } }) => (
                                     <div>
                                         <span className='font-medium text-[14px]'>Họ và tên</span>
@@ -25,13 +25,13 @@ const CustomerInformation:FC<any> = ({control,errors}) => {
                                     </div>
                                 )}
                             />
-                            {errors && <span className='text-red-600'>{errors.ticket?.message}</span>}
+                            {errors && <span className='text-red-600'>{errors.full_name?.message}</span>}
                         </div>
 
                         <div className=''>
                             <Controller
                                 control={control}
-                                name='phoneNumber'
+                                name='phone_number'
                                 render={({ field: { onChange, value, ref }, fieldState: { error } }) => (
                                     <div>
                                         <span className='font-medium text-[14px]'>Số điện thoại</span>
@@ -39,7 +39,7 @@ const CustomerInformation:FC<any> = ({control,errors}) => {
                                     </div>
                                 )}
                             />
-                            {errors && <span className='text-red-600'>{errors.phoneNumber?.message}</span>}
+                            {errors && <span className='text-red-600'>{errors.phone_number?.message}</span>}
                         </div>
 
 
@@ -55,7 +55,7 @@ const CustomerInformation:FC<any> = ({control,errors}) => {
                                     </div>
                                 )}
                             />
-                            {errors && <span className='text-red-600'>{errors.ticket?.message}</span>}
+                            {errors && <span className='text-red-600'>{errors.email?.message}</span>}
                         </div>
                     {/* </form> */}
                 </div>

@@ -20,10 +20,15 @@ const CheckChaircomponent:FC<any> = ({setSelectData,setDataPrice}) => {
         });
     }, []);
     
+  
     const tripData=dataTrips?.trip_price
-
     const handelSelecttion = (seat: any) => {
         const seatCode=seat?.code_seat
+        const seat_id = seat?.id
+        console.log('seat',seat);
+    
+        console.log('seat_id',seat_id);
+        
         const status = seat?.status
         if (status === 1) {
             return;
@@ -34,6 +39,8 @@ const CheckChaircomponent:FC<any> = ({setSelectData,setDataPrice}) => {
             setSelectData1([...selectData1,seat?.code_seat])
             setSelectData([...selectData1,seat?.code_seat])
             setDataPrice((prewPrice:any)=>prewPrice+Number(tripData))
+            console.log('index',selectData1);
+            localStorage.setItem('seat_id', JSON.stringify(seat_id));
         }
         else {
             const newSelectSeat=[...selectData1]            

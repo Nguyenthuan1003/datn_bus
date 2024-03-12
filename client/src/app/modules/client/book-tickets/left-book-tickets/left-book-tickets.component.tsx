@@ -14,11 +14,15 @@ import { message } from 'antd';
 const LeftBookTickets:FC<any> = ({setSelectData,setDataPrice,selectData,dataPrice}) => {
     const { handleSubmit, control, formState: { errors } } = useForm({
         resolver: yupResolver(validateTicket)
+        
     })
     const onSubmit = (data: any) => {
         addBill(data).then((res:any)=>{// sau truyền giá, địa chị cụ thể ,.......
             if(res){
                 message.success("thành công")
+                localStorage.setItem('userBill', JSON.stringify(data));
+                 localStorage.setItem('userBill', JSON.stringify(data));
+                console.log('data', data);
             }
             else{
                 message.error("thất bại")

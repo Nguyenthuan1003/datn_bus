@@ -1,7 +1,6 @@
 import React, { FC, useState, useEffect } from 'react';
-import { Popover, Radio } from 'antd'; // Đảm bảo bạn đã import Popover và Radio từ thư viện Ant Design
+import { Divider, Popover, Radio } from 'antd';
 import { css } from '@emotion/react';
-const { Group } = Radio;
 
 interface ISelect {
   content?: any[];
@@ -16,19 +15,40 @@ const SelectLocationComponent: FC<ISelect> = ({ content, title }) => {
   };
 
   useEffect(() => {
-    setSelectedValue(content && content[0]?.name); // Sử dụng giá trị mặc định từ content nếu có
+    setSelectedValue(content && content[0]?.name);
   }, [content]);
 
   return (
     <Popover
+
       content={
-        <Group onChange={handleChange} value={selectedValue}>
+        <div className='ant-popover popover-custom popover-on-otp ant-popover-placement-bottom '>
+
+      
+        <div className="ant-popover-inner-content">
+
+        <div className=' flex w-[100vw] flex-col rounded-xl bg-white 2lg:max-w-[420px]'>
+        <Radio.Group onChange={handleChange} value={selectedValue}>
           {content && content.map((item: any) => (
-            <div>
+            <div className='select-location' key={item.id}>
               <Radio key={item.id} value={item.name}>{item.name}</Radio>
+              <div className="flex items-center">
+                <div className="flex flex-col sm:flex-row items-center">
+                  <div className="flex justify-between text-black">
+                    <span className="text-[15px] font-medium">18:80</span>
+                    {/* {item.time} */}
+                  </div>
+                  <span className="text-gray text-[13px]">aaaaaaaaaaa</span>
+                  {/* {item.address} */}
+                </div>
+                <a className="ml-3 w-16 text-[13px] font-medium text-orange" href={item.mapLink} target="_blank" rel="noopener noreferrer">Xem vị trí</a>
+              </div>
             </div>
           ))}
-        </Group>
+        </Radio.Group>
+        </div>
+        </div>
+        </div>
       }
       placement="bottom"
       title={title || "Title"}
@@ -45,6 +65,3 @@ const SelectLocationComponent: FC<ISelect> = ({ content, title }) => {
 };
 
 export default SelectLocationComponent;
-
-const CssSelectTion = `
-`

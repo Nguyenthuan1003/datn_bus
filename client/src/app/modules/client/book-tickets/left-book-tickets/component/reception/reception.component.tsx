@@ -20,8 +20,8 @@ const Reception = () => {
     useEffect(() => {
         getTripId().then((res: any) => {
             if (res) {
-                SetDataLocationStart(res.data?.pickuplocation?.location);
-                SetDataLocationEnd(res.data?.paylocation?.location);
+                SetDataLocationStart(res.data?.pickup_location?.location);
+                SetDataLocationEnd(res.data?.pay_location?.location);
                 SetData(res.data);
             }
         });
