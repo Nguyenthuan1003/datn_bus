@@ -4,6 +4,11 @@ import {getAllCar , deleteCar, addCar, updateCar } from './service/car.service';
 import  { getAllTypeCar } from '../type_car/service/typeCar.service'
 import { Form, Input, Select, Switch } from 'antd';
 import { Option } from 'antd/es/mentions';
+<<<<<<< HEAD
+=======
+import CustomSwitch from './component/CustomSwitch'; 
+import { log } from 'console';
+>>>>>>> 7dd0ffc31139e10126e59a22ab45443a5c363b59
 const CarComponent = () => {
     
     const [column, setColumn] = useState<any>([]);
@@ -11,7 +16,7 @@ const CarComponent = () => {
     const [dataTypecar, setDataTypecar] = useState<any>([]); 
     const [checked, setChecked] = useState<any>();
     const [current, setCurrent] = useState<any>();
-    console.log(current)
+    console.log(dataCar)
     const handleChange = (value:any) => {
         setCurrent(value); 
     };

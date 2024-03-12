@@ -55,15 +55,15 @@ class AuthController extends Controller
                 ->firstOrFail();
 
             $userDataFormated = [
-                "name" => $userData->name,
-                "email" => $userData->email,
-                "phone_number" => $userData->phone_number,
-                "type_user" => $userData->typeUser->name,
-                "avatar" =>  request()->getHttpHost() . '/' . $userData->avatar,
-                "address" => $userData->address,
-                "description" => $userData->description,
-                "location" => $userData->location,
-                "created_at" => $userData->created_at
+                "name" => $userData->name ?? "",
+                "email" => $userData->email ?? "",
+                "phone_number" => $userData->phone_number ?? "",
+                "type_user" => $userData->typeUser->name ?? "",
+                "avatar" =>  request()->getHttpHost() . '/' . $userData->avatar ?? "",
+                "address" => $userData->address ?? "",
+                "description" => $userData->description ?? "",
+                "location" => $userData->location ?? "",
+                "created_at" => $userData->created_at ?? ""
             ];
 
             return response()->json([

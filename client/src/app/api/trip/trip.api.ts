@@ -1,4 +1,4 @@
-import { axiosPrivate } from "../configHTTp"
+import { axiosPrivate } from "../confighHTTp"
 
 
 export const getTripId=async()=>{
