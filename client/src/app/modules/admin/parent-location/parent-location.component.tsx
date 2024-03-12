@@ -6,6 +6,8 @@ import { addParent, deleteParent, getAllParent, updateParent } from './service/p
 const ParentLocaltion = () => {
     const [column, setColumn] = useState<any>([]);
     const [dataParent, setDataParen] = useState<any>([]);
+    const [current, setCurrent] = useState<any>(true);
+
     console.log(dataParent,"asdasd");
     
     const [reset, setReset] = useState<any>([]);
@@ -39,6 +41,9 @@ const ParentLocaltion = () => {
     const handelGetList = () => {
         setReset(!reset)
     }
+    const fomatCustomCurrent=(data:any)=>{
+        setCurrent(data)
+    }
     return (
         <div>
             <TemplateTable
@@ -46,6 +51,7 @@ const ParentLocaltion = () => {
                 callBack={handelGetList}
                 dataTable={dataParent}
                 columnTable={column}
+                dataId={fomatCustomCurrent}
                 deleteFunc={deleteParent}
                 createFunc={addParent}
                 changeFunc={updateParent}
