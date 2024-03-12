@@ -16,9 +16,11 @@ return new class extends Migration
         Schema::create('type_cars', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('description');
+            $table->text('description')->nullable(true);
             $table->integer('total_seat');
             $table->string('type_seats');
+//            $table->integer('total_floors');
+//            $table->integer('total_rows');
             $table->timestamps();
         });
     }

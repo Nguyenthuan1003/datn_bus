@@ -7,6 +7,10 @@ import RegisterComponent from "./register/register.component";
 import BusSearchResults from "./bus-search-results/bus-search-results.component";
 import RouteScheduleComponent from "./route-schedule/routeSchedule.component";
 // import AboutComponent from "./about/about.component"
+import AboutComponent from "./about/about.component"
+import ContactComponent from "./contact/contact.component"
+import ChangeComponent from "./change-pass/changePass.component";
+import ForgotPassComponent from "./forgot-pass/forgot-pass.component"
 
 export const clientRouter: RouteObject[] = [
     {
@@ -26,13 +30,25 @@ export const clientRouter: RouteObject[] = [
         element: <LoginComponent />
     },
     {
+        path: "/change-pass",
+        element: <ChangeComponent />
+    },
+    {
+        path: "/forgot-pass",
+        element: <ForgotPassComponent />
+    },
+    {
         path: "/register",
         element: <RegisterComponent />
     },
-    // {
-    //     path: "/about",
-    //     element: <AboutComponent />
-    // },
+    {
+        path: "/about",
+        element: <AboutComponent />
+    },
+    {
+        path: "/contact",
+        element: <ContactComponent />
+    },
     {
         path: "/buy-search-results",
         element: <BusSearchResults />

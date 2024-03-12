@@ -1,12 +1,12 @@
-import React from 'react'
-import TemplateTable from '../common/template-table/template-table.component'
+// import React from 'react'
+// import TemplateTable from '../common/template-table/template-table.component'
 
-const UserAdminComponent = () => {
-    return (
-        <div>
-            {/* <TemplateTable /> */}
-        </div>
-    )
-}
+// const UserAdminComponent = () => {
+//     return (
+//         <div>
+//             <TemplateTable title={'user'} />
+//         </div>
+//     )
+// }
 
-export default UserAdminComponent
+// export default UserAdminComponent

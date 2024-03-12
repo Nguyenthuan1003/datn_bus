@@ -15,8 +15,10 @@ return new class extends Migration
     {
         Schema::create('seats', function (Blueprint $table) {
             $table->id();
-            $table->integer('car_id');
+            $table->string('car_id');
             $table->string('code_seat');
+//            $table->integer('floor');
+//            $table->integer('row');
             $table->timestamps();
         });
     }

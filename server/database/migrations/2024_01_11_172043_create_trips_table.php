@@ -16,13 +16,12 @@ return new class extends Migration
         Schema::create('trips', function (Blueprint $table) {
             $table->id();
             $table->integer('car_id');
-            $table->string('start_date');
             $table->string('start_time');
             $table->string('start_location');
             $table->integer('status');
             $table->float('trip_price');
             $table->string('end_location');
-            $table->string('end_time');
+            $table->float('interval_trip');
             $table->integer('route_id');
             $table->timestamps();
         });

@@ -13,7 +13,6 @@ const ParentLocaltion = () => {
     useEffect(() => {
         getAllParent().then((res) => {
             if (res) {
-                console.log("hello", res.data?.parent_location);
                 setDataParen(res.data?.parent_location)
             }
         })

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('discount_codes', function (Blueprint $table) {
             $table->id();
-            $table->integer('id_type_discount_code')->nullable(false);
+            $table->integer('type_discount_code_id')->nullable(false);
             $table->string('name');
             $table->integer('quantity');
             $table->integer('quantity_used');
