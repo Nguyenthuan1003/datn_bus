@@ -1,4 +1,4 @@
-import { axiosPrivate } from "~/app/api/configHTTP"
+import { axiosPrivate } from "~/app/api/confighHTTp"
 
 
 export const getAllLocaltion = async () => {
