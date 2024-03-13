@@ -75,7 +75,7 @@ const LoginComponent = () => {
                             name='password'
                             render={({ field: { onChange, value, ref }, fieldState: { error } }) => (
                                 <div>
-                                    <label>Password</label>
+                                    <label>Mật khẩu</label>
                                     <input placeholder='Vui lòng nhập Password' className='' type='password' value={value} onChange={onChange} ref={ref} />
                                 </div>
                             )}

@@ -3,7 +3,7 @@ import ButtonRadiusCompoennt from '~/app/component/parts/button/button.component
 import { yupResolver } from '@hookform/resolvers/yup';
 import { validateRegister } from '../../../utils/validateForm';
 import { css } from '@emotion/react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaFacebook } from "react-icons/fa";
 import { FaGoogle } from "react-icons/fa";
 import { register } from '~/app/api/auth/auth.api';
@@ -14,7 +14,7 @@ const RegisterComponent = () => {
     const [spinning, setSpinning] = useState<boolean>(false);
     const [error, setError] = useState<any>(null);
     console.log('error',error);
-    
+    const navigate = useNavigate()
     const [open, setOpen] = useState(false);
     const { handleSubmit, control, formState: { errors } } = useForm({
         resolver: yupResolver(validateRegister)
@@ -56,7 +56,7 @@ const RegisterComponent = () => {
         finally {
             setSpinning(false);
           }
-       
+        navigate("/login")
     }
     return (
         <div css={loginCss} className='w-[1128px] m-auto flex '>
@@ -65,7 +65,7 @@ const RegisterComponent = () => {
             </div>
 
             <div className='pl-[10px]'>
-                <h2 className='font-bold text-[20px]'>Sign Up</h2>
+                <h2 className='font-bold text-[20px]'>Đăng ký</h2>
 
                 <form onSubmit={handleSubmit(onSubmit)} className='w-[400px] m-auto mt-4'>
                  
@@ -76,7 +76,7 @@ const RegisterComponent = () => {
                                 name='email'
                                 render={({ field: { onChange, value, ref }, fieldState: { error } }) => (
                                     <div>
-                                        <label>Email address</label>
+                                        <label>Địa chỉ email</label>
                                         <input placeholder='Email address' className='' type='email' value={value} onChange={onChange} ref={ref} />
                                     </div>
                                 )}
@@ -89,7 +89,7 @@ const RegisterComponent = () => {
                                 name='phone_number'
                                 render={({ field: { onChange, value, ref }, fieldState: { error } }) => (
                                     <div>
-                                        <label>Phone number</label>
+                                        <label>Số điện thoại</label>
                                         <input placeholder='Phone number' className='' type='text' value={value} onChange={onChange} ref={ref} />
                                     </div>
                                 )}
@@ -105,7 +105,7 @@ const RegisterComponent = () => {
                             name='password'
                             render={({ field: { onChange, value, ref }, fieldState: { error } }) => (
                                 <div>
-                                    <label>Password</label>
+                                    <label>Mật khẩu</label>
                                     <input placeholder='password' className='' type='password' value={value} onChange={onChange} ref={ref} />
                                 </div>
                             )}
@@ -118,7 +118,7 @@ const RegisterComponent = () => {
                             name='comfirmPassWord'
                             render={({ field: { onChange, value, ref }, fieldState: { error } }) => (
                                 <div>
-                                    <label>Password</label>
+                                    <label>Nhập lại mật khẩu</label>
                                     <input placeholder='comfirmPassWord' className='' type='password' value={value} onChange={onChange} ref={ref} />
                                 </div>
                             )}
