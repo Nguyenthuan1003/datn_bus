@@ -3,15 +3,47 @@ import ButtonRadiusCompoennt from '~/app/component/parts/button/button.component
 import { yupResolver } from '@hookform/resolvers/yup';
 import { validateLogin } from '../../../utils/validateForm';
 import { css } from '@emotion/react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaFacebook } from "react-icons/fa";
 import { FaGoogle } from "react-icons/fa";
+import { login } from '~/app/api/auth/auth.api';
+import { message, Spin } from 'antd';
+import { useState } from 'react';
 
 const LoginComponent = () => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+    const navigate = useNavigate();
     const { handleSubmit, control, formState: { errors } } = useForm({
         resolver: yupResolver(validateLogin)
     })
-    const onSubmit = (data: any) => console.log(data)
+    const onSubmit = (data: any) => {
+        setIsLoading(true);
+        login(data).then((res: any) => {
+            if (res) {
+                console.log(res)
+                localStorage.setItem('token', res?.data?.data?.jwt?.original?.access_token)
+                localStorage.setItem('user',JSON.stringify(res?.data?.data?.user))
+               
+                message.success('đăng nhập thành công')
+                // setShowSuccessMessage(true);
+                // setTimeout(()=>{
+                //     window.location.reload();
+                // }, 2000)
+                setTimeout(() => {
+                    setShowSuccessMessage(true);
+                    setIsLoading(false); // Đặt isLoading về false để dừng loading spinner
+                }, 2000);
+               
+                navigate("/");
+                window.location.reload()
+                
+            }
+            else {
+                message.error("thất bại")
+            }
+        })
+    }
     return (
         <div css={loginCss} className='w-[1128px] m-auto flex '>
             <div>
@@ -61,7 +93,13 @@ const LoginComponent = () => {
                     </div>
 
                     <div className='text-center my-3'>
-                        <ButtonRadiusCompoennt type="submit" content='Đăng nhập ' />
+                        {isLoading ? (
+                            <>
+                                Đang đăng nhập <Spin />
+                            </>
+                        ) : (
+                            <ButtonRadiusCompoennt type="submit" content='Đăng nhập' />
+                        )}
                     </div>
 
                     <div className='text-center'>
@@ -76,11 +114,11 @@ const LoginComponent = () => {
 
                     <div className='flex flex-col gap-y-4'>
                         <button className='border border-gray-500 rounded-md px-12 py-2'>
-                            <FaFacebook className='text-blue-600 -mb-[20px] ml-[35px]' /> 
+                            <FaFacebook className='text-blue-600 -mb-[20px] ml-[35px]' />
                             Đăng nhập với Facebook
                         </button>
                         <button className='border border-gray-500 rounded-md px-12 py-2'>
-                            <FaGoogle className='text-red-500 -mb-[20px] ml-[45px]' /> 
+                            <FaGoogle className='text-red-500 -mb-[20px] ml-[45px]' />
                             Đăng nhập với Google
                         </button>
                     </div>
