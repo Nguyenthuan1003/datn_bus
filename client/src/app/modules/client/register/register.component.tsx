@@ -34,7 +34,7 @@ const RegisterComponent = () => {
                   })
                   return;
             } 
-            else if (res.data.error) {
+            else if (res?.data?.error) {
                 setOpen(true);
                 Swal.fire({
                     position: 'top',

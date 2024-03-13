@@ -98,7 +98,7 @@ const HeaderComponent = () => {
                             <div className='flex h-8 2lg:mr-1'>
                                 <div className='ant-dropdown-trigger flex cursor-pointer items-center gap-4'>
                                     <div className='h-8 rounded-full b-2 '>
-                                        <img alt="avatar" loading="lazy" width="32" height="32" decoding="async" data-nimg="1" className="transition-all duration-200 h-8 rounded-full" src={user?.avatar || "https://static.vecteezy.com/system/resources/previews/009/292/244/original/default-avatar-icon-of-social-media-user-vector.jpg"}  />
+                                        <img alt="avatar" loading="lazy" width="32" height="32" decoding="async" data-nimg="1" className="transition-all duration-200 h-8 rounded-full" src={`http://${user?.avatar}`  || "https://static.vecteezy.com/system/resources/previews/009/292/244/original/default-avatar-icon-of-social-media-user-vector.jpg"}  />
                                     </div>
                                     <span className="font-medium text-white">DaoLinh</span>
                                     <img src="https://futabus.vn/images/icons/icon_form_droplist.svg" alt="icon_form_droplist"></img>
