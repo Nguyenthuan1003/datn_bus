@@ -9,9 +9,9 @@ const CheckChaircomponent = () => {
                     <div className='font-semibold text-[18px]'>
                         Chọn ghế
                     </div>
-                    <div className='font-medium text-[16px] underline text-blue-500'>
+                    {/* <div className='font-medium text-[16px] underline text-blue-500'>
                         Thông tin xe
-                    </div>
+                    </div> */}
                 </div>
 
                 <div className='py-3'>

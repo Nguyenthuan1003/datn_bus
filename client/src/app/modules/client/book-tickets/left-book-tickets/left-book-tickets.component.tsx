@@ -3,10 +3,15 @@ import CheckChaircomponent from './component/check-chair/check-chair.component';
 import CustomerInformation from './component/customer-information/customer-information.component';
 import Reception from './component/reception/reception.component';
 import FutapayComponent from './component/futapay/futapay.component';
+import BreadCrumb from '~/app/component/parts/BreadCrumb/BreadCrumb';
 
 const LeftBookTickets = () => {
     return (
         <div css={leftBookCss}>
+            <div className='py-4 '>
+                <BreadCrumb  />
+            </div>
+
             <div>
                 <CheckChaircomponent />
             </div>

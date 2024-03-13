@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('start_location');
             $table->string('end_location');
             $table->integer('status');
-            $table->text('description');
+            $table->text('description')->nullable(true);
             $table->timestamps();
         });
     }

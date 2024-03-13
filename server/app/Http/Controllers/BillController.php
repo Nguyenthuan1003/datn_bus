@@ -31,22 +31,25 @@ class BillController extends Controller
                 'total_seat' => 'required',
                 'code_bill' => 'required',
                 'phone_number' => 'required',
+                'full_name' => 'required'
             ]);
     
             $bill = new Bill();
             $bill->discount_code_id = $request->input('discount_code_id');
             $bill->seat_id = $request->input('seat_id');
             $bill->trip_id = $request->input('trip_id');
-            $bill->user_id = $request->input('user_id');
+            $bill->user_id = $request->input('user_id') ?? "";
             $bill->status_pay = $request->input('status_pay');
             $bill->total_money = $request->input('total_money');
-            $bill->total_mony_after_discount = $request->input('total_mony_after_discount');
+            $bill->total_money_after_discount = $request->input('total_money_after_discount');
             $bill->type_pay = $request->input('type_pay');
             $bill->total_seat = $request->input('total_seat');
             $bill->code_bill = $request->input('code_bill');
             $bill->full_name = $request->input('full_name');
             $bill->phone_number = $request->input('phone_number');
             $bill->email = $request->input('email');
+            $bill->full_name = $request->full_name;
+      
             $bill->save();
 
             Mail::to('recipient@example.com')->send(new SendEmail($request->input('user_name'),'Thanh toán vé xe thành công', 'checkout-success', $request->('code_bill'), $request->('start_location'), $request->('end_location'), $request->('start_time'), $request->('code_seat')));
@@ -79,6 +82,7 @@ class BillController extends Controller
             $request->validate([
                 'seat_id' => 'required',
                 'trip_id' => 'required',
+                'full_name' => 'required',
                 'status_pay' => 'required',
                 'total_money' => 'required',
                 'type_pay' => 'required',
@@ -96,16 +100,18 @@ class BillController extends Controller
             $bill->discount_code_id = $request->input('discount_code_id');
             $bill->seat_id = $request->input('seat_id');
             $bill->trip_id = $request->input('trip_id');
-            $bill->user_id = $request->input('user_id');
+            $bill->user_id = $request->input('user_id') ?? "";
             $bill->status_pay = $request->input('status_pay');
             $bill->total_money = $request->input('total_money');
-            $bill->total_mony_after_discount = $request->input('total_mony_after_discount');
+            $bill->total_money_after_discount = $request->input('total_money_after_discount');
             $bill->type_pay = $request->input('type_pay');
             $bill->total_seat = $request->input('total_seat');
             $bill->code_bill = $request->input('code_bill');
             $bill->full_name = $request->input('full_name');
             $bill->email = $request->input('email');
             $bill->phone_number = $request->input('phone_number');
+            $bill->full_name = $request->full_name;
+
             $bill->save();
     
             return response()->json(['message' => 'Cập nhật đơn hàng thành công','$bill' => $bill]);

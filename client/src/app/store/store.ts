@@ -1,7 +1,9 @@
 import { Action, ThunkAction, configureStore } from '@reduxjs/toolkit'
+import clientReducer from '../modules/client/redux/reducer'
 
 export const store = configureStore({
     reducer: {
+        client:clientReducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
