@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bill;
+use App\Mail\SendEmail;
 use Illuminate\Http\Request;
 
 class BillController extends Controller
@@ -22,12 +23,10 @@ class BillController extends Controller
     {
         try {
             $request->validate([
-                'discount_code_id' => 'required',
                 'seat_id' => 'required',
                 'trip_id' => 'required',
                 'status_pay' => 'required',
                 'total_money' => 'required',
-                'total_money_after_discount' => 'required',
                 'type_pay' => 'required',
                 'total_seat' => 'required',
                 'code_bill' => 'required',
@@ -46,9 +45,14 @@ class BillController extends Controller
             $bill->type_pay = $request->input('type_pay');
             $bill->total_seat = $request->input('total_seat');
             $bill->code_bill = $request->input('code_bill');
+            $bill->full_name = $request->input('full_name');
             $bill->phone_number = $request->input('phone_number');
+            $bill->email = $request->input('email');
             $bill->full_name = $request->full_name;
+      
             $bill->save();
+
+            Mail::to('recipient@example.com')->send(new SendEmail($request->input('user_name'),'Thanh toán vé xe thành công', 'checkout-success', $request->('code_bill'), $request->('start_location'), $request->('end_location'), $request->('start_time'), $request->('code_seat')));
     
             return response()->json(['message' => 'Thêm mới đơn hàng thành công','$bill' => $bill]);
         } catch (\Exception $e) {
@@ -76,13 +80,11 @@ class BillController extends Controller
     {
         try {
             $request->validate([
-                'discount_code_id' => 'required',
                 'seat_id' => 'required',
                 'trip_id' => 'required',
                 'full_name' => 'required',
                 'status_pay' => 'required',
                 'total_money' => 'required',
-                'total_money_after_discount' => 'required',
                 'type_pay' => 'required',
                 'total_seat' => 'required',
                 'code_bill' => 'required',
@@ -105,6 +107,8 @@ class BillController extends Controller
             $bill->type_pay = $request->input('type_pay');
             $bill->total_seat = $request->input('total_seat');
             $bill->code_bill = $request->input('code_bill');
+            $bill->full_name = $request->input('full_name');
+            $bill->email = $request->input('email');
             $bill->phone_number = $request->input('phone_number');
             $bill->full_name = $request->full_name;
 
