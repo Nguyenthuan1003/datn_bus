@@ -81,7 +81,6 @@ class BillController extends Controller
                 'trip_id' => 'required',
                 'status_pay' => 'required',
                 'total_money' => 'required',
-                'total_money_after_discount' => 'required',
                 'type_pay' => 'required',
                 'total_seat' => 'required',
                 'code_bill' => 'required',
