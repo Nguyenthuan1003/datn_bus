@@ -60,8 +60,7 @@ class PaymentController extends Controller
             $vnpSecureHash = hash('sha256', $vnp_HashSecret . $hashdata);
             $vnp_Url .= 'vnp_SecureHashType=SHA256&vnp_SecureHash=' . $vnpSecureHash;
         }
-        dd($vnp_Url);
-        return redirect($vnp_Url);
+        return response()->json(['url' => $vnp_Url]);
     }
 
     public function return(Request $request)
