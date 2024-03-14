@@ -4,6 +4,8 @@ import { useCartRedux } from '../redux/hook/useCartReducer'
 
 const PaymentComponent = () => {
     const {data:{cart}}=useCartRedux()
+    console.log('cart',cart);
+    
     return (
         <div className='w-full'>
             <div className='layout flex flex-wrap items-center py-5 px-40'>
@@ -78,11 +80,11 @@ const PaymentComponent = () => {
                                 </div>
                                 <div className="mt-1 flex items-center justify-between">
                                     <span className="text-gray w-28">Số lượng ghế</span>
-                                    <span className="text-black">1 Ghế</span>
+                                    <span className="text-black">{cart?.seat_id?.length}</span>
                                 </div>
                                 <div className="mt-1 flex items-center justify-between">
                                     <span className="text-gray w-28">Số ghế</span>
-                                    <span className="text-[#00613D]">B16</span>
+                                    <span className="text-[#00613D]">{cart?.seat_id}</span>
                                 </div>
                                 <div className="mt-1 flex items-center justify-between">
                                     <span className="text-gray w-40">Điểm lên xe</span>

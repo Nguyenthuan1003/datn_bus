@@ -13,7 +13,7 @@ import { message } from 'antd';
 import { useCartRedux } from '../../redux/hook/useCartReducer';
 import { useNavigate } from 'react-router-dom';
 
-const LeftBookTickets: FC<any> = ({ setSelectData, setDataPrice, selectData, dataPrice }) => {
+const LeftBookTickets: FC<any> = ({ trip_id,setSelectData, setDataPrice, selectData, dataPrice }) => {
     const { handleSubmit, control, formState: { errors } } = useForm({
         resolver: yupResolver(validateTicket)
     })
@@ -31,14 +31,13 @@ const LeftBookTickets: FC<any> = ({ setSelectData, setDataPrice, selectData, dat
     const navigate=useNavigate()
     const onSubmit = (data: any) => {
         actions.setDataBill({
-            code_bill: "A11",
             full_name: data?.full_name,
             phone_number: data?.phone_number,
             email: data?.email,
             total_money:dataPrice,
             total_money_after_discoun:dataPrice,
-            seat_id:'1000000000000000000',
-            trip_id:"1025",
+            seat_id:JSON.stringify(selectData),
+            trip_id: trip_id ,
         })
         console.log('select',selectData);
         
@@ -66,17 +65,22 @@ const LeftBookTickets: FC<any> = ({ setSelectData, setDataPrice, selectData, dat
      
         try {
             const billData = {
-                code_bill: "A11",
                 full_name: data?.full_name,
                 phone_number: data?.phone_number,
                 email: data?.email,
                 total_money: dataPrice,
                 total_money_after_discount: dataPrice,
-                seat_id: selectData,
+                seat_id: JSON.stringify(selectData),
                 trip_id: "1025",
                 status_pay: "0",
                 type_pay: "0",
-                total_seat: "1",
+                total_seat: selectData.length ,
+                // listSeat: [...listSeats]
+                //     .filter((i) => selectData.includes(i.id))
+                //     .map((e) => ({
+                //         row: e.row,
+                //         column: e.column,
+                //     }))
             };
 
             // Gọi API để lưu hóa đơn

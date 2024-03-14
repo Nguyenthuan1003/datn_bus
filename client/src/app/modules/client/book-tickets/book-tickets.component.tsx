@@ -6,8 +6,8 @@ import { useParams } from 'react-router-dom'
 const BooktickitsComponent = () => {
     const [selectData,setSelectData]=useState<any>([])
     console.log(selectData,'ss');
-    const {id} = useParams();
-    console.log('id',id);
+    const {id:trip_id} = useParams();
+    console.log('id',trip_id);
     
     
     const [dataPrice,setDataPrice]=useState<any>(0)
@@ -18,7 +18,7 @@ const BooktickitsComponent = () => {
                 
                 <div className='w-[65%] '>
       
-                    <LeftBookTickets setSelectData={setSelectData} setDataPrice={setDataPrice} selectData={selectData} dataPrice={dataPrice}/>
+                    <LeftBookTickets trip_id={trip_id} setSelectData={setSelectData} setDataPrice={setDataPrice} selectData={selectData} dataPrice={dataPrice}/>
                 </div>
 
                 <div className='w-[35%] py-4'>

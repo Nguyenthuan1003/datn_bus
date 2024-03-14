@@ -39,7 +39,7 @@ class BillController extends Controller
             $bill->discount_code_id = $request->input('discount_code_id');
             $bill->seat_id = $request->input('seat_id');
             $bill->trip_id = $request->input('trip_id');
-            $bill->user_id = $request->input('user_id') ?? "";
+            $bill->user_id = $request->input('user_id') ?? null;
             $bill->status_pay = $request->input('status_pay');
             $bill->total_money = $request->input('total_money');
             $bill->total_money_after_discount = $request->input('total_money_after_discount');
@@ -53,16 +53,16 @@ class BillController extends Controller
       
             $bill->save();
             $getBill = Bill::with('discountCode', 'seat', 'trip', 'user', 'ticketOrder')->find($bill->id);
-            Mail::to('thuannmph19038@fpt.edu.vn')->send(new SendEmail(
-                $request->input('full_name'),
-                'Thanh toán vé xe thành công',
-                'checkout-success',
-                $request->input('code_bill'),
-                $request->input('start_location'),
-                $request->input('end_location'),
-                $request->input('start_time'),
-                $request->input('code_seat')
-            ));
+            // Mail::to('thuannmph19038@fpt.edu.vn')->send(new SendEmail(
+            //     $request->input('full_name'),
+            //     'Thanh toán vé xe thành công',
+            //     'checkout-success',
+            //     $request->input('code_bill'),
+            //     $request->input('start_location'),
+            //     $request->input('end_location'),
+            //     $request->input('start_time'),
+            //     $request->input('code_seat')
+            // ));
     
             return response()->json(['message' => 'Thêm mới đơn hàng thành công','bill' => $getBill]);
         } catch (\Exception $e) {
