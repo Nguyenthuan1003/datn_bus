@@ -417,14 +417,18 @@ class TripController extends Controller
             $seats = Seat::where('car_id', $tripData->car_id)->get()->toArray();
             $orderedSeats = TicketOrder::join('bills', 'ticket_orders.bill_id', '=', 'bills.id')
                 ->join('trips', 'bills.trip_id', '=', 'trips.id')
-                ->where('trips.id', 2)
-                ->pluck('ticket_orders.code_seat')
-                ->toArray();
+                ->where('trips.id', $id)
+                ->select('ticket_orders.code_seat', 'bills.created_at', 'bills.status_pay')
+                ->get();
 
             foreach ($seats as &$seat) {
                 $seat['status'] = 0;
-                foreach ($orderedSeats as $code_seat) {
-                    if ($seat['code_seat'] == $code_seat) {
+                foreach ($orderedSeats as $orderedSeat) {
+                    if (
+                        $seat['code_seat'] == $orderedSeat->code_seat &&
+                        ($orderedSeat->status_pay == 1 || ($orderedSeat->status_pay == 0 && !$orderedSeat->created_at->addMinutes(20)->isBefore(now())))
+                    ) {
+//                        dd($orderedSeat->created_at->addMinutes(20));
                         $seat['status'] = 1;
                     }
                 }
