@@ -4,9 +4,10 @@ import ButtonRadiusCompoennt from '~/app/component/parts/button/button.component
 import { yupResolver } from '@hookform/resolvers/yup';
 import { validateTicket } from '~/app/utils/validateForm';
 import { css } from '@emotion/react';
+import { log } from 'console';
 
 const CustomerInformation:FC<any> = ({control,errors}) => {
-   
+    
     return (
         <div css={custommerCss} className='bg-white'>
             <div className='flex'>

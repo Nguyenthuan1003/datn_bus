@@ -116,7 +116,7 @@ const MainSearchResults = () => {
                                     </div>
                                 </div>
                                 <div>
-                                    <Link to={'/book-tickets'}>
+                                    <Link to={`/book-tickets/${item.id}`}>
                                         <ButtonRadiusCompoennt content='chọn chuyến'  />
                                     </Link>
                                     

@@ -26,7 +26,7 @@ const CheckChaircomponent:FC<any> = ({setSelectData,setDataPrice}) => {
         const seatCode=seat?.code_seat
         const seat_id = seat?.id
         console.log('seat',seat);
-    
+
         console.log('seat_id',seat_id);
         
         const status = seat?.status
@@ -39,8 +39,7 @@ const CheckChaircomponent:FC<any> = ({setSelectData,setDataPrice}) => {
             setSelectData1([...selectData1,seat?.code_seat])
             setSelectData([...selectData1,seat?.code_seat])
             setDataPrice((prewPrice:any)=>prewPrice+Number(tripData))
-            console.log('index',selectData1);
-            localStorage.setItem('seat_id', JSON.stringify(seat_id));
+            localStorage.setItem('code_seat', JSON.stringify([seatCode]));
         }
         else {
             const newSelectSeat=[...selectData1]            
@@ -60,9 +59,6 @@ const CheckChaircomponent:FC<any> = ({setSelectData,setDataPrice}) => {
                     <div className='font-semibold text-[18px]'>
                         Chọn ghế
                     </div>
-                    {/* <div className='font-medium text-[16px] underline text-blue-500'>
-                        Thông tin xe
-                    </div> */}
                 </div>
 
                 <div className='py-3'>

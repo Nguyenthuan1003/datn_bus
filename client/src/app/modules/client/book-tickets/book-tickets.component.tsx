@@ -1,10 +1,14 @@
 import React, { useState } from 'react'
 import LeftBookTickets from './left-book-tickets/left-book-tickets.component'
 import RightBookTickets from './right-book-tickets/right-book-tickets.component'
+import { useParams } from 'react-router-dom'
 
 const BooktickitsComponent = () => {
     const [selectData,setSelectData]=useState<any>([])
     console.log(selectData,'ss');
+    const {id} = useParams();
+    console.log('id',id);
+    
     
     const [dataPrice,setDataPrice]=useState<any>(0)
     return (

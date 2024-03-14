@@ -5,13 +5,30 @@ import { css } from '@emotion/react';
 interface ISelect {
   content?: any[];
   title?: string;
+  setSelectStart?:any
+  setSelectEnd? :any
 }
 
-const SelectLocationComponent: FC<ISelect> = ({ content, title }) => {
+const SelectLocationComponent: FC<ISelect> = ({ content, title ,setSelectStart,setSelectEnd }) => {
   const [selectedValue, setSelectedValue] = useState<string | undefined>();
+  const [selectedOption, setSelectedOption] = useState<any>()
+
+  const handleSelect = (option: any) => {
+        setSelectedOption(option);
+        console.log('option', option);
+        console.log('selectedOption', selectedOption);
+        // Do something with the selected option
+    };
 
   const handleChange = (e: any) => {
-    setSelectedValue(e.target.value);
+    setSelectedValue(e.target.value);    
+    if (setSelectStart) {
+        setSelectStart(e.target.value);
+        
+    }
+    if (setSelectEnd) {
+      setSelectEnd(e.target.value);
+  }
   };
 
   useEffect(() => {
@@ -20,14 +37,13 @@ const SelectLocationComponent: FC<ISelect> = ({ content, title }) => {
 
   return (
     <Popover
-
       content={
         <div className='ant-popover popover-custom popover-on-otp ant-popover-placement-bottom '>
 
       
         <div className="ant-popover-inner-content">
 
-        <div className=' flex w-[100vw] flex-col rounded-xl bg-white 2lg:max-w-[420px]'>
+        <div className=' flex w-[280px] flex-col rounded-xl bg-white 2lg:max-w-[420px]'>
         <Radio.Group onChange={handleChange} value={selectedValue}>
           {content && content.map((item: any) => (
             <div className='select-location' key={item.id}>

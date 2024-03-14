@@ -9,20 +9,22 @@ import SelectLocationComponent from './component/SelectLocation.component';
 // const content = (
 //     <SelectLocationComponent />
 //   );
-const Reception = () => {
+const Reception = ({setSelectData}:any) => {
     const [dataLocationStart, SetDataLocationStart] = useState<any>([]);
     const [dataLocationEnd, SetDataLocationEnd] = useState<any>([]);
+    const [selectStart , setSelectStart] = useState<any>('');
+    const [selectEnd , setSelectEnd] = useState<any>('');
+    console.log('eeee',{selectStart, selectEnd})
     const [data, SetData] = useState<any>([]);
 
-    console.log('data', data);
-    console.log('dataLocationStart', dataLocationStart);
-    console.log('dataLocationEnd', dataLocationEnd);
+    console.log('data', data);    
     useEffect(() => {
         getTripId().then((res: any) => {
             if (res) {
                 SetDataLocationStart(res.data?.pickup_location?.location);
                 SetDataLocationEnd(res.data?.pay_location?.location);
                 SetData(res.data);
+                localStorage.setItem('trip_id', JSON.stringify(dataLocationStart))
             }
         });
     }, []);
@@ -39,6 +41,12 @@ const Reception = () => {
         console.log('selectedOption', selectedOption);
         // Do something with the selected option
     };
+    useEffect(() => {
+        if (selectStart && selectStart) {
+            setSelectData({selectStart, selectEnd})
+        }
+    }, [selectEnd,selectStart])
+
     const firstLocationId = dataLocationStart && dataLocationStart.length > 0 ? dataLocationStart[0].id : '';
 
 
@@ -72,7 +80,7 @@ const Reception = () => {
                                 </div>
                             </div>
                         </Popover> */}
-                        <SelectLocationComponent title="chọn chuyến đi" content={dataLocationStart} />
+                        <SelectLocationComponent title="chọn chuyến đi" setSelectStart={setSelectStart} content={dataLocationStart} />
 
                         {/* <SelectSearch
                         placeholder={'chọn điểm đón'}
@@ -110,7 +118,7 @@ const Reception = () => {
                     </div>
 
                     <div className='py-6'>
-                    <SelectLocationComponent title="chọn chuyến đi" content={dataLocationEnd} />
+                    <SelectLocationComponent  title="chọn chuyến đi" setSelectEnd={setSelectEnd} content={dataLocationEnd} />
 
                     </div>
                 </div>

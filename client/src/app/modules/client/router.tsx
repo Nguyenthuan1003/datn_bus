@@ -11,6 +11,7 @@ import AboutComponent from "./about/about.component"
 import ContactComponent from "./contact/contact.component"
 import ChangeComponent from "./change-pass/changePass.component";
 import ForgotPassComponent from "./forgot-pass/forgot-pass.component"
+import PaymentComponent from "./payment/payment.component";
 
 export const clientRouter: RouteObject[] = [
     {
@@ -22,8 +23,12 @@ export const clientRouter: RouteObject[] = [
         element: <CheckTicketComponent />
     },
     {
-        path: "/book-tickets",
+        path: "/book-tickets/:id",
         element: <BooktickitsComponent />
+    },
+    {
+        path: "/payment",
+        element: <PaymentComponent />
     },
     {
         path: "/login",
