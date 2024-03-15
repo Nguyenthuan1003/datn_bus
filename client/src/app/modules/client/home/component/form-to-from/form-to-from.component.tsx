@@ -40,7 +40,8 @@ const FormToFromComponent = () => {
           formData.endLocation
         }&start_time=${formData.startDate.toISOString()}&ticket_count=${formData.ticketCount}`
       )
-
+        console.log(response, "-----------------");
+        
       const data = await response.data
       console.log(data)
       setSearchResults(data)

@@ -6,12 +6,18 @@ import moment from 'moment'
 import 'moment/locale/vi' // Import locale của bạn nếu cần thiết
 import LocationScheduleComponent from '../location-schedule/location-schedule.component'
 import { Link, useLocation } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
 
 const MainSearchResults = () => {
-  const { data: { searchResults = [] } = {}, actions } = useTripRedux()
+  const { data, actions } = useTripRedux()
+  const tripSearchResults = data?.searchResults || []
+
+  const tripState = useSelector((state) => state.trip)
+  const searchResults = tripState?.searchResults || []
   const [activeData, setActiveData] = useState({})
   const location = useLocation()
   const searchParams = new URLSearchParams(location.search)
+  const dispatch = useDispatch()
 
   const setActiveToTrips = (tripId: any, dataIndex: any) => {
     setActiveData((prevData: any) => ({
@@ -30,16 +36,18 @@ const MainSearchResults = () => {
     actions.getAllTrip(params)
   }, [])
 
-  useEffect(() => {
-    console.log(searchResults);
-  }, [searchResults])
+  // useEffect(() => {
+  //   console.log(searchResults, "----------------")
+  // }, [searchResults])
+  console.log(tripState, "store trip");
+  
 
   return (
     <div css={MainSearchCss}>
       {Array.isArray(searchResults) ? (
         searchResults.length > 0 ? (
-          searchResults.map((item: any) => (
-            <div className='mt-3' key={item}>
+          searchResults.map((index, item: any) => (
+            <div className='mt-3' key={item.id}>
               <h2>
                 {' '}
                 <span className='font-semibold'>Tuyến đường : </span>

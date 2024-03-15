@@ -7,6 +7,7 @@ export const getAllTrip = createAsyncThunk(
       const response = await axiosPrivate.get('/search/trip', {
         params: searchParams
       });
-      return response.data;
+      // console.log(response);
+      return response.data?.data;
     }
   );

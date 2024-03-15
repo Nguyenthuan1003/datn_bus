@@ -15,7 +15,7 @@ const tripSlice=createSlice({
             state.searchResults = action.payload;
         })
     }
-})
+}) 
 
 export const{actions}=tripSlice
 export default tripSlice.reducer
