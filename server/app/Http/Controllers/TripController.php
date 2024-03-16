@@ -532,5 +532,5 @@ class TripController extends Controller
             // Return an error response if database operation fails
             return response()->json(['error' => $e->getMessage()], 500);
         }
-    }
+    } 
 }
