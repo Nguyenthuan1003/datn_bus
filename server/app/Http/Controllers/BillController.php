@@ -6,7 +6,7 @@ use App\Models\Bill;
 use App\Mail\SendEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use lluminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Mail;
 
 class BillController extends Controller
 {
@@ -39,13 +39,13 @@ class BillController extends Controller
             $bill->discount_code_id = $request->input('discount_code_id');
             $bill->seat_id = $request->input('seat_id');
             $bill->trip_id = $request->input('trip_id');
-            $bill->user_id = $request->input('user_id') ?? "";
+            $bill->user_id = $request->input('user_id') ? $request->input('user_id') : 0;
             $bill->status_pay = $request->input('status_pay');
             $bill->total_money = $request->input('total_money');
             $bill->total_money_after_discount = $request->input('total_money_after_discount');
             $bill->type_pay = $request->input('type_pay');
             $bill->total_seat = $request->input('total_seat');
-            $bill->code_bill = Str::random(6);
+            $bill->code_bill = Str::random(8);
             $bill->full_name = $request->input('full_name');
             $bill->phone_number = $request->input('phone_number');
             $bill->email = $request->input('email');
@@ -57,7 +57,7 @@ class BillController extends Controller
                 $request->input('full_name'),
                 'Thanh toán vé xe thành công',
                 'checkout-success',
-                $request->input('code_bill'),
+                $request->getBill->code_bill,
                 $request->input('start_location'),
                 $request->input('end_location'),
                 $request->input('start_time'),
@@ -116,7 +116,7 @@ class BillController extends Controller
             $bill->total_money_after_discount = $request->input('total_money_after_discount');
             $bill->type_pay = $request->input('type_pay');
             $bill->total_seat = $request->input('total_seat');
-            $bill->code_bill = Str::random(6);
+            $bill->code_bill = Str::random(8);
             $bill->full_name = $request->input('full_name');
             $bill->email = $request->input('email');
             $bill->phone_number = $request->input('phone_number');
