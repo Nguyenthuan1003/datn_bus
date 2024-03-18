@@ -9,7 +9,7 @@ const LocaltionComponent = () => {
     const [column, setColumn] = useState<any>([]);
     const [dataLocation, setDataLocation] = useState<any>([]);
     const [dataParentLocation, setDataParentLocation] = useState<any>([]);
-    
+    const [current, setCurrent] = useState<any>(true);
     console.log(dataParentLocation);
     
     useEffect(() => {
@@ -24,7 +24,7 @@ const LocaltionComponent = () => {
         const title = ['STT', 'tên', 'ảnh', 'Mô tả', 'Tỉnh thành']
         console.log('s', columsTemp);
         console.log('h', dataParentLocation);
-        if (dataLocation.length > 0) {
+        if (dataLocation?.length > 0) {
             Object.keys(dataLocation[0]).forEach((itemKey, key = 0) => {
                 if (!['id', 'created_at', 'updated_at'].includes(itemKey)) {
                     columsTemp.push({
@@ -66,13 +66,17 @@ const LocaltionComponent = () => {
     const handelGetList = () => {
         setReset(!reset)
     }
+    const fomatCustomCurrent=(data:any)=>{
+        setCurrent(data)
+    }
+
     return (
         <div>
             <TemplateTable
                 title={`Danh sách Địa điểm `}
                 callBack={handelGetList}
                 dataTable={dataLocation}
-
+                dataId={fomatCustomCurrent}
                 columnTable={column}
                 deleteFunc={deleteLocaltion}
                 createFunc={addLocaltion}

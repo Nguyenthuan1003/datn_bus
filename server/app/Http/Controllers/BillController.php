@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bill;
+use App\Mail\SendEmail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
 
 class BillController extends Controller
 {
@@ -22,34 +25,46 @@ class BillController extends Controller
     {
         try {
             $request->validate([
-                'discount_code_id' => 'required',
                 'seat_id' => 'required',
                 'trip_id' => 'required',
-                'user_id' => 'required',
                 'status_pay' => 'required',
                 'total_money' => 'required',
-                'total_money_after_discount' => 'required',
                 'type_pay' => 'required',
                 'total_seat' => 'required',
-                'code_bill' => 'required',
                 'phone_number' => 'required',
+                'full_name' => 'required'
             ]);
     
             $bill = new Bill();
             $bill->discount_code_id = $request->input('discount_code_id');
             $bill->seat_id = $request->input('seat_id');
             $bill->trip_id = $request->input('trip_id');
-            $bill->user_id = $request->input('user_id');
+            $bill->user_id = $request->input('user_id') ? $request->input('user_id') : 0;
             $bill->status_pay = $request->input('status_pay');
             $bill->total_money = $request->input('total_money');
-            $bill->total_mony_after_discount = $request->input('total_mony_after_discount');
+            $bill->total_money_after_discount = $request->input('total_money_after_discount');
             $bill->type_pay = $request->input('type_pay');
             $bill->total_seat = $request->input('total_seat');
-            $bill->code_bill = $request->input('code_bill');
+            $bill->code_bill = Str::random(8);
+            $bill->full_name = $request->input('full_name');
             $bill->phone_number = $request->input('phone_number');
+            $bill->email = $request->input('email');
+            $bill->full_name = $request->full_name;
+      
             $bill->save();
+            $getBill = Bill::with('discountCode', 'seat', 'trip', 'user', 'ticketOrder')->find($bill->id);
+            Mail::to('thuannmph19038@fpt.edu.vn')->send(new SendEmail(
+                $request->input('full_name'),
+                'Thanh toán vé xe thành công',
+                'checkout-success',
+                $request->getBill->code_bill,
+                $request->input('start_location'),
+                $request->input('end_location'),
+                $request->input('start_time'),
+                $request->input('code_seat')
+            ));
     
-            return response()->json(['message' => 'Thêm mới đơn hàng thành công','$bill' => $bill]);
+            return response()->json(['message' => 'Thêm mới đơn hàng thành công','bill' => $getBill]);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Đã xảy ra lỗi khi thêm mới hóa đơn', 'error' => $e->getMessage()]);
         }
@@ -75,13 +90,11 @@ class BillController extends Controller
     {
         try {
             $request->validate([
-                'discount_code_id' => 'required',
                 'seat_id' => 'required',
                 'trip_id' => 'required',
-                'user_id' => 'required',
+                'full_name' => 'required',
                 'status_pay' => 'required',
                 'total_money' => 'required',
-                'total_money_after_discount' => 'required',
                 'type_pay' => 'required',
                 'total_seat' => 'required',
                 'code_bill' => 'required',
@@ -97,17 +110,21 @@ class BillController extends Controller
             $bill->discount_code_id = $request->input('discount_code_id');
             $bill->seat_id = $request->input('seat_id');
             $bill->trip_id = $request->input('trip_id');
-            $bill->user_id = $request->input('user_id');
+            $bill->user_id = $request->input('user_id') ?? "";
             $bill->status_pay = $request->input('status_pay');
             $bill->total_money = $request->input('total_money');
-            $bill->total_mony_after_discount = $request->input('total_mony_after_discount');
+            $bill->total_money_after_discount = $request->input('total_money_after_discount');
             $bill->type_pay = $request->input('type_pay');
             $bill->total_seat = $request->input('total_seat');
-            $bill->code_bill = $request->input('code_bill');
+            $bill->code_bill = Str::random(8);
+            $bill->full_name = $request->input('full_name');
+            $bill->email = $request->input('email');
             $bill->phone_number = $request->input('phone_number');
+            $bill->full_name = $request->full_name;
+
             $bill->save();
-    
-            return response()->json(['message' => 'Cập nhật đơn hàng thành công','$bill' => $bill]);
+            $getBill = Bill::with('discountCode', 'seat', 'trip', 'user', 'ticketOrder')->find($bill->id);
+            return response()->json(['message' => 'Cập nhật đơn hàng thành công','bill' => $getBill]);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Đã xảy ra lỗi khi cập nhật hóa đơn', 'error' => $e->getMessage()]);
         }

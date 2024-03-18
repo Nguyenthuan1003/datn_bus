@@ -15,7 +15,7 @@ const HeaderComponent = () => {
                     <nav>
                         <ul className='navMenu__list'>
                             <li className='navMenu__list-link hover-underline-animation underline-animation--active'><Link to={'/'} >Trang chủ</Link></li>
-                            <li className='navMenu__list-link hover-underline-animation'><Link to={'/'}>Lịch trình</Link></li>
+                            <li className='navMenu__list-link hover-underline-animation'><Link to={'/route-schedule'}>Lịch trình</Link></li>
                             <li className='navMenu__list-link hover-underline-animation'><Link to={'/check-ticket'}>Tra cứu vé</Link></li>
                             <li className='navMenu__list-link hover-underline-animation'><Link to={'/'}>Hóa đơn</Link></li>
                             <li className='navMenu__list-link hover-underline-animation'><Link to={'/contact'}>Liên hệ</Link></li>

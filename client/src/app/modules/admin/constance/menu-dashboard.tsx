@@ -45,6 +45,11 @@ export const menuDashBoard =[
         label: 'Xe'
     },
     {
+        key: '/admin/seat',
+        icon: <SiAdminer />,
+        label: 'Chỗ ngồi '
+    },
+    {
         key: '/admin/trip',
         icon: <PiFlagBannerDuotone />,
         label: 'Trip'
