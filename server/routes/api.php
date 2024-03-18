@@ -110,6 +110,7 @@ Route::group(['prefix' => 'type-user'], function () {
 });
 
 Route::get('search/trip', [TripController::class, 'searchTrip']);
+Route::get('getparentlocations', [TripController::class, 'getParentLocations']);
 
 Route::group(['prefix' => 'payment'], function () {
     Route::post('/', [PaymentController::class, 'create']);

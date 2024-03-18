@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ParentLocation extends Model
 {
 
-    protected $table = 'parent_location';
+    protected $table = 'parent_locations';
 
     public function location()
     {
