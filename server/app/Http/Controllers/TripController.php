@@ -429,7 +429,7 @@ class TripController extends Controller
                         $seat['code_seat'] == $orderedSeat->code_seat &&
                         ($orderedSeat->status_pay == 1 || ($orderedSeat->status_pay == 0 && !$orderedSeat->created_at->addMinutes(20)->isBefore(now())))
                     ) {
-//                        dd($orderedSeat->created_at->addMinutes(20));
+                        //                        dd($orderedSeat->created_at->addMinutes(20));
                         $seat['status'] = 1;
                     }
                 }
@@ -503,6 +503,20 @@ class TripController extends Controller
                 ->where('end_location', $endLocation)
                 ->get();
 
+            $parentLocationImage = ParentLocation::where('name', $startLocation)
+                ->orWhere('name', $endLocation)
+                ->orderBy('name', 'asc')
+                ->select('id', 'name', 'image')
+                ->get();
+            // format image url
+            $parentLocationImage->each(function ($location) use ($request) {
+                $imageName = $location->image;
+                if ($location->image[0] !== "/") {
+                    $imageName =  "/" . $location->image;
+                }
+                $location->image = "http://" . $request->getHttpHost() . $imageName;
+            });
+
             $totalTripData = collect();
             // Check if route exists
             if ($isRouteExist->isNotEmpty()) {
@@ -552,14 +566,30 @@ class TripController extends Controller
                     }
                 })->filter();
 
-                foreach ($filteredTrips as $key => $trip) {
+                foreach ($filteredTrips as $trip) {
+                    $startLocationImage = $parentLocationImage->first(function ($location) use ($startLocation) {
+                        return $location->name === $startLocation;
+                    });
+                    $endLocationImage = $parentLocationImage->first(function ($location) use ($endLocation) {
+                        return $location->name === $endLocation;
+                    });
+
+                    // format car image url
+                    $carImageName =  $trip->car->image;
+                    if ($trip->car->image[0] !== "/") {
+                        $carImageName =  "/" . $trip->car->image;
+                    }
+                    $carImageName = "http://" . $request->getHttpHost() . $carImageName;
+
                     $formatedData[] = [
                         // trip
                         "trip_id" => $trip->id,
                         "start_time" => $trip->start_time,
                         "route_name" => $trip->route->route_name,
                         "start_location_parent" => $startLocation,
+                        "start_location_parent_image" => $startLocationImage->image,
                         "end_location_parent" => $endLocation,
+                        "end_location_parent_image" => $endLocationImage->image,
                         "start_location" => $trip->start_location,
                         "end_location" => $trip->end_location,
                         "trip_price" => $trip->trip_price,
@@ -573,7 +603,7 @@ class TripController extends Controller
                         "car_name" => $trip->car->name,
                         "car_type" => $trip->car->typeCar->name,
                         "car_color" => $trip->car->color,
-                        "car_image" => $trip->car->image,
+                        "car_image" => $carImageName,
                         "car_license_plate" => $trip->car->license_plate,
                         "car_color" => $trip->car->color,
                         // trip time create, update
