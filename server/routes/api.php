@@ -110,6 +110,7 @@ Route::group(['prefix' => 'type-user'], function () {
 });
 
 Route::get('search/trip', [TripController::class, 'searchTrip']);
+Route::get('getparentlocations', [TripController::class, 'getParentLocations']);
 
 Route::group(['prefix' => 'payment'], function () {
     Route::post('/', [PaymentController::class, 'create']);
@@ -119,6 +120,7 @@ Route::group(['prefix' => 'bill'], function () {
     Route::post('store', [BillController::class, 'store']);
     Route::get('edit/{id}', [BillController::class, 'show']);
     Route::put('update/{id}', [BillController::class, 'update']);
+    Route::put('update-admin/{id}', [BillController::class, 'updateAdmin']);
     Route::delete('delete/{id}', [BillController::class, 'destroy']);
     Route::post('checkin', [BillController::class, 'checkin']);
 });

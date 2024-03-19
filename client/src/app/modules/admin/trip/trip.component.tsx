@@ -50,6 +50,8 @@ const TripComponent = () => {
     useEffect(() => {
         getAllTrip().then((res) => {
             if (res) {
+                console.log(res.data, "-----------------");
+                
                 setDataTrip(res.data?.trips)
             }
         })
