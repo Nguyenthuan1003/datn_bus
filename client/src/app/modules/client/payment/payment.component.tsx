@@ -8,8 +8,11 @@ const PaymentComponent = () => {
     
     return (
         <div className='w-full'>
-            <div className='layout flex flex-wrap items-center py-5 px-40'>
+           
+            <div className='layout flex flex-wrap  py-5 px-40'>
+                
                 <div className="w-[320px] flex-col flex">
+                    
                     <LeftComponent />
                 </div>
                 <div className=':grid-cols-1 flex flex-wrap gap-6'>
@@ -20,12 +23,12 @@ const PaymentComponent = () => {
                             <span className="text-[13px] text-[#EC9B04]">Thời gian giữ chỗ còn lại
                                 <span className="font-medium">03 : 38</span>
                             </span>
-                            <div className="relative mt-4 aspect-square w-80 rounded-lg bg-white">
+                            {/* <div className="relative mt-4 aspect-square w-80 rounded-lg bg-white">
                                 <img alt="qr code" loading="lazy" decoding="async" data-nimg="fill"
                                     className="transition-all duration-200 relative mt-4 aspect-square w-80 rounded-lg bg-white"
                                     src="https://api.futabus.vn/ticket-online/api/qrcode?Content=https%3A%2F%2Fgateway.zalopay.vn%2Fopeninapp%3Forder%3DeyJ6cHRyYW5zdG9rZW4iOiJBQ243YkdaU2p5WmZ6OEJHZUZKRC1CbXciLCJhcHBpZCI6MzYwfQ%3D%3D&amp;Size=180&amp;Color=Black&amp;Logo=zalopay.png"
                                     style={{ position: 'absolute', height: '100%', width: '100%', inset: '0px', color: 'transparent' }} />
-                            </div>
+                            </div> */}
                             {/* <div className="flex h-80 w-80 flex-col items-center justify-center gap-3">
                                 <span role="img" aria-label="reload" className="anticon anticon-reload text-5xl">
                                     <svg viewBox="64 64 896 896" focusable="false" data-icon="reload" width="1em" height="1em" fill="currentColor" aria-hidden="true">
@@ -33,7 +36,7 @@ const PaymentComponent = () => {
                                     </svg>
                                 </span>Tải lại mã thanh toán
                             </div> */}
-                            <div className="ml-2 mt-6 flex flex-col items-start gap-3">
+                            {/* <div className="ml-2 mt-6 flex flex-col items-start gap-3">
                                 <div className="text-green font-medium">Hướng dẫn thanh toán bằng ZaloPay</div>
                                 <div className="flex gap-2 text-left">
                                     <div className="h-6 rounded-full bg-gray-500 px-2 pt-1 text-xs text-white">1</div>
@@ -47,7 +50,7 @@ const PaymentComponent = () => {
                                     <div className="rounded-full bg-gray-500 px-2 pt-1 text-xs text-white">3</div>
                                     Quét mã ở trang này và thanh toán
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
 
@@ -72,43 +75,43 @@ const PaymentComponent = () => {
                                 <p className="icon-orange flex gap-4 text-xl font-medium text-black">Thông tin lượt đi</p>
                                 <div className="mt-4 flex justify-between">
                                     <span className="text-gray w-20">Tuyến xe</span>
-                                    <span className="text-right text-black">BX Mien Dong ⇒ Da lat</span>
+                                    <span className="text-right text-black">{cart?.route}</span>
                                 </div>
-                                <div className="mt-1 flex items-center justify-between">
+                                {/* <div className="mt-1 flex items-center justify-between">
                                     <span className="text-gray w-28">Thời gian</span>
                                     <span className="text-[#00613D]">16:35 01-03-2024</span>
-                                </div>
+                                </div> */}
                                 <div className="mt-1 flex items-center justify-between">
                                     <span className="text-gray w-28">Số lượng ghế</span>
                                     <span className="text-black">{cart?.seat_id?.length}</span>
                                 </div>
                                 <div className="mt-1 flex items-center justify-between">
                                     <span className="text-gray w-28">Số ghế</span>
-                                    <span className="text-[#00613D]">{cart?.seat_id}</span>
+                                    <span className="text-[#00613D]">{cart && cart.seat_id ? cart.seat_id.join(", ") : ''}</span>
                                 </div>
                                 <div className="mt-1 flex items-center justify-between">
                                     <span className="text-gray w-40">Điểm lên xe</span>
-                                    <span className="text-right text-black">BX Mien Đông Mới</span>
+                                    <span className="text-right text-black">{cart?.location?.start_location}</span>
                                 </div>
                                 <div className="mt-1 flex items-center justify-between">
                                     <span className="text-gray">Tổng tiền lượt đi</span>
-                                    <span className="text-[#00613D]">228.000đ</span>
+                                    <span className="text-[#00613D]">{cart?.total_money }</span>
                                 </div>
                             </div>
                             <div className="w-full rounded-xl border border-[#DDE2E8] bg-white px-4 py-3 text-[15px]">
                                 <div className="icon-orange flex gap-2 text-xl font-medium text-black">Chi tiết giá</div>
                                 <div className="mt-4 flex items-center justify-between">
                                     <span className="text-gray">Giá vé lượt đi</span>
-                                    <span className="text-orange">228.000đ</span>
+                                    <span className="text-orange">{cart?.total_money}</span>
                                 </div>
                                 <div className="mt-1 flex items-center justify-between">
                                     <span className="text-gray">Phí thanh toán</span>
-                                    <span className="text-black">0đ</span>
+                                    <span className="text-black"></span>
                                 </div>
                                 <div className="divide my-3"></div>
                                 <div className="flex items-center justify-between">
                                     <span className="text-gray">Tổng tiền</span>
-                                    <span className="text-orange">228.000đ</span>
+                                    <span className="text-orange">{cart?.total_money_after_discoun}</span>
                                 </div>
                             </div>
                         </div>

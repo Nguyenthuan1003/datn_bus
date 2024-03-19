@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom'
 
 const BooktickitsComponent = () => {
     const [selectData,setSelectData]=useState<any>([])
+
     console.log(selectData,'ss');
     const {id:trip_id} = useParams();
     console.log('id',trip_id);
@@ -18,11 +19,11 @@ const BooktickitsComponent = () => {
                 
                 <div className='w-[65%] '>
       
-                    <LeftBookTickets trip_id={trip_id} setSelectData={setSelectData} setDataPrice={setDataPrice} selectData={selectData} dataPrice={dataPrice}/>
+                    <LeftBookTickets trip_id={trip_id}  setSelectData={setSelectData} setDataPrice={setDataPrice} selectData={selectData} dataPrice={dataPrice}/>
                 </div>
 
                 <div className='w-[35%] py-4'>
-                    <RightBookTickets selectData={selectData} dataPrice={dataPrice}/>
+                    <RightBookTickets trip_id={trip_id} selectData={selectData} dataPrice={dataPrice}/>
                 </div>
             </div>
         </div>

@@ -2,10 +2,12 @@ import React, { FC, useEffect, useState } from 'react'
 import { css } from '@emotion/react'
 import { CiCircleInfo } from "react-icons/ci";
 import { getTripId } from '~/app/api/trip/trip.api';
-const Costticketcomponent:FC<any> = ({selectData,dataPrice}) => {
+const Costticketcomponent:FC<any> = ({trip_id,selectData,dataPrice}) => {
   const [dataChair,setDataChair]=useState<any>()
+  console.log("dataChair",dataChair);
+  
     useEffect(()=>{
-        getTripId().then((res:any)=>{
+        getTripId(trip_id).then((res:any)=>{
             setDataChair(res?.data)
         })
     },[])

@@ -1,5 +1,4 @@
 import React, { FC, useEffect, useState } from 'react'
-import { getTripId } from '~/app/api/trip/trip.api'
 import ButtonRadiusCompoennt from '~/app/component/parts/button/button.component'
 
 const FutapayComponent:FC<any> = ({dataPrice})=>{

@@ -4,7 +4,7 @@ import CustomerInformation from './component/customer-information/customer-infor
 import Reception from './component/reception/reception.component';
 import FutapayComponent from './component/futapay/futapay.component';
 import BreadCrumb from '~/app/component/parts/BreadCrumb/BreadCrumb';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { validateTicket } from '~/app/utils/validateForm';
@@ -12,20 +12,50 @@ import { addBill } from '~/app/api/bill/bill.api';
 import { message } from 'antd';
 import { useCartRedux } from '../../redux/hook/useCartReducer';
 import { useNavigate } from 'react-router-dom';
+import { getTripId } from '~/app/api/trip/trip.api';
 
-const LeftBookTickets: FC<any> = ({ trip_id,setSelectData, setDataPrice, selectData, dataPrice }) => {
+const LeftBookTickets: FC<any> = ({trip_id,setSelectData, setDataPrice, selectData, dataPrice }) => {
     const { handleSubmit, control, formState: { errors } } = useForm({
         resolver: yupResolver(validateTicket)
     })
+    const [startLocation, setStartLocation] = useState<any>();
+    const [endLocation, setEndLocation] = useState<any>();
+    const [route, setRoute] = useState<any>()
+    console.log("route",route);
     
-    const [selectLocation, setSelectLocation] = useState<any>();
-    console.log('Loo',selectLocation);
-    console.log('skkkk',selectData);
+    useEffect(()=>{
+        getTripId(trip_id).then((res)=>{  
+            setStartLocation(res?.data?.trip?.start_location);
+            setEndLocation(res?.data?.trip?.end_location);
+            setRoute(res?.data?.trip?.route?.name);
+        });
+    },[trip_id])
+    const locationData = {
+        start_location: startLocation,
+        end_location: endLocation
+    };
     
-    
-    
+    // useEffect(() => {
+    //     getTripId(trip_id).then((res: any) => {
+    //         if (res) {
+    //             const { start_location, end_location } = res?.data?.trip;
+    //             setAdddressLocation({ start_location, end_location });
+    //         } else {
+    //             console.error('Không thể tải dữ liệu chuyến đi.');
+    //         }
+    //     }).catch(error => {
+    //         console.error('Lỗi khi tải dữ liệu chuyến đi:', error);
+    //     });
+    // }, [trip_id]);
+    // const { start_location, end_location } = adddressLocation;
+
+    //     const locationData = {
+    //         start_location,
+    //         end_location
+    //     };    
     const [bill, setBill] = useState<any>();
     const { data: { cart }, actions } = useCartRedux()
+    
     console.log('bill',cart);
     
     const navigate=useNavigate()
@@ -36,63 +66,49 @@ const LeftBookTickets: FC<any> = ({ trip_id,setSelectData, setDataPrice, selectD
             email: data?.email,
             total_money:dataPrice,
             total_money_after_discoun:dataPrice,
-            seat_id:JSON.stringify(selectData),
+            seat_id:selectData,
             trip_id: trip_id ,
+            location:locationData,
+            status:'Chờ xác nhận',
+            route:route
         })
-        console.log('select',selectData);
-        
-        localStorage.setItem('cart', JSON.stringify(data));
-        localStorage.setItem('loation', JSON.stringify(selectLocation));
+   
+        localStorage.setItem('cart', JSON.stringify(actions.setDataBill({
+            full_name: data?.full_name,
+            phone_number: data?.phone_number,
+            email: data?.email,
+            total_money:dataPrice,
+            total_money_after_discoun:dataPrice,
+            seat_id:selectData,
+            trip_id: trip_id ,
+            location:locationData,
+            route: route
+        })));
+        localStorage.setItem('loation', JSON.stringify(locationData));
+        localStorage.setItem('route', JSON.stringify(route));
         localStorage.setItem('seat', JSON.stringify(selectData));
         
-        
-        //add bill to database 
-        
-        // setBill({
-        //     code_bill: "A11",
-        //     full_name: data?.full_name,
-        //     phone_number: data?.phone_number,
-        //     email: data?.email,
-        //     total_money:dataPrice,
-        //     total_money_after_discoun:dataPrice,
-        //     seat_id:"1012",
-        //     trip_id:"1025",
-        //     status_pay:"1",
-        //     type_pay:"0",
-        //     total_seat:"1",
-        //     // listSeat:[...cart].map((item:any)=>{return{seat_id: item.id}})
-        // })
-     
-        try {
-            const billData = {
-                full_name: data?.full_name,
-                phone_number: data?.phone_number,
-                email: data?.email,
-                total_money: dataPrice,
-                total_money_after_discount: dataPrice,
-                seat_id: JSON.stringify(selectData),
-                trip_id: "1025",
-                status_pay: "0",
-                type_pay: "0",
-                total_seat: selectData.length ,
-                // listSeat: [...listSeats]
-                //     .filter((i) => selectData.includes(i.id))
-                //     .map((e) => ({
-                //         row: e.row,
-                //         column: e.column,
-                //     }))
-            };
-
-            // Gọi API để lưu hóa đơn
-             addBill(billData);
-
-        } catch (error) {
-            console.error('Error saving bill:', error);
-            // Xử lý lỗi (hiển thị thông báo lỗi, ghi log, vv.)
-        }
+        // try {
+        //     const billData = {
+        //         full_name: data?.full_name,
+        //         phone_number: data?.phone_number,
+        //         email: data?.email,
+        //         total_money: dataPrice,
+        //         total_money_after_discount: dataPrice,
+        //         seat_id: JSON.stringify(selectData),
+        //         trip_id: trip_id,
+        //         status_pay: "0",
+        //         type_pay: "0",
+        //         total_seat: selectData.length ,
+        //     };
+        //     // Gọi API để lưu hóa đơn
+        //      addBill(billData);
+        // } catch (error) {
+        //     console.error('Error saving bill:', error);
+        // }
         if(cart){
             navigate("/payment")
-            }
+        }
     };
     
     return (
@@ -101,18 +117,18 @@ const LeftBookTickets: FC<any> = ({ trip_id,setSelectData, setDataPrice, selectD
                 <div className='py-4 '>
                     <BreadCrumb />
                 </div>
-
                 <div>
-                    <CheckChaircomponent setSelectData={setSelectData} setDataPrice={setDataPrice} />
+                    <CheckChaircomponent trip_id={trip_id} setSelectData={setSelectData} setDataPrice={setDataPrice} />
                 </div>
                 <div>
-                    <CustomerInformation control={control} errors={errors} />
+                    <CustomerInformation trip_id={trip_id} control={control} errors={errors} />
                 </div>
                 <div className='py-4'>
-                    <Reception setSelectData={setSelectLocation}  />
+                    {/* setSelectData={setSelectLocation}  */}
+                    <Reception trip_id={trip_id}  />
                 </div>
                 <div className='py-4'>
-                    <FutapayComponent selectData={selectData} dataPrice={dataPrice} setSelectData={setSelectData} setDataPrice={setDataPrice} />
+                    <FutapayComponent trip_id={trip_id} selectData={selectData} dataPrice={dataPrice} setSelectData={setSelectData} setDataPrice={setDataPrice} />
                 </div>
             </form>
         </div>

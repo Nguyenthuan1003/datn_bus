@@ -2,16 +2,17 @@ import { css } from '@emotion/react';
 import { FC, useEffect, useState } from 'react';
 import { getTripId } from '~/app/api/trip/trip.api';
 import ChairUiComponent from '~/app/component/parts/chair-ui/chair-ui.component';
+import tripSlice from '~/app/modules/client/redux/reducer/tripSlice/tripSlice';
 
-const CheckChaircomponent:FC<any> = ({setSelectData,setDataPrice}) => {
-    const [data, setData] = useState<any>();
+const CheckChaircomponent:FC<any> = ({trip_id,setSelectData,setDataPrice}) => {
+    const [data, setData] = useState<any>();    
     const [dataChair, setDataChair] = useState<any>();
     const [dataTrips, setDataTrips] = useState<any>();
     const [selectData1, setSelectData1] = useState<any>([]);
-    const [totalPrice, setTotalPrice] = useState<any>(0);
-
+    // const [totalPrice, setTotalPrice] = useState<any>(0);
+    
     useEffect(() => {
-        getTripId().then((res: any) => {
+        getTripId(trip_id).then((res: any) => {
             if (res) {
                 setDataChair(res?.data?.seats);
                 setDataTrips(res?.data?.trip);
@@ -39,7 +40,7 @@ const CheckChaircomponent:FC<any> = ({setSelectData,setDataPrice}) => {
             setSelectData1([...selectData1,seat?.code_seat])
             setSelectData([...selectData1,seat?.code_seat])
             setDataPrice((prewPrice:any)=>prewPrice+Number(tripData))
-            localStorage.setItem('code_seat', JSON.stringify([seatCode]));
+            // localStorage.setItem('code_seat', JSON.stringify([seatCode]));
         }
         else {
             const newSelectSeat=[...selectData1]            

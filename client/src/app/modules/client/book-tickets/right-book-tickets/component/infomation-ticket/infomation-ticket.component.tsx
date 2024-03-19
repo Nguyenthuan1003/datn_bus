@@ -3,20 +3,22 @@ import { css } from '@emotion/react'
 import { getTripId } from '~/app/api/trip/trip.api'
 import moment from 'moment-timezone'
 
-const Infomationticketcomponent = ({selectData,dataPrice}:any) => {
+const Infomationticketcomponent = ({trip_id,selectData,dataPrice}:any) => {
   const [dataTripTicket,setDataTripTicket]=useState<any>([])
   const [dataSeat,setDataSeat]=useState<any>([])
-
+  console.log('dataTripTicket',dataSeat);
+  
   useEffect(()=>{
-      getTripId().then((res:any)=>{
+      getTripId(trip_id).then((res:any)=>{
         setDataTripTicket(res?.data?.trip)
         setDataSeat(res?.data)
       })
   },[])
 
+  
   const routeName = dataTripTicket?.route?.name
   const timeStart = moment(dataTripTicket?.start_time).format('DD/MM/YYYY HH:mm')
-  const  timeEnd = moment(dataTripTicket?.end_time).format('HH:mm')  
+  // const  timeEnd = moment(dataTripTicket?.end_time).format('HH:mm')  
   return (
     <div css={cssInforTicket} className='info bg-white '>
         <h3 className='font-semibold text-[1.5rem] pb-2'>Thông tin lượt đi</h3>
