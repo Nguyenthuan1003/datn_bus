@@ -31,14 +31,17 @@ const LeftComponent = () => {
                 status_pay: "0",
                 type_pay: "0",
                 total_seat: cart?.seat_id?.length ,
+                code_bill: cart?.code_bill
             };
             // Gọi API để lưu hóa đơn
             console.log('billData',billData);
             
             await addBill(billData);
+            console.log(cart?.code_bill);
+            
         
             // Sau khi hóa đơn được lưu thành công, thực hiện thanh toán
-            const res = await paymentVNP({ amount: cart?.total_money_after_discoun });
+            const res = await paymentVNP({ amount: cart?.total_money_after_discoun , code_bill:cart?.code_bill});
         
             // Sau khi nhận được URL thanh toán, chuyển hướng tới trang thanh toán
             window.location.href = res?.data?.url;

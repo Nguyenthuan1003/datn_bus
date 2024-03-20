@@ -21,7 +21,7 @@ const LeftBookTickets: FC<any> = ({trip_id,setSelectData, setDataPrice, selectDa
     const [startLocation, setStartLocation] = useState<any>();
     const [endLocation, setEndLocation] = useState<any>();
     const [route, setRoute] = useState<any>()
-    console.log("route",route);
+    // console.log("route",route);
     
     useEffect(()=>{
         getTripId(trip_id).then((res)=>{  
@@ -53,7 +53,11 @@ const LeftBookTickets: FC<any> = ({trip_id,setSelectData, setDataPrice, selectDa
     //         start_location,
     //         end_location
     //     };    
-    const [bill, setBill] = useState<any>();
+    // const [bill, setBill] = useState<any>([]);
+
+    const billUser  = localStorage.getItem("bill_user") ? JSON.parse(localStorage.getItem("bill_user")!) : [];
+
+    console.log('userBill',billUser[0]?.code_bill);
     const { data: { cart }, actions } = useCartRedux()
     
     console.log('bill',cart);
@@ -70,7 +74,8 @@ const LeftBookTickets: FC<any> = ({trip_id,setSelectData, setDataPrice, selectDa
             trip_id: trip_id ,
             location:locationData,
             status:'Chờ xác nhận',
-            route:route
+            route:route,
+            code_bill: billUser[0]?.code_bill
         })
    
         localStorage.setItem('cart', JSON.stringify(actions.setDataBill({
@@ -82,7 +87,8 @@ const LeftBookTickets: FC<any> = ({trip_id,setSelectData, setDataPrice, selectDa
             seat_id:selectData,
             trip_id: trip_id ,
             location:locationData,
-            route: route
+            route: route,
+            code_bill: billUser[0]?.code_bill
         })));
         localStorage.setItem('loation', JSON.stringify(locationData));
         localStorage.setItem('route', JSON.stringify(route));
