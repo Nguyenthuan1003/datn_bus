@@ -53,16 +53,6 @@ class BillController extends Controller
       
             $bill->save();
             $getBill = Bill::with('discountCode', 'seat', 'trip', 'user', 'ticketOrder')->find($bill->id);
-            Mail::to('thuannmph19038@fpt.edu.vn')->send(new SendEmail(
-                $request->input('full_name'),
-                'Thanh toán vé xe thành công',
-                'checkout-success',
-                $request->getBill->code_bill,
-                $request->input('start_location'),
-                $request->input('end_location'),
-                $request->input('start_time'),
-                $request->input('code_seat')
-            ));
     
             return response()->json(['message' => 'Thêm mới đơn hàng thành công','bill' => $getBill]);
         } catch (\Exception $e) {
@@ -90,15 +80,12 @@ class BillController extends Controller
     {
         try {
             $request->validate([
-                'seat_id' => 'required',
-                'trip_id' => 'required',
                 'full_name' => 'required',
                 'status_pay' => 'required',
-                'total_money' => 'required',
                 'type_pay' => 'required',
-                'total_seat' => 'required',
-                'code_bill' => 'required',
-                'phone_number' => 'required',
+                'start_location' => 'required',
+                'end_location' => 'required',
+                'code_seat' => 'required',
             ]);
     
             $bill = Bill::find($id);
@@ -107,20 +94,63 @@ class BillController extends Controller
                 return response()->json(['message' => 'Bill not found'], 404);
             }
     
-            $bill->discount_code_id = $request->input('discount_code_id');
-            $bill->seat_id = $request->input('seat_id');
-            $bill->trip_id = $request->input('trip_id');
-            $bill->user_id = $request->input('user_id') ?? "";
-            $bill->status_pay = $request->input('status_pay');
-            $bill->total_money = $request->input('total_money');
-            $bill->total_money_after_discount = $request->input('total_money_after_discount');
-            $bill->type_pay = $request->input('type_pay');
-            $bill->total_seat = $request->input('total_seat');
-            $bill->code_bill = Str::random(8);
-            $bill->full_name = $request->input('full_name');
-            $bill->email = $request->input('email');
-            $bill->phone_number = $request->input('phone_number');
-            $bill->full_name = $request->full_name;
+            $bill->discount_code_id = $request->input('discount_code_id') ? $request->input('discount_code_id') : $bill->discount_code_id;
+            $bill->seat_id = $request->input('seat_id') ? $request->input('seat_id') : $bill->seat_id;
+            $bill->trip_id = $request->input('trip_id') ? $request->input('trip_id') : $bill->trip_id;
+            $bill->user_id = $request->input('user_id') ? $request->input('user_id') : $bill->user_id;
+            $bill->status_pay = $request->input('status_pay') ? $request->input('status_pay') : $bill->status_pay;
+            $bill->total_money = $request->input('total_money') ? $request->input('total_money') : $bill->total_money;
+            $bill->total_money_after_discount = $request->input('total_money_after_discount') ? $request->input('total_money_after_discount') : $bill->total_money_after_discount;
+            $bill->type_pay = $request->input('type_pay') ? $request->input('type_pay') : $bill->type_pay;
+            $bill->total_seat = $request->input('total_seat') ? $request->input('total_seat') : $bill->total_seat;
+            $bill->full_name = $request->input('full_name') ? $request->input('full_name') : $bill->full_name;
+            $bill->email = $request->input('email') ? $request->input('email') : $bill->email;
+            $bill->phone_number = $request->input('phone_number') ? $request->input('phone_number') : $bill->phone_number;
+
+            $bill->save();
+            $getBill = Bill::with('discountCode', 'seat', 'trip', 'user', 'ticketOrder')->find($bill->id);
+            Mail::to('thuannmph19038@fpt.edu.vn')->send(new SendEmail(
+                $request->input('full_name'),
+                'Thanh toán vé xe thành công',
+                'checkout-success',
+                $request->getBill->code_bill,
+                $request->input('start_location'),
+                $request->input('end_location'),
+                $request->input('start_time'),
+                $request->input('code_seat')
+            ));
+            return response()->json(['message' => 'Cập nhật đơn hàng thành công','bill' => $getBill]);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Đã xảy ra lỗi khi cập nhật hóa đơn', 'error' => $e->getMessage()]);
+        }
+        
+    }
+
+    public function updateAdmin(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'status_pay' => 'required',
+            ]);
+    
+            $bill = Bill::find($id);
+    
+            if (!$bill) {
+                return response()->json(['message' => 'Bill not found'], 404);
+            }
+    
+            $bill->discount_code_id = $request->input('discount_code_id') ? $request->input('discount_code_id') : $bill->discount_code_id;
+            $bill->seat_id = $request->input('seat_id') ? $request->input('seat_id') : $bill->seat_id;
+            $bill->trip_id = $request->input('trip_id') ? $request->input('trip_id') : $bill->trip_id;
+            $bill->user_id = $request->input('user_id') ? $request->input('user_id') : $bill->user_id;
+            $bill->status_pay = $request->input('status_pay') ? $request->input('status_pay') : $bill->status_pay;
+            $bill->total_money = $request->input('total_money') ? $request->input('total_money') : $bill->total_money;
+            $bill->total_money_after_discount = $request->input('total_money_after_discount') ? $request->input('total_money_after_discount') : $bill->total_money_after_discount;
+            $bill->type_pay = $request->input('type_pay') ? $request->input('type_pay') : $bill->type_pay;
+            $bill->total_seat = $request->input('total_seat') ? $request->input('total_seat') : $bill->total_seat;
+            $bill->full_name = $request->input('full_name') ? $request->input('full_name') : $bill->full_name;
+            $bill->email = $request->input('email') ? $request->input('email') : $bill->email;
+            $bill->phone_number = $request->input('phone_number') ? $request->input('phone_number') : $bill->phone_number;
 
             $bill->save();
             $getBill = Bill::with('discountCode', 'seat', 'trip', 'user', 'ticketOrder')->find($bill->id);
