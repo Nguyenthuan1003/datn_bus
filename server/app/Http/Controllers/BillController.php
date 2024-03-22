@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bill;
+use App\Models\TicketOrder;
 use App\Mail\SendEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -32,7 +33,10 @@ class BillController extends Controller
                 'type_pay' => 'required',
                 'total_seat' => 'required',
                 'phone_number' => 'required',
-                'full_name' => 'required'
+                'full_name' => 'required',
+                'code_seat' => 'required',
+                'start_location' => 'required',
+                'end_location' => 'required',
             ]);
     
             $bill = new Bill();
@@ -50,9 +54,21 @@ class BillController extends Controller
             $bill->phone_number = $request->input('phone_number');
             $bill->email = $request->input('email');
             $bill->full_name = $request->full_name;
-      
+            
             $bill->save();
-            $getBill = Bill::with('discountCode', 'seat', 'trip', 'user', 'ticketOrder')->find($bill->id);
+            $string = str_replace(['[', ']', "'"], '', $request->code_seat);
+            $codeSeats = explode(', ', $string);
+            foreach ($codeSeats as $codeSeat) {
+                $ticketOrder = new TicketOrder;
+                $ticketOrder->code_ticket = Str::random(8);
+                $ticketOrder->bill_id = $bill->id;
+                $ticketOrder->code_seat = $codeSeat;
+                $ticketOrder->pickup_location = $request->input('start_location');
+                $ticketOrder->pay_location = $request->input('end_location');
+                $ticketOrder->status = 0;
+                $ticketOrder->save();
+            }
+            $getBill = Bill::find($bill->id);
     
             return response()->json(['message' => 'Thêm mới đơn hàng thành công','bill' => $getBill]);
         } catch (\Exception $e) {
