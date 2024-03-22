@@ -26,7 +26,7 @@ class SendEmail extends Mailable
      *
      * @return void
      */
-    public function __construct($userName,$title, $content, $codeBill, $startLocation, $endLocation, $startTime, $seats, $pickUpLocation, $payLocation)
+    public function __construct($userName,$title, $content, $codeBill, $startLocation, $endLocation, $pickUpLocation, $payLocation, $startTime, $seats)
     {
         $this->userName = $userName;
         $this->title = $title;
