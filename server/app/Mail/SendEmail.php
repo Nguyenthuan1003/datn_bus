@@ -19,7 +19,6 @@ class SendEmail extends Mailable
     public $startTime;
     public $seats;
     public $content;
-
     /**
      * Create a new content instance.
      *

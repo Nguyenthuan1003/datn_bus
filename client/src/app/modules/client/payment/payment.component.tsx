@@ -87,7 +87,9 @@ const PaymentComponent = () => {
                                 </div>
                                 <div className="mt-1 flex items-center justify-between">
                                     <span className="text-gray w-28">Số ghế</span>
-                                    <span className="text-[#00613D]">{cart && cart.seat_id ? cart.seat_id.join(", ") : ''}</span>
+                                    {/* <span className="text-[#00613D]">{cart && cart.seat_id ? cart.seat_id.join(", ") : ''}</span> */}
+                                    <span className="text-[#00613D]">{cart?.seat_id}</span>
+
                                 </div>
                                 <div className="mt-1 flex items-center justify-between">
                                     <span className="text-gray w-40">Điểm lên xe</span>

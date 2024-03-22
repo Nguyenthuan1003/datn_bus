@@ -67,18 +67,22 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
     console.log('bill', cart);
 
     const navigate = useNavigate()
-    const onSubmit = (data: any) => {
+    const onSubmit = async (data: any) => {
+        console.log('seat_id', JSON.stringify(selectData));
+        
         actions.setDataBill({
             full_name: data?.name,
             phone_number: data?.phone_number,
             email: data?.email,
             total_money: dataPrice,
             total_money_after_discoun: dataPrice,
-            seat_id: selectData,
+            // seat_id: selectData,
+            seat_id: JSON.stringify(selectData),
             trip_id: trip_id,
             location: locationData,
             route: route,
-            code_bill: billUser[0]?.code_bill,
+            // code_bill: billUser[0]?.code_bill,
+
             user_id: idUser || null,
             discount_code_id: null
         })
@@ -89,18 +93,21 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
             email: data?.email,
             total_money: dataPrice,
             total_money_after_discoun: dataPrice,
-            seat_id: selectData,
+            // seat_id: selectData,
+            seat_id: JSON.stringify(selectData),
             trip_id: trip_id,
             location: locationData,
             route: route,
             code_bill: billUser[0]?.code_bill,
+            // code_bill:  Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1),\
+            
             user_id: idUser || null,
             discount_code_id: null
         })));
         localStorage.setItem('loation', JSON.stringify(locationData));
         localStorage.setItem('route', JSON.stringify(route));
         localStorage.setItem('seat', JSON.stringify(selectData));
-
+        ////////////////////////////////
         // try {
         //     const billData = {
         //         full_name: data?.full_name,
@@ -119,6 +126,41 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
         // } catch (error) {
         //     console.error('Error saving bill:', error);
         // }
+        /////////////////////////////////
+        try {
+                    const billData = {
+                        full_name: data?.name,
+                        phone_number: data?.phone_number,
+                        email: data?.email,
+                        total_money: dataPrice,
+                        total_money_after_discount: dataPrice,
+                        seat_id: JSON.stringify([selectData]),
+                        trip_id: trip_id,
+                        status_pay: "0",
+                        type_pay: "0",
+                        total_seat: selectData.length,
+                        // code_bill: cart?.code_bill,
+                        discount_code_id: null,
+                        user_id:idUser?.id || null
+                    };
+                    // Gọi API để lưu hóa đơn
+                    console.log('billData',billData);
+                    
+                    
+                    await addBill(billData);            
+                    localStorage.setItem('billData', JSON.stringify(billData));
+                } catch (error:any) {
+                    if (error.response) {
+                        // Lỗi từ API
+                        console.error('API error:', error.response.data);
+                    } else if (error.request) {
+                        // Lỗi từ không có phản hồi từ server
+                        console.error('No response received:', error.request);
+                    } else {
+                        // Lỗi khác
+                        console.error('Error:', error.message);
+                    }
+                }
         if (cart) {
             navigate("/payment")
         }
