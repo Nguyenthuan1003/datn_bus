@@ -9,6 +9,7 @@ import TripComponent from "./trip/trip.component";
 import TypeCarComponent from "./type_car/typeCar.component";
 import CarComponent from "./car/car.component";
 import SeatComponent from "./seat/seat.component";
+import BillComponent from "./bill/bill.component";
 export const adminRouter: RouteObject[] = [
     {
         path: '',
@@ -54,6 +55,13 @@ export const adminRouter: RouteObject[] = [
         path: 'trip',
         element: <TripComponent />,
         children: []
+    },
+    {
+ 
+        path: 'bill',
+        element: <BillComponent />,
+        children: []
     }
+
 
 ]

@@ -13,87 +13,94 @@ import { message } from 'antd';
 import { useCartRedux } from '../../redux/hook/useCartReducer';
 import { useNavigate } from 'react-router-dom';
 import { getTripId } from '~/app/api/trip/trip.api';
+import { getOneUser } from '~/app/api/auth/auth.api';
+import { assert } from 'console';
 
-const LeftBookTickets: FC<any> = ({trip_id,setSelectData, setDataPrice, selectData, dataPrice }) => {
+const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, selectData, dataPrice }) => {
+    const accsetoken: any = localStorage.getItem('token')
+    console.log(accsetoken)
+    const arrayFilter = ['phone_number', 'name', 'email']
     const { handleSubmit, control, formState: { errors } } = useForm({
-        resolver: yupResolver(validateTicket)
+        mode:"onChange",
+        resolver: yupResolver(validateTicket),
+        defaultValues: async () => {
+            const userData = (await getOneUser(accsetoken)).data.user
+            // console.log("1",userData)
+            const filterData: any = {}
+            arrayFilter.forEach((key: any) => {
+                if (userData.hasOwnProperty(key)) {
+                    filterData[key] = userData[key]
+                }
+            })
+            return filterData
+        }
     })
     const [startLocation, setStartLocation] = useState<any>();
     const [endLocation, setEndLocation] = useState<any>();
+    const [idUser, setIdUser] = useState<any>()
     const [route, setRoute] = useState<any>()
     // console.log("route",route);
-    
-    useEffect(()=>{
-        getTripId(trip_id).then((res)=>{  
+
+    useEffect(() => {
+        getTripId(trip_id).then((res) => {
             setStartLocation(res?.data?.trip?.start_location);
             setEndLocation(res?.data?.trip?.end_location);
             setRoute(res?.data?.trip?.route?.name);
         });
-    },[trip_id])
+        getOneUser(accsetoken).then((res:any)=>{
+            setIdUser(res?.data?.user?.id)
+        })
+     
+    }, [trip_id])
+    console.log("userdđ",idUser);
+    
     const locationData = {
         start_location: startLocation,
         end_location: endLocation
     };
-    
-    // useEffect(() => {
-    //     getTripId(trip_id).then((res: any) => {
-    //         if (res) {
-    //             const { start_location, end_location } = res?.data?.trip;
-    //             setAdddressLocation({ start_location, end_location });
-    //         } else {
-    //             console.error('Không thể tải dữ liệu chuyến đi.');
-    //         }
-    //     }).catch(error => {
-    //         console.error('Lỗi khi tải dữ liệu chuyến đi:', error);
-    //     });
-    // }, [trip_id]);
-    // const { start_location, end_location } = adddressLocation;
 
-    //     const locationData = {
-    //         start_location,
-    //         end_location
-    //     };    
-    // const [bill, setBill] = useState<any>([]);
 
-    const billUser  = localStorage.getItem("bill_user") ? JSON.parse(localStorage.getItem("bill_user")!) : [];
+    const billUser = localStorage.getItem("bill_user") ? JSON.parse(localStorage.getItem("bill_user")!) : [];
 
-    console.log('userBill',billUser[0]?.code_bill);
     const { data: { cart }, actions } = useCartRedux()
-    
-    console.log('bill',cart);
-    
-    const navigate=useNavigate()
+
+    console.log('bill', cart);
+
+    const navigate = useNavigate()
     const onSubmit = (data: any) => {
         actions.setDataBill({
-            full_name: data?.full_name,
+            full_name: data?.name,
             phone_number: data?.phone_number,
             email: data?.email,
-            total_money:dataPrice,
-            total_money_after_discoun:dataPrice,
-            seat_id:selectData,
-            trip_id: trip_id ,
-            location:locationData,
-            status:'Chờ xác nhận',
-            route:route,
-            code_bill: billUser[0]?.code_bill
-        })
-   
-        localStorage.setItem('cart', JSON.stringify(actions.setDataBill({
-            full_name: data?.full_name,
-            phone_number: data?.phone_number,
-            email: data?.email,
-            total_money:dataPrice,
-            total_money_after_discoun:dataPrice,
-            seat_id:selectData,
-            trip_id: trip_id ,
-            location:locationData,
+            total_money: dataPrice,
+            total_money_after_discoun: dataPrice,
+            seat_id: selectData,
+            trip_id: trip_id,
+            location: locationData,
             route: route,
-            code_bill: billUser[0]?.code_bill
+            code_bill: billUser[0]?.code_bill,
+            user_id: idUser || null,
+            discount_code_id: null
+        })
+
+        localStorage.setItem('cart', JSON.stringify(actions.setDataBill({
+            full_name: data?.name,
+            phone_number: data?.phone_number,
+            email: data?.email,
+            total_money: dataPrice,
+            total_money_after_discoun: dataPrice,
+            seat_id: selectData,
+            trip_id: trip_id,
+            location: locationData,
+            route: route,
+            code_bill: billUser[0]?.code_bill,
+            user_id: idUser || null,
+            discount_code_id: null
         })));
         localStorage.setItem('loation', JSON.stringify(locationData));
         localStorage.setItem('route', JSON.stringify(route));
         localStorage.setItem('seat', JSON.stringify(selectData));
-        
+
         // try {
         //     const billData = {
         //         full_name: data?.full_name,
@@ -112,11 +119,11 @@ const LeftBookTickets: FC<any> = ({trip_id,setSelectData, setDataPrice, selectDa
         // } catch (error) {
         //     console.error('Error saving bill:', error);
         // }
-        if(cart){
+        if (cart) {
             navigate("/payment")
         }
     };
-    
+
     return (
         <div css={leftBookCss}>
             <form onSubmit={handleSubmit(onSubmit)} >
@@ -131,7 +138,7 @@ const LeftBookTickets: FC<any> = ({trip_id,setSelectData, setDataPrice, selectDa
                 </div>
                 <div className='py-4'>
                     {/* setSelectData={setSelectLocation}  */}
-                    <Reception trip_id={trip_id}  />
+                    <Reception trip_id={trip_id} />
                 </div>
                 <div className='py-4'>
                     <FutapayComponent trip_id={trip_id} selectData={selectData} dataPrice={dataPrice} setSelectData={setSelectData} setDataPrice={setDataPrice} />

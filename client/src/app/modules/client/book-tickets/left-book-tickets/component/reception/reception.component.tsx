@@ -8,7 +8,7 @@ import { getTripId } from '~/app/api/trip/trip.api';
 //   );
 const Reception = ({trip_id,setSelectData}:any) => {
     const [data, SetData] = useState<any>([]);
-    console.log('data', data);    
+    // console.log('data', data);    
     useEffect(() => {
         getTripId(trip_id).then((res: any) => {
             if (res) {

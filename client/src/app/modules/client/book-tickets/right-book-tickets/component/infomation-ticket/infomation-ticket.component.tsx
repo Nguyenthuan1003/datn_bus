@@ -6,7 +6,7 @@ import moment from 'moment-timezone'
 const Infomationticketcomponent = ({trip_id,selectData,dataPrice}:any) => {
   const [dataTripTicket,setDataTripTicket]=useState<any>([])
   const [dataSeat,setDataSeat]=useState<any>([])
-  console.log('dataTripTicket',dataSeat);
+  // console.log('dataTripTicket',dataSeat);
   
   useEffect(()=>{
       getTripId(trip_id).then((res:any)=>{

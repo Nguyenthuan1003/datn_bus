@@ -21,25 +21,6 @@ const TripComponent = () => {
     const [checked, setChecked] = useState<any>(0);
     console.log('dataTrip',dataTrip);
     
-    // const checkLocation = startLocations?.find((item:any) => item?.route_id ==  selectedRouteId );
-    // console.log('checkLocation',checkLocation);
-
-    // const [checked, setChecked] = useState<any>();
-
-
-
-    // const handleRouteChange = async (routeId:any) => {
-    //     try {
-    //         const response = await fetch(`http://127.0.0.1:8000/api/trip/locations-for-route/1`);
-    //         const data = await response.json();
-    //         console.log('data',data);
-
-    //         setStartLocations(data?.start_locations);
-    //         setEndLocations(data?.end_locations);
-    //     } catch (error) {
-    //         console.error('Error fetching locations:', error);
-    //     }
-    // };
     useEffect(() => {
         getRouteTrip().then((res) => {
             if (res) {

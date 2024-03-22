@@ -1,7 +1,8 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useCartRedux } from '../../redux/hook/useCartReducer'
 import { addBill, paymentVNP } from '~/app/api/bill/bill.api'
 import { Link } from 'react-router-dom'
+import { getOneUser } from '~/app/api/auth/auth.api'
 
 
 const LeftComponent = () => {
@@ -9,8 +10,6 @@ const LeftComponent = () => {
     
     const {data:{cart}}=useCartRedux()
     console.log('cart',cart);
-    
-
     // const handelDataPaymetSanbox=()=>{
     //  paymentVNP({amount:cart?.total_money_after_discoun}).then((res:any)=>{
     //     // console.log('thanhtoan',res)
@@ -18,6 +17,14 @@ const LeftComponent = () => {
         
     //  })
     // }ư
+     const [idUser,setIdUser]=useState<any>({})
+     const accsetoken:any=localStorage.getItem("token")
+     useEffect(()=>{
+        getOneUser(accsetoken).then((res:any)=>{
+            setIdUser(res?.data?.user)
+        })
+     },[])
+     console.log('idUser',idUser)
     const handelDataPaymetSanbox = async () =>{
         try {
             const billData = {
@@ -31,14 +38,14 @@ const LeftComponent = () => {
                 status_pay: "0",
                 type_pay: "0",
                 total_seat: cart?.seat_id?.length ,
-                code_bill: cart?.code_bill
+                code_bill: cart?.code_bill,
+                discount_code_id: null,
+                user_id:idUser?.id
             };
             // Gọi API để lưu hóa đơn
             console.log('billData',billData);
             
-            await addBill(billData);
-            console.log(cart?.code_bill);
-            
+            await addBill(billData);            
         
             // Sau khi hóa đơn được lưu thành công, thực hiện thanh toán
             const res = await paymentVNP({ amount: cart?.total_money_after_discoun , code_bill:cart?.code_bill});
