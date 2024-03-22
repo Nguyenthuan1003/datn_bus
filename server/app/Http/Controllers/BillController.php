@@ -108,7 +108,7 @@ class BillController extends Controller
             $bill->phone_number = $request->input('phone_number') ? $request->input('phone_number') : $bill->phone_number;
 
             $bill->save();
-            $getBill = Bill::with('discountCode', 'seat', 'trip', 'user', 'ticketOrder')->find($bill->id);
+            $getBill = Bill::with('discountCode', 'seat', 'trip', 'user', 'ticketOrder')->find($id);
             Mail::to('thuannmph19038@fpt.edu.vn')->send(new SendEmail(
                 $request->input('full_name'),
                 'Thanh toán vé xe thành công',
