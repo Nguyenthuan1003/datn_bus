@@ -130,7 +130,6 @@ class AuthController extends Controller
         $userData = auth()->user();
 
         $userDataFormated = [
-            "id" => $userData->id,
             "name" => $userData->name,
             "email" => $userData->email,
             "phone_number" => $userData->phone_number,

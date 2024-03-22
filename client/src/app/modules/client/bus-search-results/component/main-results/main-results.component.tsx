@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from 'react-redux'
 const MainSearchResults = () => {
   const { data, actions } = useTripRedux()
   const tripSearchResults = data?.searchResults || []
-
   const tripState = useSelector((state) => state.trip)
   const searchResults = tripState?.searchResults || []
   const [activeData, setActiveData] = useState({})
@@ -36,22 +35,19 @@ const MainSearchResults = () => {
     actions.getAllTrip(params)
   }, [])
 
-  // useEffect(() => {
-  //   console.log(searchResults, "----------------")
-  // }, [searchResults])
-  console.log(tripState, "store trip");
+  console.log(tripState, 'store trip')
   
 
   return (
     <div css={MainSearchCss}>
       {Array.isArray(searchResults) ? (
         searchResults.length > 0 ? (
-          searchResults.map((index, item: any) => (
+          searchResults.map((item: any) => (
             <div className='mt-3' key={item.id}>
               <h2>
                 {' '}
                 <span className='font-semibold'>Tuyến đường : </span>
-                {item?.route?.start_location}-{item?.route?.end_location}
+                {item?.start_location}-{item?.end_location}
               </h2>
 
               <div className='result mt-3'>
@@ -277,7 +273,14 @@ const MainSearchResults = () => {
             </div>
           ))
         ) : (
-          <p>Không có kết quả tìm kiếm.</p>
+          <div className='flex flex-col items-center'>
+            <div className='ant-empty mb-4 mt-32 ml-72'>
+              <div className='ml-16 mb-2'>
+                <img src='https://futabus.vn/images/empty_list.svg' alt='empty_list' width='160' />
+              </div>
+              <div className='ant-empty-description'>Không có kết quả được tìm thấy.</div>
+            </div>
+          </div>
         )
       ) : (
         console.log('Error: searchResults is not an array.')

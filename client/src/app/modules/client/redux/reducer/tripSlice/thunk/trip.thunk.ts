@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { axiosPrivate } from "~/app/api/confighHTTp";
+import { axiosPrivate} from "~/app/api/confighHTTp";
 
 export const getAllTrip = createAsyncThunk(
     'trip/getAllTrip',
@@ -7,7 +7,7 @@ export const getAllTrip = createAsyncThunk(
       const response = await axiosPrivate.get('/search/trip', {
         params: searchParams
       });
-      // console.log(response);
+      console.log('Search results:', response.data?.data);
       return response.data?.data;
     }
   );
