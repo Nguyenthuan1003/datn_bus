@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\HoldSeatEvent;
 use App\Models\Location;
 use App\Models\ParentLocation;
 use App\Models\Seat;
@@ -457,6 +458,29 @@ class TripController extends Controller
 
     public function searchTrip(Request $request)
     {
+        // $seatCodes = ["F1-NO56468936", "F2-NO32192700", "F2-NO66841837"];
+        // $seatCodes2 = ["F1-NO56468936", "F2-NO32192700", "F2-NO66841837"];
+        // $seatCodes3 = ["F1-NO56468936", "F2-NO32192700", "F2-NO66841837"];
+
+        // $data = [
+        //     [
+        //         "trip_id" => "333",
+        //         "seat_code" => json_encode($seatCodes),
+        //         "status" => "hold"
+        //     ],
+        //     [
+        //         "trip_id" => "334",
+        //         "seat_code" => json_encode($seatCodes2),
+        //         "status" => "hold"
+        //     ],
+        //     [
+        //         "trip_id" => "335",
+        //         "seat_code" => json_encode($seatCodes3),
+        //         "status" => "hold"
+        //     ]
+        // ];
+        // HoldSeatEvent::dispatch($data);
+
         try {
             // Validate the incoming request data
             $request->validate([
@@ -468,7 +492,7 @@ class TripController extends Controller
 
             $startLocation = $request->input('start_location');
             $endLocation = $request->input('end_location');
-            $startTime = $request->input('start_time'); // type string
+            $startTime = substr($request->input('start_time'), 0, 10); // type string
             $ticketCount = $request->input('ticket_count');
 
             // validate location
@@ -479,20 +503,19 @@ class TripController extends Controller
             // Set the default timezone to use for all Carbon instances
             Carbon::setLocale('Asia/Ho_Chi_Minh');
             // Parse the start time string into a Carbon instance
-            $startTime = Carbon::createFromFormat('Y-m-d', $request->input('start_time'), 'Asia/Ho_Chi_Minh');
-
+            $startTime = Carbon::createFromFormat('Y-m-d', $startTime, 'Asia/Ho_Chi_Minh');
             // Get the current date
-            $currentDate = Carbon::now('Asia/Ho_Chi_Minh')->endOfDay();
-
-            // validate $startTime cant in the past
-            if ($startTime < $currentDate) {
-                return response()->json(['error' => 'start_time không thể là thời gian đã qua'], 500);
-            }
+            $currentDate = Carbon::now('Asia/Ho_Chi_Minh');
 
             // nếu tìm kiếm trong ngày thì check thời gian tìm kiếm từ giờ phút
             if ($startTime->isSameDay($currentDate)) {
                 // chỉnh giờ theo nghiệp vụ không đặt chuyến trước giờ xuất phát 4h
                 $startTime->addHours(4);
+            } else {
+                // validate $startTime cant in the past
+                if ($startTime < $currentDate) {
+                    return response()->json(['error' => 'start_time không thể là thời gian đã qua'], 500);
+                }
             }
 
             // Format the start time as a string to match the database format
