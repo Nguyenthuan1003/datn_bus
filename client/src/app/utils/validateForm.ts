@@ -15,12 +15,12 @@ export const validateLogin = yup.object().shape({
 })
 
 export const validateRegister = yup.object().shape({
-    first_name: yup.string().required('cần nhập đầy đủ thông tin'),
-    last_name: yup.string().required('cần nhập đầy đủ thông tin'),
-    phoneNumber: yup.string().length(10, "Độ dài số điện thoại là 10").matches(phoneRegExp, 'Số điện thoại không đúng định dạng').required('cần nhập đầy đủ thông tin'),
+    phone_number: yup.string().length(10, "Độ dài số điện thoại là 10").matches(phoneRegExp, 'Số điện thoại không đúng định dạng').required('cần nhập đầy đủ thông tin'),
     email: yup.string().email('Email không hợp lệ').matches(emailregExp, 'Email không đúng định dạng').required('cần nhập đầy đủ thông tin'),
-    password: yup.string().required('cần nhập đầy đủ thông tin')
-})
+    password: yup.string().min(8, 'Mật khẩu phải có ít nhất 8 kí tự').required('cần nhập đầy đủ thông tin'),
+    comfirmPassWord: yup.string().oneOf([yup.ref("password")], 'mật khẩu xác nhận phải trùng với mật khẩu bắt buộc').required('cần nhập đầy đủ thông tin'),
+});
+
 
 export const validateForgot = yup.object().shape({
     email: yup.string().email('Email không hợp lệ').matches(emailregExp, 'Email không đúng định dạng').required('cần nhập đầy đủ thông tin'),
