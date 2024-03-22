@@ -97,8 +97,8 @@
                         {{ $startLocation }} {{ " ⇒ " }} {{ $endLocation }}
                     </b>
                 </p>
-                <p class="mb-1"><strong>Điểm đón: </strong><b class="color-text">{{ $startLocation }}</b></p>
-                <p class="mb-1"><strong>Điểm trả: </strong><b class="color-text">{{ $endLocation }}</b></p>
+                <p class="mb-1"><strong>Điểm đón: </strong><b class="color-text">{{ $pickUpLocation }}</b></p>
+                <p class="mb-1"><strong>Điểm trả: </strong><b class="color-text">{{ $payLocation }}</b></p>
                 <p class="mb-1"><strong>Thời gian đi: </strong>
                     <b class="color-text">
                         {{ \Carbon\Carbon::parse($startTime)->format('Y:m:d H:i:s') }}

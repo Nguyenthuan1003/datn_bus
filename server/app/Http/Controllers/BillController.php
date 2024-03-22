@@ -35,8 +35,8 @@ class BillController extends Controller
                 'phone_number' => 'required',
                 'full_name' => 'required',
                 'code_seat' => 'required',
-                'start_location' => 'required',
-                'end_location' => 'required',
+                'pickup_location' => 'required',
+                'pay_location' => 'required',
             ]);
     
             $bill = new Bill();
@@ -63,8 +63,8 @@ class BillController extends Controller
                 $ticketOrder->code_ticket = Str::random(8);
                 $ticketOrder->bill_id = $bill->id;
                 $ticketOrder->code_seat = $codeSeat;
-                $ticketOrder->pickup_location = $request->input('start_location');
-                $ticketOrder->pay_location = $request->input('end_location');
+                $ticketOrder->pickup_location = $request->input('pickup_location');
+                $ticketOrder->pay_location = $request->input('pay_location');
                 $ticketOrder->status = 0;
                 $ticketOrder->save();
             }
@@ -102,6 +102,8 @@ class BillController extends Controller
                 'start_location' => 'required',
                 'end_location' => 'required',
                 'code_seat' => 'required',
+                'pickup_location' => 'required',
+                'pay_location' => 'required',
             ]);
     
             $bill = Bill::find($id);
@@ -132,6 +134,8 @@ class BillController extends Controller
                 $getBill->code_bill,
                 $request->input('start_location'),
                 $request->input('end_location'),
+                $request->input('pickup_location'),
+                $request->input('pay_location'),
                 $request->input('start_time'),
                 $request->input('code_seat')
             ));
