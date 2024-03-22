@@ -1,9 +1,11 @@
 import { Action, ThunkAction, configureStore } from '@reduxjs/toolkit'
 import clientReducer from '../modules/client/redux/reducer'
+import tripReducer from '../modules/client/redux/reducer/tripSlice/tripSlice'
 
 export const store = configureStore({
     reducer: {
-        client:clientReducer
+        client:clientReducer,
+        trip: tripReducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

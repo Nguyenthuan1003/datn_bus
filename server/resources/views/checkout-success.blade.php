@@ -108,7 +108,7 @@
             </div>
         </div>
         <p class="mb-1"><b>Lưu ý:</b>  Đây là thông tin cần được bảo mật, quý khách vui lòng không chia sẻ thông tin này cho bất kì ai để tránh việc mất vé. </p>
-        <a href="{{ route('client.searching-ticket') }}" class="button">Xem chi tiết vé đặt</a>
+        <a href="" class="button">Xem chi tiết vé đặt</a>
     </div>
     <div class="footer">
         <p>&copy; 2024 LETGO 5. All rights reserved.</p>

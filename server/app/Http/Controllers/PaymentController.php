@@ -11,16 +11,16 @@ class PaymentController extends Controller
     {
         session(['cost_id' => $request->id]);
         session(['url_prev' => url()->previous()]);
-        $vnp_TmnCode = "KLSAK0A5"; //Mã website tại VNPAY
+        $vnp_TmnCode = "KLSAK0A5";
         $vnp_HashSecret = "WQIPRYGSBDEMGHDRTKVVLWMIZAGZIOWB"; //Chuỗi bí mật
         $vnp_Url = "http://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        $vnp_Returnurl = "http://localhost:3000";
-        $vnp_TxnRef = Str::random(8); //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này sang VNPAY
+        $vnp_Returnurl = "http://localhost:3000/result-payment";
+        $vnp_TxnRef = $request->input('code_bill');
         $vnp_OrderInfo = "Thanh toán mua vé xe";
         $vnp_OrderType = 'billpayment';
         $vnp_Amount = $request->input('amount') * 100;
         $vnp_Locale = 'vn';
-        $vnp_IpAddr = request()->ip(); // $request->ip;
+        $vnp_IpAddr = request()->ip();
 
         $inputData = array(
             "vnp_Version" => "2.0.0",
@@ -60,8 +60,7 @@ class PaymentController extends Controller
             $vnpSecureHash = hash('sha256', $vnp_HashSecret . $hashdata);
             $vnp_Url .= 'vnp_SecureHashType=SHA256&vnp_SecureHash=' . $vnpSecureHash;
         }
-        dd($vnp_Url);
-        return redirect($vnp_Url);
+        return response()->json(['url' => $vnp_Url]);
     }
 
     public function return(Request $request)
