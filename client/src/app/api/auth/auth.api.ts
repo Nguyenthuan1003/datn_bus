@@ -1,4 +1,4 @@
-import { axiosFormData } from "../confighHTTp"
+import { axiosFormData, axiosPrivate } from "../confighHTTp"
 
 
 export const register=async(data:any)=>{
@@ -7,6 +7,19 @@ export const register=async(data:any)=>{
 export const login=async(data:any)=>{
     return await axiosFormData.post("login",data)
 }
+export const getOneUser = async (token: string) => {
+    try {
+      const response = await axiosPrivate.post('me', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error in getOneUser API:', error);
+      throw error;
+    }
+  };
 // export const profileUser = async (token: string) => {
 //     try {
 //         const response = await axiosFormData.post("me", null, {
