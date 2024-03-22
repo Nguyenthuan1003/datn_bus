@@ -6,7 +6,7 @@ import ButtonRadiusCompoennt from '~/app/component/parts/button/button.component
 import { DatePicker } from 'antd'
 import dayjs from 'dayjs'
 import { Link } from 'react-router-dom'
-import { axiosPrivate } from '~/app/api/configHTTp'
+import { axiosPrivate } from '~/app/api/confighHTTp'
 
 const { RangePicker } = DatePicker
 
