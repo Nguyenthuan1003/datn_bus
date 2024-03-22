@@ -109,11 +109,11 @@ class BillController extends Controller
 
             $bill->save();
             $getBill = Bill::with('discountCode', 'seat', 'trip', 'user', 'ticketOrder')->find($bill->id);
-            Mail::to('thuannmph19038@fpt.edu.vn')->send(new SendEmail(
+            Mail::to($getBill->email)->send(new SendEmail(
                 $request->input('full_name'),
                 'Thanh toán vé xe thành công',
                 'checkout-success',
-                $request->getBill->code_bill,
+                $getBill->code_bill,
                 $request->input('start_location'),
                 $request->input('end_location'),
                 $request->input('start_time'),
