@@ -228,15 +228,15 @@ const TripComponent = () => {
                             <Input />
                         </Form.Item> */}
                         <Form.Item label='Thời gian bắt đầu' name='start_time' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                        {/* <DatePicker
+                        <DatePicker
                             // showTime={{ defaultValue: moment('00:00', 'HH:mm'), format: 'HH:mm' }}
                             showTime
                             format="DD/MM/YYYY HH:mm:ss"
                             placeholder="Chọn ngày và giờ"
                             onChange={handleDateChange}
                             locale={viVN}
-                        /> */}
-                            <Input />
+                        />
+                            {/* <Input /> */}
                         </Form.Item>
                         <Form.Item label='Địa điểm bắt đầu' name='start_location' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
                             <Select placeholder="lựa chọn địa điểm bắt đầu">

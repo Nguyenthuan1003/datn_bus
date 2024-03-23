@@ -33,7 +33,7 @@ const FormToFromComponent = () => {
   }
 
   const disablePastDate = (current) => {
-    return current && current.isBefore(dayjs().startOf('day'))
+    return current && current < dayjs().endOf('day')
   }
 
   const ButtonRadiusComponent = ({ content, onClick }) => <button onClick={onClick}>{content}</button>
