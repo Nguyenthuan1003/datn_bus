@@ -516,6 +516,7 @@ class TripController extends Controller
                 if ($startTime < $currentDate) {
                     return response()->json(['error' => 'start_time không thể là thời gian đã qua'], 500);
                 }
+                $startTime->startOfDay();
             }
 
             // Format the start time as a string to match the database format
