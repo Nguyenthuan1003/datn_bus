@@ -10,7 +10,7 @@ const tripSlice=createSlice({
     name:"trip",
     initialState,
     reducers:{},
-    extraReducers:(builder)=>{
+    extraReducers:(builder)=>{ 
         builder.addCase(getAllTrip.fulfilled,(state,action)=>{
             state.searchResults = action.payload;
         })
