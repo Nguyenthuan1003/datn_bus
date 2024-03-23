@@ -533,8 +533,8 @@ class TripController extends Controller
                 ->get();
             // format image url
             $parentLocationImage->each(function ($location) use ($request) {
-                $imageName = $location->image;
-                if ($location->image[0] !== "/") {
+                $imageName = $location->image ?? "";
+                if ($location->image && $location->image[0] !== "/") {
                     $imageName =  "/" . $location->image;
                 }
                 $location->image = "http://" . $request->getHttpHost() . $imageName;
@@ -598,8 +598,8 @@ class TripController extends Controller
                     });
 
                     // format car image url
-                    $carImageName =  $trip->car->image;
-                    if ($trip->car->image[0] !== "/") {
+                    $carImageName =  $trip->car->image ?? "";
+                    if ($trip->car->image && $trip->car->image[0] !== "/") {
                         $carImageName =  "/" . $trip->car->image;
                     }
                     $carImageName = "http://" . $request->getHttpHost() . $carImageName;
