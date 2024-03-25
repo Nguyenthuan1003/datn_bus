@@ -101,6 +101,15 @@ Route::group(['prefix' => 'cars'], function () {
     Route::put('update/{id}', [CarController::class, 'update']);
     Route::delete('delete/{id}', [CarController::class, 'destroy']);
 });
+
+Route::group(['prefix' => 'seats'], function () {
+    Route::get('', [SeatController::class, 'index']);
+    Route::get('edit/{id}', [SeatController::class, 'show']);
+    Route::post('store', [SeatController::class, 'store']);
+    Route::put('update/{id}', [SeatController::class, 'update']);
+    Route::delete('delete/{id}', [SeatController::class, 'destroy']);
+});
+
 Route::group(['prefix' => 'type-user'], function () {
     Route::get('', [TypeUserController::class, 'index']);
     Route::post('store', [TypeUserController::class, 'store']);

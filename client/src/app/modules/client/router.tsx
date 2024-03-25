@@ -11,8 +11,8 @@ import AboutComponent from "./about/about.component"
 import ContactComponent from "./contact/contact.component"
 import ChangeComponent from "./change-pass/changePass.component";
 import ForgotPassComponent from "./forgot-pass/forgot-pass.component"
+import SuccessComponent from "./success/success.component";
 import PaymentComponent from "./payment/payment.component";
-import ResultPage from "./result/result_page";
 
 export const clientRouter: RouteObject[] = [
     {
@@ -64,8 +64,7 @@ export const clientRouter: RouteObject[] = [
         element: <RouteScheduleComponent />
     },
     {
-        path: "/result-payment",
-        element: <ResultPage />
-    },
-
+        path: "/success",
+        element: <SuccessComponent />
+    }
 ]
