@@ -1,22 +1,10 @@
 import React from 'react'
 import { Button, Result } from 'antd'
-import { BsFillShareFill } from 'react-icons/bs'
 
 type Props = {}
 
 const SuccessComponent = (props: Props) => {
 
-    const tickets = [];
-
-    const settings = {
-      dots: true,
-      infinite: true,
-      speed: 500,
-      slidesToShow: 1,
-      slidesToScroll: 1,
-      nextArrow: <button type="button">Next</button>,
-      prevArrow: <button type="button">Prev</button>,
-    };
   return (
     <>
       <Result
@@ -63,7 +51,7 @@ const SuccessComponent = (props: Props) => {
         <div className='flex my-10 gap-10 justify-center'>
           <div className='flex-col border-[2px] rounded-[8px] border-gray-200 pt-4'>
             <div className='flex '>
-              <div className='bg-gray-200 rounded-full p-3 ml-5 mr-10'>
+              <div className='bg-gray-200 rounded-full p-4 ml-5 mr-10'>
                 <svg
                   className='w-6 h-6'
                   stroke='currentColor'
