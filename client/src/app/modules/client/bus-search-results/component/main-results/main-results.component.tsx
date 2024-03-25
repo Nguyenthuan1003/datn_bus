@@ -7,11 +7,10 @@ import 'moment/locale/vi' // Import locale của bạn nếu cần thiết
 import LocationScheduleComponent from '../location-schedule/location-schedule.component'
 import { Link, useLocation, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { getTripId } from '~/app/api/trip/trip.api'
-
+import { getAllTrip } from '~/app/api/trip/trip.api'
 const MainSearchResults = () => {
   const { data, actions } = useTripRedux()
-  const [ idTrip , setIdTrip] = useState();
+  // const [ idTrip , setIdTrip] = useState();
 
   const tripSearchResults = data?.searchResults || []
   const tripState = useSelector((state:any) => state.trip)
@@ -20,8 +19,10 @@ const MainSearchResults = () => {
   const location = useLocation()
   const searchParams:any = new URLSearchParams(location.search)
   const dispatch = useDispatch()
-  // const {id:trip_id} = useParams();
-  // console.log('id',trip_id);
+  console.log(tripState, 'store trip')
+  const idTrip = tripState?.searchResults
+  console.log(idTrip, 'Tripid')
+
   const setActiveToTrips = (tripId: any, dataIndex: any) => {
     setActiveData((prevData: any) => ({
       ...prevData,
@@ -39,13 +40,12 @@ const MainSearchResults = () => {
     actions.getAllTrip(params)
     // getTripId(searchParams.get('id'))
     //   .then((res)=>{setIdTrip(res.data?.id)})
-      getTripId(id)
-      .then((res)=>{setIdTrip(res.data?.id)})
+      // getAllTrip()
+      // .then((res)=>{setIdTrip(res.data?.trips?.id)});
       
   }, [])
 
-  console.log(tripState, 'store trip')
-  console.log(idTrip, 'Tripid')
+
 
   
 
@@ -132,7 +132,7 @@ const MainSearchResults = () => {
                       </div>
                     </div>
                     <div>
-                      <Link to={`/book-tickets/${id}`}>
+                      <Link to={`/book-tickets/${item?.trip_id}`}>
                         <ButtonRadiusCompoennt content='chọn chuyến' />
                       </Link>
                     </div>

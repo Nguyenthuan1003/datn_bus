@@ -7,7 +7,7 @@ import { getOneUser } from '~/app/api/auth/auth.api';
 const CustomerInformation: FC<any> = ({ control, errors }) => {
     const [user, setUser] = useState<any>({})
     const token = localStorage.getItem("token");
-    console.log(token);
+    // console.log(token);
 
     useEffect(() => {
         if (!token) {

@@ -16,9 +16,9 @@ import { getTripId } from '~/app/api/trip/trip.api';
 import { getOneUser } from '~/app/api/auth/auth.api';
 import { assert } from 'console';
 
-const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, selectData, dataPrice }) => {
+const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, selectData, dataPrice ,seat_id}) => {
     const accsetoken: any = localStorage.getItem('token')
-    console.log(accsetoken)
+    // console.log(accsetoken)
     const arrayFilter = ['phone_number', 'name', 'email']
     const { handleSubmit, control, formState: { errors } } = useForm({
         mode:"onChange",
@@ -35,14 +35,20 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
             return filterData
         }
     })
+    const [dataTrip, setDataTrip] = useState<any>({})
+
     const [startLocation, setStartLocation] = useState<any>();
     const [endLocation, setEndLocation] = useState<any>();
+    // const [seatId , setSeatId] = useState<any>()
+    
     const [idUser, setIdUser] = useState<any>()
     const [route, setRoute] = useState<any>()
+    
     // console.log("route",route);
-
+    const seatId = localStorage.getItem('seat_id')
     useEffect(() => {
         getTripId(trip_id).then((res) => {
+            setDataTrip(res?.data?.trip)
             setStartLocation(res?.data?.trip?.start_location);
             setEndLocation(res?.data?.trip?.end_location);
             setRoute(res?.data?.trip?.route?.name);
@@ -52,7 +58,7 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
         })
      
     }, [trip_id])
-    console.log("userdđ",idUser);
+    // console.log("userdđ",idUser);
     
     const locationData = {
         start_location: startLocation,
@@ -61,14 +67,18 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
 
 
     const billUser = localStorage.getItem("bill_user") ? JSON.parse(localStorage.getItem("bill_user")!) : [];
-
+    // console.log("Bill User", billUser?.code_bill);
+    
     const { data: { cart }, actions } = useCartRedux()
 
     console.log('bill', cart);
 
+
+
     const navigate = useNavigate()
     const onSubmit = async (data: any) => {
-        console.log('seat_id', JSON.stringify(selectData));
+        console.log('seat_id123 ', JSON.stringify(selectData));
+        console.log('ddd',seat_id);
         
         actions.setDataBill({
             full_name: data?.name,
@@ -77,12 +87,15 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
             total_money: dataPrice,
             total_money_after_discoun: dataPrice,
             // seat_id: selectData,
-            seat_id: JSON.stringify(selectData),
+            // seat_id: JSON.stringify(selectData),
+            seat_id: seatId,
             trip_id: trip_id,
             location: locationData,
+            pickup_location: locationData?.start_location,
+            pay_location: locationData?.end_location,
             route: route,
             // code_bill: billUser[0]?.code_bill,
-
+            total_seat: selectData.length,
             user_id: idUser || null,
             discount_code_id: null
         })
@@ -93,14 +106,15 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
             email: data?.email,
             total_money: dataPrice,
             total_money_after_discoun: dataPrice,
+            total_seat: selectData?.length,
             // seat_id: selectData,
-            seat_id: JSON.stringify(selectData),
+            code_seat: selectData.map((seat: string) => `'${seat}'`).join(', '),
+            seat_id: seatId,
             trip_id: trip_id,
             location: locationData,
             route: route,
-            code_bill: billUser[0]?.code_bill,
+            code_bill: billUser?.code_bill,
             // code_bill:  Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1),\
-            
             user_id: idUser || null,
             discount_code_id: null
         })));
@@ -134,10 +148,13 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
                         email: data?.email,
                         total_money: dataPrice,
                         total_money_after_discount: dataPrice,
-                        seat_id: JSON.stringify([selectData]),
+                        code_seat: selectData.map((seat: string) => `'${seat}'`).join(', '),
+                        seat_id: seatId,
                         trip_id: trip_id,
                         status_pay: "0",
                         type_pay: "0",
+                        pickup_location: locationData?.start_location,
+                        pay_location: locationData?.end_location,
                         total_seat: selectData.length,
                         // code_bill: cart?.code_bill,
                         discount_code_id: null,
@@ -170,10 +187,10 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
         <div css={leftBookCss}>
             <form onSubmit={handleSubmit(onSubmit)} >
                 <div className='py-4 '>
-                    <BreadCrumb />
+                    <BreadCrumb dataTrip={dataTrip} />
                 </div>
                 <div>
-                    <CheckChaircomponent trip_id={trip_id} setSelectData={setSelectData} setDataPrice={setDataPrice} />
+                    <CheckChaircomponent seat_id={seat_id} trip_id={trip_id} setSelectData={setSelectData} setDataPrice={setDataPrice} />
                 </div>
                 <div>
                     <CustomerInformation trip_id={trip_id} control={control} errors={errors} />

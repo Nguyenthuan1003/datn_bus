@@ -26,7 +26,7 @@ const CheckChaircomponent:FC<any> = ({trip_id,setSelectData,setDataPrice}) => {
     const handelSelecttion = (seat: any) => {
         const seatCode=seat?.code_seat
         const seat_id = seat?.id
-        console.log('seat',seat);
+        // console.log('seat',seat);
 
         console.log('seat_id',seat_id);
         
@@ -40,7 +40,7 @@ const CheckChaircomponent:FC<any> = ({trip_id,setSelectData,setDataPrice}) => {
             setSelectData1([...selectData1,seat?.code_seat])
             setSelectData([...selectData1,seat?.code_seat])
             setDataPrice((prewPrice:any)=>prewPrice+Number(tripData))
-            // localStorage.setItem('code_seat', JSON.stringify([seatCode]));
+            localStorage.setItem('seat_id', JSON.stringify(seat_id));
         }
         else {
             const newSelectSeat=[...selectData1]            
@@ -73,7 +73,7 @@ const CheckChaircomponent:FC<any> = ({trip_id,setSelectData,setDataPrice}) => {
                                 {upperArray?.map((item: any,index: number) => (
                                     <div className='my-4'onClick={()=>handelSelecttion(item)}>
                                         {/* <ChairUiComponent key={index} children={item?.code_seat?.slice(0,2)} /> */}
-                                        <ChairUiComponent key={index} children={item?.code_seat?.slice(0, 2)} status={item?.status} />
+                                        <ChairUiComponent key={index} children={item?.code_seat} status={item?.status} />
                                     </div>
                                 ))}
 
@@ -88,7 +88,7 @@ const CheckChaircomponent:FC<any> = ({trip_id,setSelectData,setDataPrice}) => {
                             <div className='flex-wrap grid grid-cols-3'>
                                 {lowarArray?.map((item: any) => (
                                     <div className='my-4'onClick={()=>handelSelecttion(item)}>
-                                        <ChairUiComponent children={item?.code_seat?.slice(0,2)} status={item?.status} />
+                                        <ChairUiComponent children={item?.code_seat} status={item?.status} />
                                     </div>
                                 ))}
 
