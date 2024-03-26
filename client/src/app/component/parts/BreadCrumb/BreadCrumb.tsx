@@ -1,8 +1,6 @@
 import React from 'react'
 
 const BreadCrumb = ({dataTrip}:any) => {
-  console.log("dataTrip",dataTrip);
-  
   return (
     <div className='p-4 bg-white'>
       <h2 className='font-bold'>{dataTrip?.route?.name}</h2>

@@ -81,7 +81,7 @@ const LeftComponent = () => {
                     // Chờ 10 giây trước khi chuyển hướng sang trang chủ
                     setTimeout(() => {
                         window.location.href = '/'; // Điều hướng đến trang chủ
-                    }, 5000); // 10 giây
+                    }, 2000); // 10 giây
                 } else {
                     // Xử lý khi có lỗi hoặc không có kết quả từ hàm cancelBill
                     message.error('Failed to delete bill.');

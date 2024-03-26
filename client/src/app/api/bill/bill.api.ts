@@ -11,6 +11,16 @@ export const addBill = async (data: any) => {
 export const updateBillAndSendMail=async(id:number,data:any)=>{
     return await axiosPrivate.put(`/bill/update/${id}`,data)
 }
+// export  const getAllBillsByUserId=(userId:string|undefined):Promise<any>=>{
+//      let user = userId || localStorage.getItem("user");
+//       user = user ? user : "";
+//        const token = `Bearer ${localStorage.getItem("token")}`;
+//        const config = { headers: { Authorization: token } };
+//        return axiosPrivate.get(`/bill/show/all/${user}`,config);
+// }
+export const getOneBillById=(id:number)=>{
+    return axiosPrivate.get(`/bill/edit/${id}`)
+}
 export const cancelBill=async(id:number)=>{
     return await axiosPrivate.delete(`/bill/delete/${id}`,)
 }

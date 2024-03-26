@@ -1,11 +1,19 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import LeftComponent from '../payment/component/left.component'
 import { useCartRedux } from '../redux/hook/useCartReducer'
 
 const PaymentComponent = () => {
     const {data:{cart}}=useCartRedux()
-    console.log('cart',cart);
-    
+    const paymentRef = useRef<any>(null);
+    useEffect(() => {
+        // Kiểm tra nếu paymentRef tồn tại và không phải là null
+        if (paymentRef.current) {
+            // Cuộn đến vị trí của phần tử paymentRef
+            paymentRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }, []); // Trigger lại useEffect khi giá trị của cart thay đổi
+
+
     return (
         <div className='w-full'>
            
