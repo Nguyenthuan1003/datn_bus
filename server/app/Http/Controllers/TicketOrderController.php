@@ -26,41 +26,6 @@ class TicketOrderController extends Controller
         return response()->json($ticketOrder);
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'bill_id' => 'required|exists:bills,id',
-            'code_seat' => 'required',
-            'start_location' => 'required',
-            'end_location' => 'required',
-            'pay_location' => 'required',
-        ]);
-
-        $ticketOrder = new TicketOrder;
-        $ticketOrder->code_ticket = Str::uuid();
-        $ticketOrder->bill_id = $request->input('bill_id');
-        $ticketOrder->code_seat = $request->input('code_seat');
-        $ticketOrder->pickup_location = $request->input('start_location');
-        $ticketOrder->pay_location = $request->input('pay_location');
-        $ticketOrder->status = 0;
-        $ticketOrder->save();
-        $newTicket = [$ticketOrder];
-
-        if ($request->round_trip == true) {
-            $ticketOrderRound = new TicketOrder;
-            $ticketOrderRound->code_ticket = Str::uuid();
-            $ticketOrderRound->bill_id = $request->input('bill_id');
-            $ticketOrderRound->code_seat = $request->input('code_seat');
-            $ticketOrderRound->pay_location = $request->input('pay_location');
-            $ticketOrderRound->pickup_location = $request->input('end_location');
-            $ticketOrder->status = 0;
-            $ticketOrderRound->save();
-            array_push($newTicket, $ticketOrderRound);
-        }
-
-        return response()->json($newTicket, 201);
-    }
-
     public function destroy($id)
     {
         $ticketOrder = TicketOrder::find($id);
@@ -115,7 +80,7 @@ class TicketOrderController extends Controller
     {
         try {
             $request->validate([
-                'phone_number' => 'required|digits:11|exists:bills,phone_number',
+                'phone_number' => 'required|exists:bills,phone_number',
                 'code_ticket' => 'required|string|exists:ticket_orders,code_ticket'
             ]);
 

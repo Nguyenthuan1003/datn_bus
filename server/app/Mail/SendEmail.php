@@ -16,25 +16,43 @@ class SendEmail extends Mailable
     public $codeBill;
     public $startLocation;
     public $endLocation;
+    public $pickUpLocation;
+    public $payLocation;
     public $startTime;
     public $seats;
     public $content;
+    public $codeTickets;
 
     /**
      * Create a new content instance.
      *
      * @return void
      */
-    public function __construct($userName,$title, $content, $codeBill, $startLocation, $endLocation, $startTime, $seats)
+    public function __construct(
+        $userName,
+        $title,
+        $content,
+        $codeBill,
+        $startLocation,
+        $endLocation,
+        $pickUpLocation,
+        $payLocation,
+        $startTime,
+        $seats,
+        $codeTickets
+    )
     {
         $this->userName = $userName;
         $this->title = $title;
         $this->codeBill = $codeBill;
         $this->startLocation = $startLocation;
         $this->endLocation = $endLocation;
+        $this->pickUpLocation = $pickUpLocation;
+        $this->payLocation = $payLocation;
         $this->startTime = $startTime;
         $this->seats = $seats;
         $this->content = $content;
+        $this->codeTickets = $codeTickets;
     }
 
     /**
