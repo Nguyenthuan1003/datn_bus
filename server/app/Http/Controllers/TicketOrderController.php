@@ -80,7 +80,7 @@ class TicketOrderController extends Controller
     {
         try {
             $request->validate([
-                'phone_number' => 'required|digits:11|exists:bills,phone_number',
+                'phone_number' => 'required|exists:bills,phone_number',
                 'code_ticket' => 'required|string|exists:ticket_orders,code_ticket'
             ]);
 
