@@ -126,7 +126,12 @@ class BillController extends Controller
             $bill->phone_number = $request->input('phone_number') ? $request->input('phone_number') : $bill->phone_number;
 
             $bill->save();
-            $getBill = Bill::with('discountCode', 'seat', 'trip', 'user', 'ticketOrder')->find($bill->id);
+            $getBill = Bill::with('discountCode', 'seat', 'trip.route', 'user', 'ticketOrder')->find($bill->id);
+            $tickets = $getBill->ticketOrder;
+            $codeTicket = [];
+            foreach ($tickets as $ticket) {
+                array_push($codeTicket, $ticket->code_ticket);
+            }
             Mail::to($getBill->email)->send(new SendEmail(
                 $request->input('full_name'),
                 'Thanh toán vé xe thành công',
@@ -137,7 +142,8 @@ class BillController extends Controller
                 $request->input('pickup_location'),
                 $request->input('pay_location'),
                 $request->input('start_time'),
-                $request->input('code_seat')
+                $request->input('code_seat'),
+                $codeTicket
             ));
             return response()->json(['message' => 'Cập nhật đơn hàng thành công','bill' => $getBill]);
         } catch (\Exception $e) {
