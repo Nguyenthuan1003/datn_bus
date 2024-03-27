@@ -79,7 +79,7 @@ class BillController extends Controller
     public function show($id)
     {
         try {
-            $bill = Bill::with('discountCode', 'seat', 'trip.routeroute', 'user', 'ticketOrder')->find($id);
+            $bill = Bill::with('discountCode', 'seat', 'trip.route', 'user', 'ticketOrder')->find($id);
 
             if (!$bill) {
                 return response()->json(['message' => 'Không có hóa đơn nào được tìm thấy'], 404);
@@ -189,10 +189,8 @@ class BillController extends Controller
 
     public function showClient($id) {
         try {
-            $bill = Bill::with('discountCode', 'seat', 'trip.routeroute', 'user', 'ticketOrder')
-            ->whereHas('user', function ($query) use ($id) {
-                 $query->where('id', $id);
-             })
+            $bill = Bill::with('discountCode', 'seat', 'trip.route', 'user', 'ticketOrder')
+            ->where('user_id', $id)
             ->get();
 
             if (!$bill) {
