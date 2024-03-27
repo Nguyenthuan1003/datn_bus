@@ -128,6 +128,7 @@ Route::group(['prefix' => 'bill'], function () {
     Route::get('', [BillController::class, 'index']);
     Route::post('store', [BillController::class, 'store']);
     Route::get('edit/{id}', [BillController::class, 'show']);
+    Route::get('show/{id}', [BillController::class, 'showClient']);
     Route::put('update/{id}', [BillController::class, 'update']);
     Route::put('update-admin/{id}', [BillController::class, 'updateAdmin']);
     Route::delete('delete/{id}', [BillController::class, 'destroy']);
