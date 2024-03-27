@@ -21,12 +21,26 @@ class SendEmail extends Mailable
     public $startTime;
     public $seats;
     public $content;
+    public $codeTickets;
+
     /**
      * Create a new content instance.
      *
      * @return void
      */
-    public function __construct($userName,$title, $content, $codeBill, $startLocation, $endLocation, $pickUpLocation, $payLocation, $startTime, $seats)
+    public function __construct(
+        $userName,
+        $title,
+        $content,
+        $codeBill,
+        $startLocation,
+        $endLocation,
+        $pickUpLocation,
+        $payLocation,
+        $startTime,
+        $seats,
+        $codeTickets
+    )
     {
         $this->userName = $userName;
         $this->title = $title;
@@ -38,6 +52,7 @@ class SendEmail extends Mailable
         $this->startTime = $startTime;
         $this->seats = $seats;
         $this->content = $content;
+        $this->codeTickets = $codeTickets;
     }
 
     /**

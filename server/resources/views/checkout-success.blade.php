@@ -90,8 +90,13 @@
             <h2>Xin chào, {{ $userName }}!</h2>
             <h4 class="mb-1">Cảm ơn bạn đã mua vé tại LETGO 5</h4>
             <p class="p-0">Bạn đã thanh toán thành công. Dưới đây là thông tin vé của bạn!</p>
+            <p class="mb-1"><strong>Mã hóa đơn: </strong><b class="color-text">{{ $codeBill }}</b></p>
             <div class="py-3">
-                <p class="mb-1"><strong>Mã đặt vé: </strong><b class="color-text">{{ $codeBill }}</b></p>
+                <p class="mb-1"><strong>Mã vé của bạn lần lượt là: </strong>
+                <?php foreach ($codeTickets as $key => $value) : ?>
+                    <br>Vé số {{$key}}: {{$value }}
+                <?php endforeach; ?>
+            </p>
                 <p class="mb-1"><strong>Tuyển đường: </strong>
                     <b class="color-text">
                         {{ $startLocation }} {{ " ⇒ " }} {{ $endLocation }}

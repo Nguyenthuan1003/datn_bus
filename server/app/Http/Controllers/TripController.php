@@ -533,7 +533,7 @@ class TripController extends Controller
                         }])
                         ->with(['bill' => function ($query) {
                             // Select the total_seat from the associated bill relationship
-                            $query->select('trip_id', 'total_seat as total_seat_used', 'seat_id as seat_code_used', 'created_at');
+                            $query->select('trip_id', 'status_pay', 'total_seat as total_seat_used', 'seat_id as seat_code_used', 'created_at');
                         }])
                         ->with(['route' => function ($query) {
                             $query->select('id', 'name as route_name');
@@ -548,7 +548,14 @@ class TripController extends Controller
 
                 $filteredTrips = $totalTripData->map(function ($trip) use ($ticketCount) {
                     $trip['total_seat'] = optional(optional($trip->car)->typeCar)->total_seat;
-                    $trip['total_seat_used'] = collect($trip->bill)->sum('total_seat_used') ?? 0;
+                    $trip['total_seat_sold'] = collect($trip->bill
+                        ->where('status_pay', 1))->sum('total_seat_used') ?? 0;
+                    $trip['total_seat_holding'] = collect($trip->bill
+                        ->where('status_pay', 0)
+                        ->where('created_at', '>=', now()->subMinutes(20))) // Compare with (now - 20 minutes)
+                        ->sum('total_seat_used') ?? 0;
+                    $trip['total_seat_used'] =  $trip['total_seat_sold'] + $trip['total_seat_holding'] ?? 0;
+
                     // Pluck 'seat_code_used' from each bill and flatten the array
                     $seatCodes = collect($trip->bill)->pluck('seat_code_used')->flatten()->toArray();
                     // Decode JSON strings to arrays
@@ -566,6 +573,8 @@ class TripController extends Controller
                         }
                     }
                 })->filter();
+
+                return $filteredTrips;
 
                 foreach ($filteredTrips as $trip) {
                     $startLocationImage = $parentLocationImage->first(function ($location) use ($startLocation) {
