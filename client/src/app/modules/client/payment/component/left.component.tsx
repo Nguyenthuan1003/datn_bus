@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useCartRedux } from '../../redux/hook/useCartReducer'
 import { addBill, cancelBill, paymentVNP } from '~/app/api/bill/bill.api'
 import { Link } from 'react-router-dom'
@@ -7,61 +7,29 @@ import { updateBillAndSendMail } from '~/app/api/bill/bill.api'
 import { Spin, message } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons';
 const LeftComponent = () => {
-
+    
     const [isLoading, setIsLoading] = useState(false);
     const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
     const { data: { cart } } = useCartRedux()
+   
+    
+    const paymentRef = useRef<any>(null);
+    console.log('paymentRef',paymentRef);
+    useEffect(() => {
+        window.scrollTo(0, 0); // Cuộn lên đầu trang khi component được load lại
+    }, []); // useEf
     console.log('cart', cart);
     const dataBill: any = localStorage.getItem('bill_user')
     const ObDataBill = JSON.parse(dataBill)
-    // const handelDataPaymetSanbox = () => {
-    //     paymentVNP({ amount: cart?.total_money_after_discoun, code_bill: cart?.code_bill }).then((res: any) => {
-    //         window.location.href = res?.data?.url;
-    //     }).then(() => {
-    //         const splipRoute = cart?.route?.split("-")
-    //         const idUpdate: any = ObDataBill?.id
-    //         const dataUpdate = {
-    //             status_pay: "1",
-    //             type_pay: "0",
-    //             full_name: cart?.full_name,
-    //             start_location: splipRoute[0],
-    //             end_location: splipRoute[1],
-    //             pickup_location: cart?.location?.start_location,
-    //             pay_location: cart?.location?.end_location,
-    //             code_seat: cart?.code_seat
 
-    //         }
-    //         updateBillAndSendMail(idUpdate, dataUpdate)
-    //     })
-    // }
     const handelDataPaymetSanbox = () => {
         paymentVNP({ amount: cart?.total_money_after_discoun, code_bill: cart?.code_bill })
             .then((res: any) => {
                 // Chuyển hướng đến trang thanh toán của bên thứ ba
                 window.location.href = res?.data?.url;
-                // Trả về một promise để tiếp tục xử lý
-                // return new Promise<void>((resolve, reject) => {
-                //     resolve(); // Không cần xử lý gì ở đây, chỉ để đảm bảo then() tiếp theo được gọi
-                // });
             })
        
-            
-            // .then(() => {
-            //     // Chỉ gọi API cập nhật hóa đơn sau khi thanh toán thành công
-            //     const splipRoute = cart?.route?.split("-");
-            //     const idUpdate: any = ObDataBill?.id;
-            //     const dataUpdate = {
-            //         status_pay: "1",
-            //         type_pay: "0",
-            //         full_name: cart?.full_name,
-            //         start_location: splipRoute[0],
-            //         end_location: splipRoute[1],
-            //         pickup_location: cart?.location?.start_location,
-            //         pay_location: cart?.location?.end_location,
-            //         code_seat: cart?.code_seat
-            //     };
-            //     updateBillAndSendMail(idUpdate, dataUpdate);
-            // })
+        
             .catch((error: any) => {
                 // Xử lý lỗi nếu có
                 console.error("Error:", error);

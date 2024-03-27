@@ -4,6 +4,7 @@ import { useCartRedux } from '../redux/hook/useCartReducer';
 import { LoadingOutlined } from '@ant-design/icons';
 import SuccessComponent from '../success/success.component';
 import { Spin } from 'antd';
+import { Link } from 'react-router-dom';
 
 const ResultPage = () => {
   const [isUpdating, setIsUpdating] = useState(false);
@@ -46,10 +47,10 @@ const ResultPage = () => {
         // Assuming updateBillAndSendMail returns a Promise
         updateBillAndSendMail(idUpdate, dataUpdate)
           .then((res) => {
-
             setUpdateSuccess(true);
             setSuccessData(res?.data);
             setIsUpdating(false);
+            setBillUpdated(true)
           })
           .catch(error => {
             console.error("Update failed:", error);
@@ -58,7 +59,7 @@ const ResultPage = () => {
       }, 2000); // Simulate 2 seconds delay, adjust as needed
     }
 
-  }, [updateCalled]);
+  }, [updateCalled,billUpdated]);
 
   return (
     <div className=''>

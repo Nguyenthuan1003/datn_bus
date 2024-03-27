@@ -20,7 +20,19 @@ const BillComponent = () => {
     const [selectedRouteId, setSelectedRouteId] = useState<any>({});
     const [current, setCurrent] = useState<any>(null);
     const [checked, setChecked] = useState<any>(0);
-    console.log('dataBill',dataBill);
+    console.log('data',dataBill);
+    const paymentTypes = [
+        { key: '0', name: 'VNP' },
+        { key: '1', name: 'Thanh toán tại quầy' },
+        { key: '2', name: 'Mono' }
+      ];
+      const getTypePayName = (typePayKey:any) => {
+        const foundType = paymentTypes.find(type => type.key === typePayKey);
+        console.log('foundType',foundType);
+        
+        return foundType ? foundType?.name : 'Không xác định';
+    };
+    const trip = dataBill.map((trip:any) => trip?.trip)
     
     
     useEffect(() => {
@@ -30,32 +42,75 @@ const BillComponent = () => {
             }
         })
     }, [])
-
-
-
+    
+    const getStatusText = (status:any) => {
+        if (status === 1) {
+            return <h3 style={{ color: 'green' }}>Thanh toán thành công</h3>;
+        } else {
+            return <h3 style={{ color: 'red' }}>Chưa thanh toán</h3>;
+        }
+    };
+    
     const handleRouteChange = (routeId: any) => {
         setSelectedRouteId(routeId);
     };
 
     useEffect(() => {
         const columnsTemp: any = [];
-        const title = ['', 'STT', 'Mã ghế', 'Chuyến đi', 'khách hàng', 'Loại thanh toán','Số tiền','Tổng số tiền','Trạng thái thanh toán','Tổng số ghế ','Mã hóa đơn', 'Số điện thoại', 'Tên khách hàng','Email'];
-    
+        const title = ['STT','', '','Chuyến đi', '',  'Trạng thái thanh toán', '','Tổng số tiền','Loại thanh toán','Tổng số ghế ','Mã hóa đơn', 'Số điện thoại', 'khách hàng','Ngày tạo', '',''];
+        console.log();
+        
+        
         if (dataBill.length > 0) {
             // Bắt đầu từ chỉ số 1 để bỏ qua cột 'STT'
-            Object.keys(dataBill[1]).forEach((itemKey, index) => {
-                if (!['id', 'created_at', 'updated_at', 'discount_code', 'seat', 'trip', 'user', 'tiket', 'ticket_order' ,"discount_code_id"].includes(itemKey)) {
+            Object.keys(dataBill[0]).forEach((itemKey, index =0) => {
+                if (!['id', "discount_code_id", 'seat_id', 'discount_code', 'user_id', 'total_money' , 'seat', 'user', 'tiket', 'ticket_order', 'updated_at' ,'email'].includes(itemKey)) {
                     columnsTemp.push({
-                        title: title[index],
+                        
+                        title: title[index++],
                         dataIndex: itemKey,
                         key: itemKey,
+                        render: (text: any, record: any) =>{
+                            if(itemKey == "total_money"){
+                                return <span key={record?.id}>{record?.total_money?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</span>
+                            }
+                            if(itemKey == "total_money_after_discount"){
+                                return <span key={record?.id}>{record?.total_money_after_discount?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</span>
+                            }
+                            if(itemKey === "trip_id"){
+                                const matchedTrip = trip?.find((trip: any) => trip?.id === record?.trip_id);
+                                const time = matchedTrip?.start_time
+                                const timetrip =  moment.utc(time).local().format('HH:mm')
+                                    if (matchedTrip) {
+                                        return <span>{`${matchedTrip.start_location} - ${matchedTrip.end_location} (khởi hành ${timetrip})`}</span>;
+                                    }
+                            }
+                            if(itemKey === 'created_at'){
+                                const time = record?.created_at
+                                const timeCreate =  moment.utc(time).local().format('DD/MM/YYYY HH:mm:ss');
+                                return <span>{timeCreate}</span>
+                            }
+                            if(itemKey === 'status_pay'){
+                                const status = record?.status_pay
+                                return <h3>{getStatusText(status)}</h3>
+                            }
+                            if(itemKey === 'type_pay'){
+                                const typePay = record?.type_pay
+                                const typeName = getTypePayName(typePay);
+                                return <h3>{typeName}</h3>
+                            }
+                            return text
+                        }
                     });
                 }
             });
         }
         setColumn(columnsTemp);
+        console.log(columnsTemp);
     }, [dataBill]);
 
+
+    
     const [reset, setReset] = useState<any>([]);
     useEffect(() => {
         getAllBill().then((res) => {
@@ -72,7 +127,7 @@ const BillComponent = () => {
 
 
     const fomatCustomCurrent = (data: any) => {
-        setCurrent(data?.status === 1 ? 1 : 0)
+        setCurrent(data)
     }
     // const handleChange = (checked: number) => {
     //     setCurrent(checked ? 1 : 0);
@@ -105,7 +160,7 @@ const BillComponent = () => {
                             <Input />
                         </Form.Item>
                         <Form.Item label='Chuyến đi' name='trip_id' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                           
+                           <Input />
                         </Form.Item>
                         <Form.Item label='Khách hàng' name='discount_code_id' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
                             <Input />
