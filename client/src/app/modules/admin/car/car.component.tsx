@@ -87,7 +87,6 @@ const CarComponent = () => {
     }
     const acctive = 1;
     const inAcctive = 0
-  
     return (
         <div>
             <TemplateTable
@@ -101,7 +100,7 @@ const CarComponent = () => {
                 changeFunc={updateCar}
                 formEdit={
                     <Fragment>
-                        <Form.Item label='Loại xe' name='name' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+                        <Form.Item label='Tên xe' name='name' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
                             <Input />
                         </Form.Item>
                         <Form.Item label='Màu xe' name='color' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
@@ -124,7 +123,7 @@ const CarComponent = () => {
                             </Select>
                         </Form.Item>
                         <Form.Item label='Trạng Thái' name='status' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                        <Select onChange={handleChange} value={`${current}`}>
+                        <Select placeholder='Chọn trạng thái' onChange={handleChange} value={`${current}`}>
                                 {[
                                     { value: acctive, label: "Hoạt động" },
                                     { value: inAcctive, label: "Không hoạt động" }

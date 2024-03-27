@@ -20,11 +20,11 @@ const initialFormState = {
 }
 
 const FormToFromComponent = () => {
-  const [formData, setFormData] = useState(initialFormState)
+  const [formData, setFormData] = useState<any>(initialFormState)
   const [value, setValue] = useState(1)
-  const [errorMessage, setErrorMessage] = useState(null)
-  const [searchResults, setSearchResults] = useState([])
-  const [locations, setLocations] = useState([])
+  const [errorMessage, setErrorMessage] = useState<any>(null)
+  const [searchResults, setSearchResults] = useState<any>([])
+  const [locations, setLocations] = useState<any>([])
   const inputWidth = value === 1 ? '250px' : '200px'
 
   const onChange = (e: RadioChangeEvent) => {
@@ -32,11 +32,11 @@ const FormToFromComponent = () => {
     setValue(e.target.value)
   }
 
-  const disablePastDate = (current) => {
-    return current && current.isBefore(dayjs().startOf('day'))
+  const disablePastDate = (current:any) => {
+    return current && current < dayjs().endOf('day')
   }
 
-  const ButtonRadiusComponent = ({ content, onClick }) => <button onClick={onClick}>{content}</button>
+  const ButtonRadiusComponent = ({ content, onClick }:any) => <button onClick={onClick}>{content}</button>
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -79,7 +79,7 @@ const FormToFromComponent = () => {
   //   fetchLocations()
   // }, [])
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event:any) => {
     event.preventDefault()
 
     try {

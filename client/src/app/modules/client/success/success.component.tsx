@@ -1,12 +1,73 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Result } from 'antd'
+import { getOneBillById } from '~/app/api/bill/bill.api'
+import TicketComponent from './TicketComponent'
 
-type Props = {}
+// type Props = {
+//   data:any
+// }
 
-const SuccessComponent = (props: Props) => {
+const SuccessComponent = () => {
+  const [data, setData] = useState<any>({})
+  const dataTicket = data?.ticket_order
+  console.log('data',dataTicket);
+  
+  const [loading, setLoading] = useState(true)
+  const dataBill: any = localStorage.getItem('bill_user')
+  const ObDataBill = JSON.parse(dataBill)
+  const idUpdate: any = ObDataBill?.id;
+  const getStatusText = (status:any) => {
+    if (status === 1) {
+      return "Thanh toán thành công";
+    } else {
+      return "Chưa thanh toán";
+    }
+  };
+  const getStatusPay = (status:any) => {
+    if (status == 0) {
+      return "VNP";
+    } else {
+      return "Tại nhà xe";
+    }
+  };
 
+
+  useEffect(()=>{
+    getOneBillById(idUpdate)
+    .then((res) => {
+      if(res.status === 200){
+        setData(res?.data?.bill)
+        setLoading(false)
+        localStorage.removeItem('bill_user');
+      }
+    })
+    },[])
+    const  handleBackHome=()=>{
+      window.location.href='/'
+    }
+    
+    const [visible, setVisible] = useState<boolean>(false);
+    const showModal = () => {
+        setVisible(true);
+        };
+        const handleOk = (e: any) => {
+            console.log(e);
+            setVisible(false);
+            };
+        const handleCancel = (e: any) => {
+            console.log(e);
+            setVisible(false);
+        };
+      // const dataBill = data?.bill
+      // console.log(dataBill);
+      // phone_number  
+      // full_name
+        //total_money_after_discount
+        //type_pay
+        //status_pay ticket_order code_ticket code_seat pay_location pickup_location
+      
   return (
-    <>
+    <div >
       <Result
         status='success'
         title='Mua vé xe thành công'
@@ -20,145 +81,45 @@ const SuccessComponent = (props: Props) => {
           <div className='flex-col ml-10'>
             <div className='flex'>
               <p className='text-gray-400 font-medium'>Họ và tên:</p>
-              <strong className='ml-14'>Nguyễn Phan Tùng Dương</strong>
+              <strong className='ml-14'>{data?.full_name}</strong>
             </div>
             <div className='flex py-4'>
               <p className='text-gray-400 font-medium'>Số điện thoại:</p>
-              <strong className='ml-8'>0987654321</strong>
+              <strong className='ml-8'>{data?.phone_number}</strong>
             </div>
             <div className='flex'>
               <p className='text-gray-400 font-medium'>Email:</p>
-              <strong className='ml-[85px]'>duong.nguyen@futa.vn</strong>
+              <strong className='ml-[85px]'>{data?.email}</strong>
             </div>
           </div>
 
           <div className='flex-col ml-[450px]'>
             <div className='flex'>
               <p className='text-gray-400 font-medium'>Tổng giá vé:</p>
-              <strong className='ml-5'>2,000,000đ</strong>
+              <strong className='ml-5'>{data?.total_money_after_discount}đ</strong>
             </div>
             <div className='flex py-4'>
               <p className='text-gray-400 font-medium'>PTTT:</p>
-              <strong className='ml-[65px]'>VNPAY</strong>
+              <strong className='ml-[65px]'> {getStatusPay(data?.type_pay)}</strong>
             </div>
             <div className='flex'>
               <p className='text-gray-400 font-medium'>Trạng thái:</p>
-              <strong className='ml-[30px] text-green-400'>Thanh toán thành công</strong>
+              <strong className='ml-[30px] text-green-400'>{getStatusText(data?.status_pay)}</strong>
             </div>
           </div>
         </div>
 
         <div className='flex my-10 gap-10 justify-center'>
-          <div className='flex-col border-[2px] rounded-[8px] border-gray-200 pt-4'>
-            <div className='flex '>
-              <div className='bg-gray-200 rounded-full p-4 ml-5 mr-10'>
-                <svg
-                  className='w-6 h-6'
-                  stroke='currentColor'
-                  fill='gray'
-                  stroke-width='0'
-                  viewBox='0 0 1024 1024'
-                  height='1em'
-                  width='1em'
-                  xmlns='http://www.w3.org/2000/svg'
-                >
-                  <path d='M505.7 661a8 8 0 0 0 12.6 0l112-141.7c4.1-5.2.4-12.9-6.3-12.9h-74.1V168c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v338.3H400c-6.7 0-10.4 7.7-6.3 12.9l112 141.8zM878 626h-60c-4.4 0-8 3.6-8 8v154H214V634c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v198c0 17.7 14.3 32 32 32h684c17.7 0 32-14.3 32-32V634c0-4.4-3.6-8-8-8z'></path>
-                </svg>
-              </div>
-              <div className='mx-2 mt-3'>
-                <p className='font-semibold text-[18px]'>Mã vé E7GZF8</p>
-              </div>
-              <div className='bg-gray-200 rounded-full p-4 ml-9 mr-6'>
-                <svg
-                  className='w-6 h-6'
-                  stroke='currentColor'
-                  fill='gray'
-                  stroke-width='0'
-                  viewBox='0 0 16 16'
-                  height='1em'
-                  width='1em'
-                  xmlns='http://www.w3.org/2000/svg'
-                >
-                  <path d='M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z'></path>
-                </svg>
-              </div>
-            </div>
-            <div>
-              <img
-                alt='qr code'
-                loading='lazy'
-                decoding='async'
-                data-nimg='fill'
-                className='w-[270px] mx-auto'
-                src='https://api.futabus.vn/ticket-online/api/qrcode?Content=https%3A%2F%2Fgateway.zalopay.vn%2Fopeninapp%3Forder%3DeyJ6cHRyYW5zdG9rZW4iOiJBQ243YkdaU2p5WmZ6OEJHZUZKRC1CbXciLCJhcHBpZCI6MzYwfQ%3D%3D&amp;Size=180&amp;Color=Black&amp;Logo=zalopay.png'
-              />
-            </div>
-            <div className='text-justify'>
-              <div className='flex gap-28 ml-7'>
-                <div className='font-bold text-gray-400'>Tuyến xe</div>
-                <div className='text-green-700 font-normal'>Sài Gòn - Cần Thơ</div>
-              </div>
-              <div className='flex gap-[125px] ml-7'>
-                <div className='font-bold text-gray-400'>Thời gian</div>
-                <div className='text-green-700 font-normal'>23:00 27/5/2022</div>
-              </div>
-              <div className='flex gap-[230px] ml-7'>
-                <div className='font-bold text-gray-400'>Số ghế</div>
-                <div className='text-green-700 font-normal'>A08</div>
-              </div>
-              <div className='flex ml-7'>
-                <p className='font-bold text-gray-400'>Điểm lên xe</p>
-                <div className='flex-col font-normal text-right ml-[12px]'>
-                  <strong>VP BX Miền Tây</strong>
-                  <p className='w-[210px] text-gray-400'>395 Kinh Dương Vương, P. An Lạc, Q. Bình Tân, TP.HCM</p>
-                </div>
-              </div>
-              <div className='flex gap-[195px] ml-7'>
-                <div className='font-bold text-gray-400'>Giá vé</div>
-                <div className='font-normal'>160,000đ</div>
-              </div>
-            </div>
-            <div className='text-center text-green-700 mt-4 bg-gray-200'>
-              <p className='w-[310px] mx-auto leading-[22px] py-2'>
-                Mang mã vé đến văn phòng để đổi vé lên xe trước giờ xuất bến ít nhất 60 phút.
-              </p>
-            </div>
-          </div>
+          {
+            dataTicket?.map((item: any,index: number)=>(
+              <TicketComponent key={index} dataTicket={item} data={data} />
+            ))
+          }
+            
         </div>
-        <div className='flex justify-center mb-10'>
-          <div className='bg-[#fbeeea] rounded-full py-3 px-12 flex mr-5'>
-            <svg
-              className='w-6 h-6'
-              stroke='currentColor'
-              fill='#e48666'
-              stroke-width='0'
-              viewBox='0 0 16 16'
-              height='1em'
-              width='1em'
-              xmlns='http://www.w3.org/2000/svg'
-            >
-              <path d='M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5z'></path>
-            </svg>
-            <p className='ml-2 text-[#e48666] font-bold'>Chia sẻ</p>
-          </div>
-          <div className='flex bg-[#fbeeea] rounded-full py-3 px-14'>
-            <svg
-              className='w-6 h-6'
-              stroke='currentColor'
-              fill='#e48666'
-              stroke-width='0'
-              viewBox='0 0 1024 1024'
-              height='1em'
-              width='1em'
-              xmlns='http://www.w3.org/2000/svg'
-            >
-              <path d='M505.7 661a8 8 0 0 0 12.6 0l112-141.7c4.1-5.2.4-12.9-6.3-12.9h-74.1V168c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v338.3H400c-6.7 0-10.4 7.7-6.3 12.9l112 141.8zM878 626h-60c-4.4 0-8 3.6-8 8v154H214V634c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v198c0 17.7 14.3 32 32 32h684c17.7 0 32-14.3 32-32V634c0-4.4-3.6-8-8-8z'></path>
-            </svg>
-            <p className='ml-2 text-[#e48666] font-bold'>Tải về</p>
-          </div>
-        </div>
+   
       </div>
-    </>
+    </div>
   )
 }
 
