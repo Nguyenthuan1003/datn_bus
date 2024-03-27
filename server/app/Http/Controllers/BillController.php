@@ -14,7 +14,7 @@ class BillController extends Controller
     public function index()
     {
         try {
-            $bills = Bill::with('discountCode', 'seat', 'trip', 'user', 'ticketOrder')->get();
+            $bills = Bill::with('discountCode', 'seat', 'trip.route', 'user', 'ticketOrder')->get();
 
             return response()->json(['message' => 'Lấy dữ liệu thành công', 'bills' => $bills]);
         } catch (\Exception $e) {
@@ -79,7 +79,7 @@ class BillController extends Controller
     public function show($id)
     {
         try {
-            $bill = Bill::with('discountCode', 'seat', 'trip', 'user', 'ticketOrder')->find($id);
+            $bill = Bill::with('discountCode', 'seat', 'trip.routeroute', 'user', 'ticketOrder')->find($id);
 
             if (!$bill) {
                 return response()->json(['message' => 'Không có hóa đơn nào được tìm thấy'], 404);
@@ -185,6 +185,24 @@ class BillController extends Controller
             return response()->json(['message' => 'Đã xảy ra lỗi khi cập nhật hóa đơn', 'error' => $e->getMessage()]);
         }
         
+    }
+
+    public function showClient($id) {
+        try {
+            $bill = Bill::with('discountCode', 'seat', 'trip.routeroute', 'user', 'ticketOrder')
+            ->whereHas('user', function ($query) use ($id) {
+                 $query->where('id', $id);
+             })
+            ->get();
+
+            if (!$bill) {
+                return response()->json(['message' => 'Không có hóa đơn nào được tìm thấy'], 404);
+            }
+    
+            return response()->json(['message' => 'Lấy dữ liệu hóa đơn thành công', 'bill' => $bill]);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Đã xảy ra lỗi khi lấy dữ liệu', 'error' => $e->getMessage()]);
+        }
     }
 
     public function destroy($id)
