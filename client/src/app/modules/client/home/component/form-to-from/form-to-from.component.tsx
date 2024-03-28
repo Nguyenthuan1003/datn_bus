@@ -14,7 +14,7 @@ const { Option } = Select
 const initialFormState = {
   startLocation: '',
   endLocation: '',
-  startDate: dayjs(),
+  startDate: dayjs(), 
   endDate: dayjs(),
   ticketCount: 1
 }
