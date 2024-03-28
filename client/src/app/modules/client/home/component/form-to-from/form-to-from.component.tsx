@@ -5,7 +5,7 @@ import { css } from '@emotion/react'
 import ButtonRadiusCompoennt from '~/app/component/parts/button/button.component'
 import { DatePicker, Select } from 'antd'
 import dayjs from 'dayjs'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { axiosPrivate } from '~/app/api/confighHTTp'
 
 const { RangePicker } = DatePicker
@@ -25,6 +25,8 @@ const FormToFromComponent = () => {
   const [errorMessage, setErrorMessage] = useState<any>(null)
   const [searchResults, setSearchResults] = useState<any>([])
   const [locations, setLocations] = useState<any>([])
+  const navigate = useNavigate()
+
   const inputWidth = value === 1 ? '250px' : '200px'
 
   const onChange = (e: RadioChangeEvent) => {
@@ -32,43 +34,17 @@ const FormToFromComponent = () => {
     setValue(e.target.value)
   }
 
-  const disablePastDate = (current:any) => {
+  const disablePastDate = (current: any) => {
     return current && current < dayjs().endOf('day')
   }
 
-  const ButtonRadiusComponent = ({ content, onClick }:any) => <button onClick={onClick}>{content}</button>
-
-  useEffect(() => {
-    const fetchLocations = async () => {
-      try {
-        const response = await axiosPrivate.get('/getparentlocations')
-        setLocations(response.data)
-        const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]')
-        setSearchResults(searchHistory)
-      } catch (error) {
-        console.log('Failed to fetch locations:', error)
-      }
-    }
-
-    fetchLocations()
-  }, [])
+  const ButtonRadiusComponent = ({ content, onClick }: any) => <button onClick={onClick}>{content}</button>
 
   // useEffect(() => {
   //   const fetchLocations = async () => {
   //     try {
   //       const response = await axiosPrivate.get('/getparentlocations')
-  //       const locations = response.data
-
-  //       if (!formData.startLocation && locations.length > 0) {
-  //         setFormData((prevFormData) => ({
-  //           ...prevFormData,
-  //           startLocation: locations[0].name,
-  //           endLocation: locations.length > 1 ? locations[1].name : locations[0].name
-  //         }))
-  //       }
-
-  //       setLocations(locations)
-
+  //       setLocations(response.data)
   //       const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]')
   //       setSearchResults(searchHistory)
   //     } catch (error) {
@@ -79,31 +55,65 @@ const FormToFromComponent = () => {
   //   fetchLocations()
   // }, [])
 
-  const handleSubmit = async (event:any) => {
-    event.preventDefault()
+  useEffect(() => {
+    const fetchLocations = async () => {
+      try {
+        const response = await axiosPrivate.get('/getparentlocations')
+        const locations = response.data
 
+        if (!formData.startLocation && locations.length > 0) {
+          setFormData((prevFormData) => ({
+            ...prevFormData,
+            startLocation: locations[0].name,
+            endLocation: locations.length > 1 ? locations[1].name : locations[0].name
+          }))
+        }
+
+        setLocations(locations)
+
+        const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]')
+        setSearchResults(searchHistory)
+      } catch (error) {
+        console.log('Failed to fetch locations:', error)
+      }
+    }
+
+    fetchLocations()
+  }, [])
+
+  const handleSubmit = async (event: any) => {
+    event.preventDefault()
+  
     try {
       const response = await axiosPrivate.get(
         `/search/trip?start_location=${formData.startLocation}&end_location=${
           formData.endLocation
         }&start_time=${formData.startDate.format('YYYY-MM-DD')}&ticket_count=${formData.ticketCount}`
       )
-
+  
       console.log('Search results:', response.data)
-
+  
       const data = await response.data
       setSearchResults(data)
-
+  
       let searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]')
       searchHistory.unshift(formData)
       if (searchHistory.length > 3) {
         searchHistory = searchHistory.slice(0, 3)
       }
       localStorage.setItem('searchHistory', JSON.stringify(searchHistory))
+  
+      navigate(
+        `/buy-search-results?start_location=${formData.startLocation}&end_location=${
+          formData.endLocation
+        }&start_time=${formData.startDate.format('YYYY-MM-DD')}&ticket_count=${formData.ticketCount}`
+      )
+  
+      window.location.reload()
     } catch (error) {
       console.log('Failed to fetch data')
     }
-
+  
     setFormData(initialFormState)
   }
   return (
@@ -215,25 +225,24 @@ const FormToFromComponent = () => {
 
         <div className='mt-3 '>
           <div className='font-semibold text'>Tìm kiếm gần đây</div>
-          {searchResults.map((result, index) => (
-            <div key={index} className=' mt-2 bg-gray-100 view-search'>
-              <p className='font-medium'>
-                {' '}
-                {result.startLocation} - {result.endLocation}
-              </p>
-              <p className='text-gray-500 font-semibold text-[14px]'>{dayjs(result.startDate).format('DD-MM-YYYY')}</p>
-            </div>
-          ))}
+          <div className='flex gap-5'>
+            {Array.isArray(searchResults) &&
+              searchResults.map((result, index) => (
+                <div key={index} className='mt-2 bg-gray-100 view-search'>
+                  <p className='font-medium'>
+                    {' '}
+                    {result.startLocation} - {result.endLocation}
+                  </p>
+                  <p className='text-gray-500 font-semibold text-[14px]'>
+                    {dayjs(result.startDate).format('DD-MM-YYYY')}
+                  </p>
+                </div>
+              ))}
+          </div>
         </div>
 
         <div className='button-wrapper'>
-          <Link
-            to={`/buy-search-results?start_location=${formData.startLocation}&end_location=${
-              formData.endLocation
-            }&start_time=${formData.startDate.format('YYYY-MM-DD')}&ticket_count=${formData.ticketCount}`}
-          >
-            <ButtonRadiusCompoennt content='Tìm chuyến xe' onSubmit={handleSubmit} />
-          </Link>
+          <ButtonRadiusCompoennt content='Tìm chuyến xe' onClick={handleSubmit} />
         </div>
       </div>
     </form>
