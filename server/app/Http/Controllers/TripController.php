@@ -12,12 +12,20 @@ use Illuminate\Http\Request;
 use App\Models\Trip;
 use App\Models\Route;
 use App\Models\Car;
+use App\Services\GetSeatDataService;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Validation\ValidationException;
 
 class TripController extends Controller
 {
+    private $getSeatDataService;
+
+    public function __construct(GetSeatDataService $getSeatDataService)
+    {
+        $this->getSeatDataService = $getSeatDataService;
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -458,6 +466,8 @@ class TripController extends Controller
 
     public function searchTrip(Request $request)
     {
+        $rtGetSeatData = $this->getSeatDataService->rtGetSeatData();
+
         try {
             // Validate the incoming request data
             $request->validate([
@@ -573,8 +583,6 @@ class TripController extends Controller
                         }
                     }
                 })->filter();
-
-                return $filteredTrips;
 
                 foreach ($filteredTrips as $trip) {
                     $startLocationImage = $parentLocationImage->first(function ($location) use ($startLocation) {
