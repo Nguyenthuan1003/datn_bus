@@ -32,7 +32,7 @@ export const menuDashBoard =[
     {
         key: '/admin/location',
         icon: <PiFlagBannerDuotone />,
-        label: 'location'
+        label: 'Địa Điểm'
     },
     {
         key: '/admin/route',
@@ -52,7 +52,12 @@ export const menuDashBoard =[
     {
         key: '/admin/trip',
         icon: <PiFlagBannerDuotone />,
-        label: 'Trip'
+        label: 'Chuyến đi'
+    },
+    {
+        key: '/admin/bill',
+        icon: <PiFlagBannerDuotone />,
+        label: 'Đơn Hàng'
     }
 
 ]

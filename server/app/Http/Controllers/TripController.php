@@ -503,7 +503,6 @@ class TripController extends Controller
                 if ($startTime < $currentDate) {
                     return response()->json(['error' => 'start_time không thể là thời gian đã qua'], 500);
                 }
-                $startTime->startOfDay();
             }
 
             // Format the start time as a string to match the database format
@@ -521,8 +520,8 @@ class TripController extends Controller
                 ->get();
             // format image url
             $parentLocationImage->each(function ($location) use ($request) {
-                $imageName = $location->image ?? "";
-                if ($location->image && $location->image[0] !== "/") {
+                $imageName = $location->image;
+                if ($location->image[0] !== "/") {
                     $imageName =  "/" . $location->image;
                 }
                 $location->image = "http://" . $request->getHttpHost() . $imageName;
@@ -543,7 +542,7 @@ class TripController extends Controller
                         }])
                         ->with(['bill' => function ($query) {
                             // Select the total_seat from the associated bill relationship
-                            $query->select('trip_id', 'status_pay', 'total_seat as total_seat_used', 'seat_id as seat_code_used', 'created_at');
+                            $query->select('trip_id', 'total_seat as total_seat_used', 'seat_id as seat_code_used', 'created_at');
                         }])
                         ->with(['route' => function ($query) {
                             $query->select('id', 'name as route_name');
@@ -558,14 +557,7 @@ class TripController extends Controller
 
                 $filteredTrips = $totalTripData->map(function ($trip) use ($ticketCount) {
                     $trip['total_seat'] = optional(optional($trip->car)->typeCar)->total_seat;
-                    $trip['total_seat_sold'] = collect($trip->bill
-                        ->where('status_pay', 1))->sum('total_seat_used') ?? 0;
-                    $trip['total_seat_holding'] = collect($trip->bill
-                        ->where('status_pay', 0)
-                        ->where('created_at', '>=', now()->subMinutes(20))) // Compare with (now - 20 minutes)
-                        ->sum('total_seat_used') ?? 0;
-                    $trip['total_seat_used'] =  $trip['total_seat_sold'] + $trip['total_seat_holding'] ?? 0;
-
+                    $trip['total_seat_used'] = collect($trip->bill)->sum('total_seat_used') ?? 0;
                     // Pluck 'seat_code_used' from each bill and flatten the array
                     $seatCodes = collect($trip->bill)->pluck('seat_code_used')->flatten()->toArray();
                     // Decode JSON strings to arrays
@@ -593,8 +585,8 @@ class TripController extends Controller
                     });
 
                     // format car image url
-                    $carImageName =  $trip->car->image ?? "";
-                    if ($trip->car->image && $trip->car->image[0] !== "/") {
+                    $carImageName =  $trip->car->image;
+                    if ($trip->car->image[0] !== "/") {
                         $carImageName =  "/" . $trip->car->image;
                     }
                     $carImageName = "http://" . $request->getHttpHost() . $carImageName;
@@ -636,8 +628,7 @@ class TripController extends Controller
                 ], 200);
             } else {
                 return response()->json([
-                    'message' => 'Không có tuyến nào phù hợp',
-                    'data' => []
+                    'error' => 'Không có tuyến nào phù hợp'
                 ], 200);
             }
         } catch (ValidationException $e) {

@@ -42,7 +42,7 @@ class TicketOrderController extends Controller
     public function checkin(Request $request)
     {
         // Get the phone number from the request
-        $phoneNumber = $request->input('phone_number');
+        // $phoneNumber = $request->input('phone_number');
 
         // Get the code ticket from the request
         $codeTicket = $request->input('code_ticket');
@@ -53,18 +53,18 @@ class TicketOrderController extends Controller
         // Check if ticket order was found
         if ($ticketOrder) {
             // Get the associated bill
-            $bill = $ticketOrder->bill;
+            // $bill = $ticketOrder->bill;
 
             // Check if the phone number matches
-            if ($bill && $bill->phone_number === $phoneNumber) {
+            // if ($bill && $bill->phone_number === $phoneNumber) {
                 // Update the status of the ticket order
                 // status 1 = chưa checkin, 0 = đã checkin
                 $ticketOrder->update(['status' => 0]);
 
                 return response()->json(['message' => 'Cập nhật thành công! (^__ ^ ")'], 200);
-            } else {
-                return response()->json(['error' => 'Thông tin không tồn tại'], 404);
-            }
+            // } else {
+            //     return response()->json(['error' => 'Thông tin không tồn tại'], 404);
+            // }
         } else {
             return response()->json(['error' => 'Thông tin không tồn tại'], 404);
         }

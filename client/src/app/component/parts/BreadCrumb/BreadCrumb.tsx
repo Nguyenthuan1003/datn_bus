@@ -1,9 +1,9 @@
 import React from 'react'
 
-const BreadCrumb = () => {
+const BreadCrumb = ({dataTrip}:any) => {
   return (
     <div className='p-4 bg-white'>
-        tuyến đường
+      <h2 className='font-bold'>{dataTrip?.route?.name}</h2>
     </div>
   )
 }

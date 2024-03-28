@@ -5,18 +5,23 @@ import { useTripRedux } from '../../../redux/hook/useTripReducer'
 import moment from 'moment'
 import 'moment/locale/vi' // Import locale của bạn nếu cần thiết
 import LocationScheduleComponent from '../location-schedule/location-schedule.component'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-
+import { getAllTrip } from '~/app/api/trip/trip.api'
 const MainSearchResults = () => {
   const { data, actions } = useTripRedux()
+  // const [ idTrip , setIdTrip] = useState();
+
   const tripSearchResults = data?.searchResults || []
-  const tripState = useSelector((state) => state.trip)
+  const tripState = useSelector((state:any) => state.trip)
   const searchResults = tripState?.searchResults || []
-  const [activeData, setActiveData] = useState({})
+  const [activeData, setActiveData] = useState<any>({})
   const location = useLocation()
-  const searchParams = new URLSearchParams(location.search)
+  const searchParams:any = new URLSearchParams(location.search)
   const dispatch = useDispatch()
+  console.log(tripState, 'store trip')
+  const idTrip = tripState?.searchResults
+  console.log(idTrip, 'Tripid')
 
   const setActiveToTrips = (tripId: any, dataIndex: any) => {
     setActiveData((prevData: any) => ({
@@ -33,9 +38,15 @@ const MainSearchResults = () => {
       ticket_count: searchParams.get('ticket_count')
     }
     actions.getAllTrip(params)
+    // getTripId(searchParams.get('id'))
+    //   .then((res)=>{setIdTrip(res.data?.id)})
+      // getAllTrip()
+      // .then((res)=>{setIdTrip(res.data?.trips?.id)});
+      
   }, [])
 
-  console.log(tripState, 'store trip')
+
+
   
 
   return (
@@ -121,7 +132,7 @@ const MainSearchResults = () => {
                       </div>
                     </div>
                     <div>
-                      <Link to={'/book-tickets'}>
+                      <Link to={`/book-tickets/${item?.trip_id}`}>
                         <ButtonRadiusCompoennt content='chọn chuyến' />
                       </Link>
                     </div>
@@ -283,7 +294,8 @@ const MainSearchResults = () => {
           </div>
         )
       ) : (
-        console.log('Error: searchResults is not an array.')
+        // console.log('Error: searchResults is not an array.')
+        <div>Error: searchResults is not an array.</div>
       )}
     </div>
   )
