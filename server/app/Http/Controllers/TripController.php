@@ -458,28 +458,6 @@ class TripController extends Controller
 
     public function searchTrip(Request $request)
     {
-        // $seatCodes = ["F1-NO56468936", "F2-NO32192700", "F2-NO66841837"];
-        // $seatCodes2 = ["F1-NO56468936", "F2-NO32192700", "F2-NO66841837"];
-        // $seatCodes3 = ["F1-NO56468936", "F2-NO32192700", "F2-NO66841837"];
-
-        // $data = [
-        //     [
-        //         "trip_id" => "333",
-        //         "seat_code" => json_encode($seatCodes),
-        //         "status" => "hold"
-        //     ],
-        //     [
-        //         "trip_id" => "334",
-        //         "seat_code" => json_encode($seatCodes2),
-        //         "status" => "hold"
-        //     ],
-        //     [
-        //         "trip_id" => "335",
-        //         "seat_code" => json_encode($seatCodes3),
-        //         "status" => "hold"
-        //     ]
-        // ];
-        // HoldSeatEvent::dispatch($data);
 
         try {
             // Validate the incoming request data
@@ -642,7 +620,7 @@ class TripController extends Controller
             } else {
                 return response()->json([
                     'error' => 'Không có tuyến nào phù hợp'
-                ], 404);
+                ], 200);
             }
         } catch (ValidationException $e) {
             // Return validation error messages if validation fails
