@@ -9,7 +9,17 @@ import { getOneUser } from '~/app/api/auth/auth.api'
 const HomeComponent = () => {
     const [user, setUser] = useState<any>({});
     const token = localStorage.getItem("token");
-    console.log(token);
+    // const [showCancellationMessage, setShowCancellationMessage] = useState(false);
+    // useEffect(() => {
+    //     if (true) {
+    //         setShowCancellationMessage(true);
+    //     }
+    // }, [true]);
+
+    // // Hàm xử lý khi người dùng bấm OK để đóng model thông báo
+    // const handleCloseMessage = () => {
+    //     setShowCancellationMessage(false);
+    // };
     
     useEffect(() => {
       if (!token) {
@@ -33,7 +43,14 @@ const HomeComponent = () => {
 
         <div >
             <div className='w-[1128px] m-auto '>
-                
+            {/* {showCancellationMessage && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <p>Đơn hàng của bạn đã bị hủy do hết thời gian. Xin vui lòng đặt lại vé.</p>
+                        <button onClick={() =>handleCloseMessage()}>OK</button>
+                    </div>
+                </div>
+            )} */}
                 <div>
                     <FormToFromComponent />
                 </div>

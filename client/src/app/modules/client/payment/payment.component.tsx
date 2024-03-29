@@ -1,19 +1,56 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import LeftComponent from '../payment/component/left.component'
 import { useCartRedux } from '../redux/hook/useCartReducer'
-
+import { cancelBill } from '~/app/api/bill/bill.api'
 const PaymentComponent = () => {
     const {data:{cart}}=useCartRedux()
+    const price = cart?.total_money_after_discoun
     const paymentRef = useRef<any>(null);
+    const [remainingTime, setRemainingTime] = useState(100); 
+    const [orderCancelled, setOrderCancelled] = useState(false);
     useEffect(() => {
         // Kiểm tra nếu paymentRef tồn tại và không phải là null
         if (paymentRef.current) {
             // Cuộn đến vị trí của phần tử paymentRef
             paymentRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-    }, []); // Trigger lại useEffect khi giá trị của cart thay đổi
+    }, [price]); // Trigger lại useEffect khi giá trị của cart thay đổi
 
+    useEffect(() => {
+        const countdownInterval = setInterval(() => {
+            setRemainingTime(prevTime => prevTime - 1);
+        }, 1000);
 
+        return () => clearInterval(countdownInterval);
+    }, []);
+    const minutes = Math.floor(remainingTime / 60);
+    const seconds = remainingTime % 60;
+    const dataBill: any = localStorage.getItem('bill_user')
+    const ObDataBill = JSON.parse(dataBill)
+    const idBill =ObDataBill?.id
+    useEffect(() => {
+        const deleteOrderAsync = async () => {
+            try {
+                // Gọi API để xóa đơn hàng
+                await  cancelBill(idBill);
+                setOrderCancelled(true);
+                // Sau khi xóa đơn hàng thành công, điều hướng về trang chủ
+                window.location.href = '/';
+            } catch (error) {
+                // Xử lý lỗi nếu có
+                console.error('Error deleting order:', error);
+                // Điều hướng về trang chủ dù có lỗi xảy ra hoặc không
+                window.location.href = '/';
+
+            }
+        };
+    
+        if (remainingTime <= 0) {
+            deleteOrderAsync();
+        }
+        
+    }, [remainingTime]);
+    
     return (
         <div className='w-full'>
            
@@ -26,10 +63,13 @@ const PaymentComponent = () => {
                 <div className=':grid-cols-1 flex flex-wrap gap-6'>
                     <div className="flex-col items-center overflow-x-hidden text-center w-[360px] ml-16">
                         <div className="text-gray text-base font-medium">Tổng thanh toán</div>
-                        <div className="mb-6 text-5xl font-semibold text-orange">{cart?.total_money_after_discoun}</div>
+                        <div className="mb-6 text-5xl font-semibold text-orange">{cart?.total_money_after_discoun?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</div>
                         <div className="rounded-2xl bg-[#FAFAFC] p-4">
-                            <span className="text-[13px] text-[#EC9B04]">Thời gian giữ chỗ còn lại
-                                <span className="font-medium">03 : 38</span>
+                        <span className="text-[13px] text-[#EC9B04]">
+                                Thời gian giữ chỗ còn lại{' '}
+                                <span className="font-medium">
+                                    {minutes.toString().padStart(2, '0')} : {seconds.toString().padStart(2, '0')}
+                                </span>
                             </span>
                             {/* <div className="relative mt-4 aspect-square w-80 rounded-lg bg-white">
                                 <img alt="qr code" loading="lazy" decoding="async" data-nimg="fill"
@@ -105,23 +145,23 @@ const PaymentComponent = () => {
                                 </div>
                                 <div className="mt-1 flex items-center justify-between">
                                     <span className="text-gray">Tổng tiền lượt đi</span>
-                                    <span className="text-[#00613D]">{cart?.total_money }</span>
+                                    <span className="text-[#00613D]">{cart?.total_money?.toLocaleString('vi', { style: 'currency', currency: 'VND' }) }</span>
                                 </div>
                             </div>
                             <div className="w-full rounded-xl border border-[#DDE2E8] bg-white px-4 py-3 text-[15px]">
                                 <div className="icon-orange flex gap-2 text-xl font-medium text-black">Chi tiết giá</div>
                                 <div className="mt-4 flex items-center justify-between">
                                     <span className="text-gray">Giá vé lượt đi</span>
-                                    <span className="text-orange">{cart?.total_money}</span>
+                                    <span className="text-orange">{cart?.total_money?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</span>
                                 </div>
                                 <div className="mt-1 flex items-center justify-between">
                                     <span className="text-gray">Phí thanh toán</span>
-                                    <span className="text-black"></span>
+                                    <span className="text-black">0đ</span>
                                 </div>
                                 <div className="divide my-3"></div>
                                 <div className="flex items-center justify-between">
                                     <span className="text-gray">Tổng tiền</span>
-                                    <span className="text-orange">{cart?.total_money_after_discoun}</span>
+                                    <span className="text-orange">{cart?.total_money_after_discoun?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</span>
                                 </div>
                             </div>
                         </div>

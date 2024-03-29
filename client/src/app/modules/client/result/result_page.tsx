@@ -12,55 +12,58 @@ const ResultPage = () => {
   const [updateCalled, setUpdateCalled] = useState(false);
   const [successData, setSuccessData] = useState<any>({});
   const [billUpdated, setBillUpdated] = useState(false);
+  const [id,setId]  = useState();
+  console.log('id',billUpdated);
+  
   console.log('Result Page', successData);
-
   useEffect(() => {
-    const cart: any = localStorage.getItem('cart');
-    const cartUser = JSON.parse(cart);
-    const dataCartUser = cartUser?.payload;
+    const fetchDataAndUpdate = async () => {
+      try {
+        const cart: any = localStorage.getItem('cart');
+        const cartUser = JSON.parse(cart);
+        const dataCartUser = cartUser?.payload;
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const responseCode = urlParams.get('vnp_ResponseCode');
+        const urlParams = new URLSearchParams(window.location.search);
+        const responseCode = urlParams.get('vnp_ResponseCode');
 
-    const dataBill: any = localStorage.getItem('bill_user');
-    const route = localStorage.getItem('route');
-    const ObDataBill = JSON.parse(dataBill);
+        const dataBill: any = localStorage.getItem('bill_user');
+        const route = localStorage.getItem('route');
+        const ObDataBill = JSON.parse(dataBill);
+        const currentId = ObDataBill?.id;
 
-    if (responseCode === '00' && !updateCalled) {
-      setIsUpdating(true);
-      setUpdateCalled(true);
-      const splipRoute: any = route?.split("-");
-      const idUpdate = ObDataBill?.id;
-      const dataUpdate = {
-        status_pay: "1",
-        type_pay: "0",
-        full_name: dataCartUser?.full_name,
-        start_location: splipRoute[0],
-        end_location: splipRoute[1],
-        pickup_location: dataCartUser?.location?.start_location,
-        pay_location: dataCartUser?.location?.end_location,
-        code_seat: dataCartUser?.code_seat
-      };
+        if (responseCode === '00' && !updateCalled && currentId) {
+          setIsUpdating(true);
+          setUpdateCalled(true);
+          const splipRoute: any = route?.split("-");
+          const idUpdate = currentId;
+          const dataUpdate = {
+            status_pay: "1",
+            type_pay: "0",
+            full_name: dataCartUser?.full_name,
+            start_location: splipRoute[0],
+            end_location: splipRoute[1],
+            pickup_location: dataCartUser?.location?.start_location,
+            pay_location: dataCartUser?.location?.end_location,
+            code_seat: dataCartUser?.code_seat
+          };
 
-      // Simulate API call
-      setTimeout(() => {
-        // Assuming updateBillAndSendMail returns a Promise
-        updateBillAndSendMail(idUpdate, dataUpdate)
-          .then((res) => {
-            setUpdateSuccess(true);
-            setSuccessData(res?.data);
-            setIsUpdating(false);
-            setBillUpdated(true)
-          })
-          .catch(error => {
-            console.error("Update failed:", error);
-            setIsUpdating(false);
-          });
-      }, 2000); // Simulate 2 seconds delay, adjust as needed
-    }
+          // Simulate API call
+          await new Promise((resolve) => setTimeout(resolve, 2000));
 
-  }, [updateCalled,billUpdated]);
+          const res = await updateBillAndSendMail(idUpdate, dataUpdate);
+          setUpdateSuccess(true);
+          // setSuccessData(res?.data);
+          setIsUpdating(false);
+          setBillUpdated(true);
+        }
+      } catch (error) {
+        console.error("Update failed:", error);
+        setIsUpdating(false);
+      }
+    };
 
+    fetchDataAndUpdate();
+  }, [billUpdated, updateCalled]);
   return (
     <div className=''>
       {isUpdating && (

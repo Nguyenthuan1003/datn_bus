@@ -41,7 +41,7 @@ const Infomationticketcomponent = ({trip_id,selectData,dataPrice}:any) => {
           </div>
           <div className='body__info__line'>
             <span className='body__info__text-right'>Tổng tiền lượt đi</span>
-            <span className='body__info__text-left'>{dataPrice}</span>
+            <span className='body__info__text-left'>{dataPrice?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</span>
           </div>
         </div>
     </div>
