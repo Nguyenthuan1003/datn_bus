@@ -52,7 +52,7 @@ const ResultPage = () => {
 
           const res = await updateBillAndSendMail(idUpdate, dataUpdate);
           setUpdateSuccess(true);
-          // setSuccessData(res?.data);
+          setSuccessData(res?.data);
           setIsUpdating(false);
           setBillUpdated(true);
         }
