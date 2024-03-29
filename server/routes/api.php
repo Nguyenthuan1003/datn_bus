@@ -152,3 +152,4 @@ Route::post('me', [AuthController::class, 'me']);
 
 // reset password
 Route::post('forgotpassword', [AuthController::class, 'forgotPasswordSubmit'])->name('forgot.password.submit');
+Route::get('rt/seat', [TripController::class, 'realTimeSeat']);

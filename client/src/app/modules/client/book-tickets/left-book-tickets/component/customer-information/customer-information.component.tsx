@@ -84,12 +84,29 @@ const CustomerInformation: FC<any> = ({ control, errors }) => {
                     <p className='text-[14px] font-semibold'>(*) Nếu quý khách có nhu cầu trung chuyển, vui lòng liên hệ Tổng đài trung chuyển <span className='text-orange-600'>1900 6918</span> trước khi đặt vé. Chúng tôi không đón/trung chuyển tại những điểm xe trung chuyển không thể tới được.</p>
                 </div>
             </div>
-            <span className='flex p-4'>
-                <span> <input type="checkbox" name="" id="" /></span>
-
-                <span className='text-orange-600 underline px-1'>Chấp nhận điều khoản </span>
-                <span>đặt vé & chính sách bảo mật thông tin của FUTABusline</span>
-            </span>
+            {/* <div className=''>  
+            <Controller
+                control={control}
+                name='acceptTerms'
+                defaultValue={false} // Giá trị mặc định là false
+                render={({ field: { onChange, value } }) => (
+                    <div className='flex p-4 w-[200px]'>
+                        <input
+                            type="checkbox"
+                            name="acceptTerms"
+                            id="acceptTerms"
+                            checked={value}
+                            onChange={(e) => onChange(e.target.checked)}
+                            className='w-[12px]'
+                        />
+                        <label htmlFor="acceptTerms" className='text-orange-600 underline px-1'>Chấp nhận điều khoản</label>
+                        <span>đặt vé & chính sách bảo mật thông tin của FUTABusline</span>
+                    </div>
+                )}
+                rules={{ required: 'Bạn cần chấp nhận điều khoản' }}
+            />
+            {errors.acceptTerms && <span className='text-red-600'>{errors.acceptTerms.message}</span>}
+            </div> */}
         </div >
     )
 }

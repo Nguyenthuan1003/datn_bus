@@ -519,13 +519,13 @@ class TripController extends Controller
                 ->select('id', 'name', 'image')
                 ->get();
             // format image url
-            $parentLocationImage->each(function ($location) use ($request) {
-                $imageName = $location->image;
-                if ($location->image[0] !== "/") {
-                    $imageName =  "/" . $location->image;
-                }
-                $location->image = "http://" . $request->getHttpHost() . $imageName;
-            });
+            // $parentLocationImage->each(function ($location) use ($request) {
+            //     $imageName = $location->image ?? '';
+            //     if ($location->image[0] !== "/") {
+            //         $imageName =  "/" . $location->image ?? '';
+            //     }
+            //     $location->image = "http://" . $request->getHttpHost() . $imageName;
+            // });
 
             $totalTripData = collect();
             // Check if route exists
@@ -587,7 +587,7 @@ class TripController extends Controller
                     // format car image url
                     $carImageName =  $trip->car->image;
                     if ($trip->car->image[0] !== "/") {
-                        $carImageName =  "/" . $trip->car->image;
+                        $carImageName =  "/" . $trip->car->image ?? '';
                     }
                     $carImageName = "http://" . $request->getHttpHost() . $carImageName;
 
@@ -650,4 +650,9 @@ class TripController extends Controller
 
         return $locations;
     }
+    public function realTimeSeat()
+    {
+        $this->getSeatDataService->rtGetSeatData();
+    }
 }
+

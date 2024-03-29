@@ -13,9 +13,7 @@ const SuccessComponent = () => {
   console.log('data',dataTicket);
   
   const [loading, setLoading] = useState(true)
-  const dataBill: any = localStorage.getItem('bill_user')
-  const ObDataBill = JSON.parse(dataBill)
-  const idUpdate: any = ObDataBill?.id;
+
   const getStatusText = (status:any) => {
     if (status === 1) {
       return "Thanh toán thành công";
@@ -32,39 +30,65 @@ const SuccessComponent = () => {
   };
 
 
-  useEffect(()=>{
-    getOneBillById(idUpdate)
-    .then((res) => {
-      if(res.status === 200){
-        setData(res?.data?.bill)
-        setLoading(false)
-        localStorage.removeItem('bill_user');
+  // useEffect(()=>{
+  //   const dataBill: any = localStorage.getItem('bill_user')
+  //   const ObDataBill = JSON.parse(dataBill)
+  //   const idUpdate: any = ObDataBill?.id;
+  //   getOneBillById(idUpdate)
+  //   .then((res) => {
+  //     if(res.status === 200){
+  //       setData(res?.data?.bill)
+  //       setLoading(false)
+  //       localStorage.removeItem('bill_user');
+  //       localStorage.removeItem('cart')
+  //     }
+  //   })
+  //   },[])
+
+
+  useEffect(() => {
+    const dataBill: any = localStorage.getItem('bill_user');
+    const ObDataBill = JSON.parse(dataBill);
+    const idUpdate: any = ObDataBill?.id;
+  
+    const fetchData = async () => {
+      try {
+        const res = await getOneBillById(idUpdate);
+        if (res.status === 200) {
+          setData(res?.data?.bill);
+          setLoading(false);
+          setTimeout(() => {
+            localStorage.removeItem('bill_user');
+            localStorage.removeItem('cart');
+          }, 3000); // Đợi 3 giây trước khi xóa localStorage
+        }
+      } catch (error) {
+        // Xử lý lỗi nếu có
+        console.error('Error fetching data:', error);
       }
-    })
-    },[])
-    const  handleBackHome=()=>{
-      window.location.href='/'
-    }
+    };
+  
+    fetchData();
+  }, []);
+
+
+    // const  handleBackHome=()=>{
+    //   window.location.href='/'
+    // }
     
-    const [visible, setVisible] = useState<boolean>(false);
-    const showModal = () => {
-        setVisible(true);
-        };
-        const handleOk = (e: any) => {
-            console.log(e);
-            setVisible(false);
-            };
-        const handleCancel = (e: any) => {
-            console.log(e);
-            setVisible(false);
-        };
-      // const dataBill = data?.bill
-      // console.log(dataBill);
-      // phone_number  
-      // full_name
-        //total_money_after_discount
-        //type_pay
-        //status_pay ticket_order code_ticket code_seat pay_location pickup_location
+    // const [visible, setVisible] = useState<boolean>(false);
+    // const showModal = () => {
+    //     setVisible(true);
+    //     };
+    //     const handleOk = (e: any) => {
+    //         console.log(e);
+    //         setVisible(false);
+    //         };
+    //     const handleCancel = (e: any) => {
+    //         console.log(e);
+    //         setVisible(false);
+    //     };
+
       
   return (
     <div >
