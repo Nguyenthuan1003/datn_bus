@@ -3,6 +3,7 @@ import {
 } from '@ant-design/icons'
 import { SiAdminer } from 'react-icons/si'
 import { PiFlagBannerDuotone } from "react-icons/pi";
+import { BsTicketPerforated } from "react-icons/bs";
 export const menuDashBoard =[
     {
         key: '/',
@@ -58,7 +59,11 @@ export const menuDashBoard =[
         key: '/admin/bill',
         icon: <PiFlagBannerDuotone />,
         label: 'Đơn Hàng'
+    },
+    {
+        key: '/admin/check-ticket',
+        icon: <BsTicketPerforated />,
+        label: 'Ticket'
     }
-
 ]
 
