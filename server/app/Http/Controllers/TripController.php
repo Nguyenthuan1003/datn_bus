@@ -25,7 +25,7 @@ class TripController extends Controller
     {
         $this->getSeatDataService = $getSeatDataService;
     }
-    
+
     /**
      * Display a listing of the resource.
      *
@@ -413,10 +413,11 @@ class TripController extends Controller
         try {
             $tripData = Trip::with(['car', 'route'])->find($id);
 
-            //            validate thêm start_date || $tripData->start_time
-            if (!$tripData) {
+//            mess này của tìm kiếm ngoài frontend nên sẽ lệch 4 tiếng
+            if (!$tripData ||  \Carbon\Carbon::parse($tripData->start_time)->subHours(4)->isBefore(now())) {
                 return response()->json([
-                    'message' => 'Chuyến đi không tồn tại'
+                    'message' => 'Chuyến đi không tồn tại',
+                    "status" => "fail"
                 ]);
             }
 
@@ -454,12 +455,14 @@ class TripController extends Controller
                 'trip' => $tripData,
                 'seats' => $seats,
                 'pickup_location' => $pickupLocations,
-                'pay_location' => $payLocation
+                'pay_location' => $payLocation,
+                "status" => "success",
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
-                'error' => $e->getMessage()
+                "status" => "fail"
+//                'error' => $e->getMessage()
             ]);
         }
     }
