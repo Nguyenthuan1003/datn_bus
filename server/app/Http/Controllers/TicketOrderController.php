@@ -97,18 +97,21 @@ class TicketOrderController extends Controller
 
             if (!$ticket) {
                 return response()->json([
-                    'message' => 'Vé này không tồn tại'
+                    'message' => 'Vé này không tồn tại',
+                    'status' => 'fail'
                 ]);
             }
 
             return response()->json([
                 'message' => 'Truy vấn dữ liệu thành công',
+                'status' => 'success',
                 'ticket' => $ticket
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
-                'error' => $e->getMessage()
+                'status' => 'fail'
+//                'error' => $e->getMessage()
             ]);
         }
     }
