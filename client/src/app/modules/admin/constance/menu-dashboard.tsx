@@ -3,6 +3,7 @@ import {
 } from '@ant-design/icons'
 import { SiAdminer } from 'react-icons/si'
 import { PiFlagBannerDuotone } from "react-icons/pi";
+import { BsTicketPerforated } from "react-icons/bs";
 export const menuDashBoard =[
     {
         key: '/',
@@ -15,9 +16,9 @@ export const menuDashBoard =[
         label: 'Bảng điều kiển'
     },
     {
-        key: '/admin/user',
-        icon: <UserOutlined />,
-        label: 'Người dùng'
+        key: '/admin/type-car',
+        icon: <SiAdminer />,
+        label: 'Loại xe'
     },
     {
         key: '/admin/banner',
@@ -25,10 +26,44 @@ export const menuDashBoard =[
         label: 'Banner'
     },
     {
+        key: '/admin/parent-location',
+        icon: <PiFlagBannerDuotone />,
+        label: 'Tỉnh Thành'
+    },
+    {
+        key: '/admin/location',
+        icon: <PiFlagBannerDuotone />,
+        label: 'Địa Điểm'
+    },
+    {
+        key: '/admin/route',
+        icon: <PiFlagBannerDuotone />,
+        label: 'Tuyến đường '
+    },
+    {
+        key: '/admin/car',
+        icon: <SiAdminer />,
+        label: 'Xe'
+    },
+    {
+        key: '/admin/seat',
+        icon: <SiAdminer />,
+        label: 'Chỗ ngồi '
+    },
+    {
         key: '/admin/trip',
         icon: <PiFlagBannerDuotone />,
-        label: 'Trip'
+        label: 'Chuyến đi'
+    },
+    {
+        key: '/admin/bill',
+        icon: <PiFlagBannerDuotone />,
+        label: 'Đơn Hàng'
+    },
+    {
+        key: '/admin/check-ticket',
+        icon: <BsTicketPerforated />,
+        label: 'Ticket'
     }
-
 ]
 

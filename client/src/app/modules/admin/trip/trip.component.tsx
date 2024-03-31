@@ -19,26 +19,8 @@ const TripComponent = () => {
     const [selectedRouteId, setSelectedRouteId] = useState<any>({});
     const [current, setCurrent] = useState<any>(null);
     const [checked, setChecked] = useState<any>(0);
-
-    // const checkLocation = startLocations?.find((item:any) => item?.route_id ==  selectedRouteId );
-    // console.log('checkLocation',checkLocation);
-
-    // const [checked, setChecked] = useState<any>();
-
-
-
-    // const handleRouteChange = async (routeId:any) => {
-    //     try {
-    //         const response = await fetch(`http://127.0.0.1:8000/api/trip/locations-for-route/1`);
-    //         const data = await response.json();
-    //         console.log('data',data);
-
-    //         setStartLocations(data?.start_locations);
-    //         setEndLocations(data?.end_locations);
-    //     } catch (error) {
-    //         console.error('Error fetching locations:', error);
-    //     }
-    // };
+    console.log('dataTrip',dataTrip);
+    
     useEffect(() => {
         getRouteTrip().then((res) => {
             if (res) {
@@ -49,6 +31,8 @@ const TripComponent = () => {
     useEffect(() => {
         getAllTrip().then((res) => {
             if (res) {
+                console.log(res.data, "-----------------");
+                
                 setDataTrip(res.data?.trips)
             }
         })
@@ -95,7 +79,7 @@ const TripComponent = () => {
 
     useEffect(() => {
         const columsTemp: any = []
-        const title = ['STT', 'Tên xe', 'Thời gian bắt đầu ', 'Địa điểm bắt đầu ', 'Trạng Thái', 'Giá chuyến đi', 'Địa điểm kết thúc ', 'Tổng thời gian chuyến đi', 'Tuyến đường ']
+        const title = ['STT', 'Tên xe' ,'Thời gian bắt đầu ', 'Địa điểm bắt đầu ', 'Trạng Thái', 'Giá chuyến đi', 'Địa điểm kết thúc ', 'Tổng thời gian chuyến đi', 'Tuyến đường ']
 
         if (dataTrip.length > 0) {
             Object.keys(dataTrip[0]).forEach((itemKey, key = 0) => {
@@ -232,23 +216,27 @@ const TripComponent = () => {
                                 ))}
                             </Select>
                         </Form.Item>
-                        <Form.Item label='chuyến xe' name='route_id' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                            <Select placeholder="lựa chọn xe" onChange={handleRouteChange} >
+                        <Form.Item label='chuyến Tuyến đường' name='route_id' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+                            <Select placeholder="Chọn tuyến đường" onChange={handleRouteChange} >
                                 {dataRouteTrip?.map((item: any) => (
                                     <Option value={item?.id} key={item?.id}>{item?.name}</Option>
                                 ))}
                             </Select>
                         </Form.Item>
+                        {/* <Form.Item label='Ngày bắt đầu' name='start_date' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+
+                            <Input />
+                        </Form.Item> */}
                         <Form.Item label='Thời gian bắt đầu' name='start_time' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                        {/* <DatePicker
+                        <DatePicker
                             // showTime={{ defaultValue: moment('00:00', 'HH:mm'), format: 'HH:mm' }}
                             showTime
                             format="DD/MM/YYYY HH:mm:ss"
                             placeholder="Chọn ngày và giờ"
                             onChange={handleDateChange}
                             locale={viVN}
-                        /> */}
-                            <Input />
+                        />
+                            {/* <Input /> */}
                         </Form.Item>
                         <Form.Item label='Địa điểm bắt đầu' name='start_location' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
                             <Select placeholder="lựa chọn địa điểm bắt đầu">

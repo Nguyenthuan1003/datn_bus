@@ -7,7 +7,7 @@ import { Layout, Menu, Button, theme } from 'antd';
 import { css } from '@emotion/react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { menuDashBoard } from '~/app/modules/admin/constance/menu-dashboard';
-
+import logo from "~/assets/img/logo_book_bus.png"
 const { Header, Sider, Content } = Layout;
 
 const DefaulAdmin = () => {
@@ -21,10 +21,10 @@ const DefaulAdmin = () => {
         navigate(data.key)
     }
     return (
-        <Layout style={{ height: '100vh' }}>
-            <Sider trigger={null} collapsible collapsed={collapsed}>
-                <div css={cssLogoAdmin}>
-                    <h3 className='text-black'> logo</h3>
+        <Layout style={{ minHeight: '100vh' }}>
+            <Sider trigger={null} collapsible collapsed={collapsed} >
+                <div css={cssLogoAdmin} className='flex justify-center'>
+                  <img src={logo} alt="" width={70} height={70} />
                 </div>
                 <div className="demo-logo-vertical" />
                 <Menu
@@ -35,7 +35,7 @@ const DefaulAdmin = () => {
                     onSelect={handleClickMenuDashboard}
                 />
             </Sider>
-            <Layout>
+            <Layout style={{ height: '100%', minHeight: '100vh' }}>
                 <Header style={{ padding: 0, background: colorBgContainer }}>
                     <div className='flex' style={{ justifyContent: 'space-between', alignItems: 'center' }}>
                         <div>
@@ -57,7 +57,7 @@ const DefaulAdmin = () => {
                     </div>
                 </Header>
 
-                <Content
+                <Content   
                     style={{
                         margin: '24px 16px',
                         padding: 24,

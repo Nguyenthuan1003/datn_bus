@@ -1,4 +1,4 @@
-import { axiosPrivate } from "~/app/api/configHTTp"
+import { axiosPrivate } from "~/app/api/confighHTTp"
 
 
 export const getAllTrip = async () => {

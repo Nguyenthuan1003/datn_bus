@@ -26,6 +26,8 @@ return new class extends Migration
             $table->integer('total_seat')->nullable(false);
             $table->string('code_bill')->nullable(false);
             $table->string('phone_number')->nullable(false);
+            $table->string('full_name')->nullable(false);
+            $table->string('email')->nullable(false);
             $table->timestamps();
         });
     }

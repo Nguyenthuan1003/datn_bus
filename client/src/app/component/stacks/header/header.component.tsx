@@ -1,9 +1,76 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { css } from '@emotion/react';
 import logo from '../../../../assets/img/logo_book_bus.png'
+// import { profileUser } from '~/app/api/auth/auth.api';
+import { DownOutlined, UserOutlined } from '@ant-design/icons';
+import type { MenuProps } from 'antd';
+import { Button, Dropdown, message, Space, Tooltip } from 'antd';
 
 const HeaderComponent = () => {
+    // const token: any = getDecodedAccessToken();
+    // const user = JSON.parse(localStorage.getItem('user')) || null;
+    const token = localStorage.getItem("token")  ;
+    const [loading, setLoading] = useState<boolean>(false);
+    const handleLogout = () => {
+    localStorage.clear();
+    setLoading(true);
+    setTimeout(() => {
+        setUser(null); // Đặt lại user thành null sau 10 giây
+        window.location.reload();
+    }, 10000);
+    window.location.reload();
+   
+  };
+        const [user, setUser] = useState<any>(null); // Sử dụng state để lưu trữ thông tin người dùng
+
+    useEffect(() => {
+        // Lấy dữ liệu người dùng từ localStorage khi component được render
+        const userString = localStorage.getItem('user');
+        if (userString) {
+            const userData = JSON.parse(userString);
+            setUser(userData);
+        }
+    }, []);
+        const [roleId, setRoleId] = useState<any>(null);
+        console.log(user);
+        // const history = useHistory();
+        const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+            message.info('Click on left button.');
+            console.log('click left button', e);
+          };
+          
+          const handleMenuClick: MenuProps['onClick'] = (e) => {
+          if(e.key === "3"){
+              message.info('đăng xuất thành công !')
+          }
+            console.log('click', e);
+          };
+        const items: MenuProps['items'] = [
+            {
+              label: <Link to={''}>Thông tin khách hàng</Link>,
+              key: '1',
+              style: { color: '#1890ff', fontSize : "16px", cursor:"pointer",padding: "20px"},
+              icon: <UserOutlined />,
+            },
+            {
+              label: <Link to={''}>Lịch sử mua vé</Link>,
+              key: '2',
+              style: { color: '#1890ff', fontSize : "16px", cursor:"pointer",padding: "20px"},
+              icon: <UserOutlined />,
+            },
+            {
+                label: 'Logout',
+                key: '3',
+                style: { color: 'red', fontSize : "16px", cursor:"pointer",padding: "20px"},
+                icon: <UserOutlined />,
+                onClick: ()=>{handleLogout()}
+              },
+          ];
+          const menuProps = {
+            items,
+            onClick: handleMenuClick,
+          };
     return (
         <>
             <header css={headerCss} className=' bg-gradient-to-b from-bgHeader to-primary h-[120px] fixed w-full z-20 top-0 left-0 '>
@@ -15,17 +82,33 @@ const HeaderComponent = () => {
                     <nav>
                         <ul className='navMenu__list'>
                             <li className='navMenu__list-link hover-underline-animation underline-animation--active'><Link to={'/'} >Trang chủ</Link></li>
-                            <li className='navMenu__list-link hover-underline-animation'><Link to={'/'}>Lịch trinh</Link></li>
+                            <li className='navMenu__list-link hover-underline-animation'><Link to={'/route-schedule'}>Lịch trình</Link></li>
                             <li className='navMenu__list-link hover-underline-animation'><Link to={'/check-ticket'}>Tra cứu vé</Link></li>
                             <li className='navMenu__list-link hover-underline-animation'><Link to={'/'}>Hóa đơn</Link></li>
-                            <li className='navMenu__list-link hover-underline-animation'><Link to={'/'}>Liên hệ</Link></li>
-                            <li className='navMenu__list-link hover-underline-animation'><Link to={'/'}>Về chúng tôi</Link></li>
+                            <li className='navMenu__list-link hover-underline-animation'><Link to={'/contact'}>Liên hệ</Link></li>
+                            <li className='navMenu__list-link hover-underline-animation'><Link to={'/about'}>Về chúng tôi</Link></li>
                         </ul>
                     </nav>
                     <div className="header__user flex justify-end items-center ">
-                        <div>
-                            <div className="btn text-[12px]"><Link to={"/register"}>Đăng kí</Link>/ <Link to={"/login"}>Đăng nhập</Link></div>
-                        </div>
+                    {loading ? ( // Nếu loading là true, hiển thị phần loading
+                    <div>Loading...</div>
+                ) : (
+                    user ? (
+                        <Dropdown menu={menuProps}>
+                            <div className='flex h-8 2lg:mr-1'>
+                                <div className='ant-dropdown-trigger flex cursor-pointer items-center gap-4'>
+                                    <div className='h-8 rounded-full b-2 '>
+                                        <img alt="avatar" loading="lazy" width="32" height="32" decoding="async" data-nimg="1" className="transition-all duration-200 h-8 rounded-full" src={`http://${user?.avatar}`  || "https://static.vecteezy.com/system/resources/previews/009/292/244/original/default-avatar-icon-of-social-media-user-vector.jpg"}  />
+                                    </div>
+                                    <span className="font-medium text-white">DaoLinh</span>
+                                    <img src="https://futabus.vn/images/icons/icon_form_droplist.svg" alt="icon_form_droplist"></img>
+                                </div>
+                            </div>
+                        </Dropdown>
+                    ) : (
+                        <div className="btn text-[12px]"><Link to={"/register"}>Đăng kí</Link>/ <Link to={"/login"}>Đăng nhập</Link></div>
+                    )
+                )}
                     </div>
                 </div>
             </header>

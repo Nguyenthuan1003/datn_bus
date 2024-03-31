@@ -1,11 +1,11 @@
 import axios from 'axios'
-const accessToken = localStorage.getItem('accessToken')
+const token = localStorage.getItem('token')
 export const axiosPrivate = axios.create({
   baseURL: 'http://127.0.0.1:8000/api',
   headers: {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
-    Authorization: `Bearer ${accessToken}`
+    Authorization: `Bearer ${token}`
   }
 })
 
@@ -14,7 +14,7 @@ export const axiosFormData = axios.create({
   headers: {
     'Content-Type': 'multipart/form-data',
     'Access-Control-Allow-Origin': '*',
-    Authorization: `Bearer ${accessToken}`
+    Authorization: `Bearer ${token}`
   }
 })
 
