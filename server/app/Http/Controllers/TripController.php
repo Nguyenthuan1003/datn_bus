@@ -34,13 +34,22 @@ class TripController extends Controller
     public function index()
     {
         try {
-            $trips = Trip::with(['car', 'route'])
+            $currentDateTime =  \Carbon\Carbon::now();
+            $allTrips = Trip::with(['car', 'route'])
+                ->get();
+            $notStartedTrips = Trip::with(['car', 'route'])
+                ->where('start_time', '>', $currentDateTime)
+                ->get();
+            $startedTrips = Trip::with(['car', 'route'])
+                ->where('start_time', '<=', $currentDateTime)
                 ->get();
 
             return response()->json([
                 'message' => 'Truy vấn dữ liệu thành công',
-                'trips' => $trips,
-                "status" => "success"
+                "status" => "success",
+                "not_started_trips" => $notStartedTrips,
+                "started_trips" => $startedTrips,
+                'all_trips' => $allTrips
             ]);
         } catch (\Exception $e) {
             return response()->json([
