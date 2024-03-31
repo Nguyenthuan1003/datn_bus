@@ -39,12 +39,14 @@ class TripController extends Controller
 
             return response()->json([
                 'message' => 'Truy vấn dữ liệu thành công',
-                'trips' => $trips
+                'trips' => $trips,
+                "status" => "success"
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi truy vấn dữ liệu',
-                'error' => $e->getMessage()
+//                'error' => $e->getMessage(),
+                "status" => "fail"
             ]);
         }
     }
@@ -63,12 +65,14 @@ class TripController extends Controller
             return response()->json([
                 'message' => 'Truy vấn dữ liệu thành công',
                 'cars' => $cars,
-                'routes' => $routes
+                'routes' => $routes,
+                "status" => "success"
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi truy vấn dữ liệu',
-                'error' => $e->getMessage()
+//                'error' => $e->getMessage(),
+                "status" => "fail"
             ]);
         }
     }
@@ -85,7 +89,8 @@ class TripController extends Controller
 
             if (!$route) {
                 return response()->json([
-                    'message' => 'Tuyến đi không tồn tại'
+                    'message' => 'Tuyến đi không tồn tại',
+                    "status" => "fail"
                 ]);
             }
 
@@ -97,12 +102,14 @@ class TripController extends Controller
             return response()->json([
                 'message' => 'Truy vấn dữ liệu thành công',
                 'start_locations' => $start_locations,
-                'end_locations' => $end_locations
+                'end_locations' => $end_locations,
+                "status" => "success"
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi truy vấn dữ liệu',
-                'error' => $e->getMessage()
+//                'error' => $e->getMessage(),
+                "status" => "fail"
             ]);
         }
     }
@@ -136,7 +143,8 @@ class TripController extends Controller
 
             if ($route->status == 0) {
                 return response()->json([
-                    'message' => 'Tuyến đường này không hoạt động.'
+                    'message' => 'Tuyến đường này không hoạt động.',
+                    "status" => "fail"
                 ]);
             }
 
@@ -145,13 +153,15 @@ class TripController extends Controller
 
             if ($startLocation->parentLocation->name != $route->start_location) {
                 return response()->json([
-                    'message' => 'Thông tin về vị trí bắt đầu không trùng khớp với tuyến đường!'
+                    'message' => 'Thông tin về vị trí bắt đầu không trùng khớp với tuyến đường!',
+                    "status" => "fail"
                 ]);
             }
 
             if ($endLocation->parentLocation->name != $route->end_location) {
                 return response()->json([
-                    'message' => 'Thông tin về vị trí kết thúc không trùng khớp với tuyến đường!'
+                    'message' => 'Thông tin về vị trí kết thúc không trùng khớp với tuyến đường!',
+                    "status" => "fail"
                 ]);
             }
 
@@ -162,7 +172,8 @@ class TripController extends Controller
 
             if ($isValid) {
                 return response()->json([
-                    'message' => 'Xe này đã có chuyến đi vào giờ này!'
+                    'message' => 'Xe này đã có chuyến đi vào giờ này!',
+                    "status" => "fail"
                 ]);
             }
 
@@ -189,7 +200,8 @@ class TripController extends Controller
 
                 return response()->json([
                     'message' => 'Thêm mới thành công',
-                    'trips' => $trips
+                    'trips' => $trips,
+                    "status" => "success"
                 ]);
             } else {
                 $trip = new Trip();
@@ -207,13 +219,15 @@ class TripController extends Controller
 
                 return response()->json([
                     'message' => 'Thêm mới thành công',
-                    'trip' => $trip
+                    'trip' => $trip,
+                    "status" => "success"
                 ]);
             }
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
-                'error' => $e->getMessage()
+                "status" => "fail"
+//                'error' => $e->getMessage()
             ]);
         }
     }
@@ -231,18 +245,21 @@ class TripController extends Controller
 
             if (!$trip) {
                 return response()->json([
-                    'message' => 'Chuyến đi không tồn tại'
+                    'message' => 'Chuyến đi không tồn tại',
+                    "status" => "fail"
                 ]);
             }
 
             return response()->json([
                 'message' => 'Truy vấn dữ liệu thành công',
+                "status" => "success",
                 'trip' => $trip
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
-                'error' => $e->getMessage()
+                "status" => "fail",
+//                'error' => $e->getMessage()
             ]);
         }
     }
@@ -261,7 +278,8 @@ class TripController extends Controller
 
             if (!$trip) {
                 return response()->json([
-                    'message' => 'Chuyến đi không tồn tại'
+                    'message' => 'Chuyến đi không tồn tại',
+                    "status" => "fail"
                 ]);
             }
 
@@ -271,7 +289,8 @@ class TripController extends Controller
 
             if (!(\Carbon\Carbon::parse($trip->start_time, 'Asia/Ho_Chi_Minh')->isAfter(\Carbon\Carbon::now('Asia/Ho_Chi_Minh')))) {
                 return response()->json([
-                    'message' => 'Chuyến đi đã hết hạn điều chỉnh. Không thể cập nhật thông tin.'
+                    'message' => 'Chuyến đi đã hết hạn điều chỉnh. Không thể cập nhật thông tin.',
+                    "status" => "fail"
                 ]);
             } else {
 
@@ -295,7 +314,8 @@ class TripController extends Controller
 
                 if ($route->status == 0) {
                     return response()->json([
-                        'message' => 'Tuyến đường này không hoạt động.'
+                        'message' => 'Tuyến đường này không hoạt động.',
+                        "status" => "fail"
                     ]);
                 }
 
@@ -304,13 +324,15 @@ class TripController extends Controller
 
                 if ($startLocation->parentLocation->name != $route->start_location) {
                     return response()->json([
-                        'message' => 'Thông tin về vị trí bắt đầu không trùng khớp với tuyến đường!'
+                        'message' => 'Thông tin về vị trí bắt đầu không trùng khớp với tuyến đường!',
+                        "status" => "fail"
                     ]);
                 }
 
                 if ($endLocation->parentLocation->name != $route->end_location) {
                     return response()->json([
-                        'message' => 'Thông tin về vị trí kết thúc không trùng khớp với tuyến đường!'
+                        'message' => 'Thông tin về vị trí kết thúc không trùng khớp với tuyến đường!',
+                        "status" => "fail"
                     ]);
                 }
 
@@ -322,7 +344,8 @@ class TripController extends Controller
 
                 if ($isValid) {
                     return response()->json([
-                        'message' => 'Xe này đã có chuyến đi vào giờ này!'
+                        'message' => 'Xe này đã có chuyến đi vào giờ này!',
+                        "status" => "fail"
                     ]);
                 }
 
@@ -333,7 +356,8 @@ class TripController extends Controller
                     return response()->json([
                         'message' => 'Cập nhật thông tin thành công.',
                         'warning' => 'Chỉ có thể cập nhật thông tin trạng thái chuyến đi đối với chuyến đi đã được đặt vé/đánh giá.',
-                        'trip' => $trip
+                        'trip' => $trip,
+                        "status" => "success"
                     ]);
                 } else {
                     $trip->car_id = $request->input('car_id');
@@ -348,6 +372,7 @@ class TripController extends Controller
 
                     return response()->json([
                         'message' => 'Cập nhật thành công chuyến đi',
+                        "status" => "success",
                         'trip' => $trip
                     ]);
                 }
@@ -355,7 +380,8 @@ class TripController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
-                'error' => $e->getMessage()
+                "status" => "fail"
+//                'error' => $e->getMessage()
             ]);
         }
     }
@@ -373,31 +399,36 @@ class TripController extends Controller
 
             if (!$trip) {
                 return response()->json([
-                    'message' => 'Chuyến đi không tồn tại'
+                    'message' => 'Chuyến đi không tồn tại',
+                    "status" => "fail"
                 ]);
             }
 
             if ($trip->bill()->exists()) {
                 return response()->json([
-                    'message' => 'Chuyến đi đã được đặt vé, không được xóa. Nếu có thể hãy hủy/xóa vé để có thể xóa chuyến xe này.'
+                    'message' => 'Chuyến đi đã được đặt vé, không được xóa. Nếu có thể hãy hủy/xóa vé để có thể xóa chuyến xe này.',
+                    "status" => "fail"
                 ]);
             }
 
             if ($trip->comment()->exists()) {
                 return response()->json([
-                    'message' => 'Chuyến đi đã được đánh giá/bình luận, không được xóa. Nếu có thể hãy hủy/xóa bình luận để có thể xóa chuyến xe này.'
+                    'message' => 'Chuyến đi đã được đánh giá/bình luận, không được xóa. Nếu có thể hãy hủy/xóa bình luận để có thể xóa chuyến xe này.',
+                    "status" => "fail"
                 ]);
             }
 
             $trip->delete();
 
             return response()->json([
-                'message' => 'Xóa chuyến đi thành công'
+                'message' => 'Xóa chuyến đi thành công',
+                "status" => "success"
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
-                'error' => $e->getMessage()
+                "status" => "fail"
+//                'error' => $e->getMessage()
             ]);
         }
     }
