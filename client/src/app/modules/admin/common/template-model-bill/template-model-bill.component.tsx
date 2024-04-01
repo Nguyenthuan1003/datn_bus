@@ -7,7 +7,7 @@ import React, { FC, useState } from 'react'
 import { MdDeleteForever } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 import { Option } from 'antd/es/mentions';
-
+import { IoEyeSharp } from "react-icons/io5";
 interface ITemplateModelBill {
     dataTable?: any
     title?: any
@@ -16,10 +16,13 @@ interface ITemplateModelBill {
 }
 const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFunc, callBack }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [state, setState] = useState({});
     const [detailRecord, setDetailRecord] = useState<any>({})
     const [objectTicket, setObjectTicket] = useState<any>([])
     console.log('objectTicket', objectTicket);
+    console.log('detailRecord', detailRecord);
 
+    
 
     const paymentTypes = [
         { key: '0', name: 'VNP' },
@@ -27,7 +30,8 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
         { key: '2', name: 'Mono' }
     ];
     const getTypePayName = (typePayKey: any) => {
-        const foundType = paymentTypes.find(type => type.key === typePayKey);
+        const foundType = paymentTypes.find(type => type.key === typePayKey);;
+        
         // console.log('foundType', foundType);
         return foundType ? foundType?.name : 'Không xác định';
     };
@@ -75,7 +79,8 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
             codeSeat: ticket?.code_seat,
             price: record?.trip?.trip_price,
             quantity: 1,
-            totalPrice: record?.total_money
+            totalPrice: record?.total_money,
+            phoneNumber : record?.phone_number
         }));
         setObjectTicket(combinedTickets);
 
@@ -93,7 +98,7 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
     const confirmDelete = (itemId: any) => {
         deleteFunc(itemId).then((res: any) => {
             if (res) {
-                callBack(res.data)
+                callBack(res.data.message)
                 message.success('xoá thành công');
             }
             else {
@@ -104,7 +109,16 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
     const cancel = (e: any) => {
         message.info('huỷ xoá');
     };
-
+    const onHandleSearch = async (value: any) => {
+        try {
+            const searchOptions: any = {
+                bill_code: value.bill_code,
+            }
+            setState(searchOptions);
+        } catch (error) {
+            console.log(error);
+        }
+    }
     const columns: any = [
         {
             title: 'Mã hoá đơn',
@@ -125,11 +139,13 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
                 const time = matchedTrip?.start_time
 
                 const timetrip = moment.utc(time).local().format('HH:mm')
-                if (matchedTrip) {
+                if (!matchedTrip) {
+                    return <span>Tuyến đường không tồn tại </span>
+                }else{
                     return <span>
-                        {/* {`${matchedTrip.start_location} - ${matchedTrip.end_location} (khởi hành)`} */}
-                        {routeName}  {timetrip}
-                    </span>;
+                    {/* {`${matchedTrip.start_location} - ${matchedTrip.end_location} (khởi hành)`} */}
+                    {routeName ? routeName  : " Tuyền đường không còn tồn tại"}  {timetrip}
+                </span>;
                 }
             }
         },
@@ -188,7 +204,7 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
             title: 'Hành động',
             key: 'action',
             render: (_: any, record: any) => (
-                <div>
+                <div className='flex'>
                     <Popconfirm
                         title="xác nhận xoá"
                         description="bạn có chắc chắn muốn xoá không ?"
@@ -201,10 +217,16 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
                         title={`Xoá theo ID: ${record.id}`}
                     >
                             <MdDeleteForever />
+                            
                         </button>
                     </Popconfirm>
-
-                    <Button type='primary' onClick={() => showModal(record)}>xem chi tiết</Button>
+                    <IoEyeSharp 
+                        onClick={() => showModal(record)}
+                        className= 'text-[23px] cursor-pointer text-green-500 hover:text-green-700 dark:hover:text-green-800 ml-4'
+                        style={{ cursor:'pointer' }}
+                        title={`Chi tiết thông tin hóa đơn: ${record.id}`}
+                    />
+                
                 </div>
 
             )
@@ -213,43 +235,38 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
     const items: DescriptionsProps['items'] = [
         {
             key: "1",
-            label: "max hoá đơn",
+            label: "Mã hóa đơn",
             children: detailRecord?.code_bill
         },
         {
             key: "2",
-            label: "số điện thoại",
-            children: detailRecord?.phone_number
-        },
-        {
-            key: "3",
-            label: "ten khach hang",
+            label: "Tên khách hàng",
             children: detailRecord?.full_name
         },
         {
-            key: "4",
+            key: "3",
             label: "Email",
             children: detailRecord?.email
         },
         {
-            key: "5",
-            label: "thoi gian mua",
+            key: "4",
+            label: "Thời gian mua",
             children: detailRecord?.created_at
         },
         {
-            key: "6",
-            label: "So ve",
+            key: "5",
+            label: "Số vé",
             children: detailRecord?.total_seat
         },
         {
-            key: "7",
-            label: "loai thanh toan",
+            key: "6",
+            label: "Loại thanh toán",
             children: detailRecord?.type_pay
         },
         {
-            key: "8",
-            label: "trang thai",
-            children: detailRecord?.status_pay
+            key: "7",
+            label: "Trạng thái",
+            children: getStatusText(detailRecord?.status_pay)
         },
 
     ]
@@ -261,7 +278,7 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
             dataIndex: 'route',
             render: (_: any, record: any, index: number) => {
                 return {
-                    children: record.route,
+                    children: record.route ? record.route : " Tuyến xe không tồn tại ",
                     props: {
                         rowSpan: index === 0 ? objectTicket.length : 0,
                     },
@@ -282,7 +299,7 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
             dataIndex: 'price',
             sorter: (a: any, b: any) => a.price - b.price,
             render: (_: any, record: any) => {
-                return <div>{record.price}</div>
+                return <div>{record.price ? record.price : "Tuyến xe không tồn tại không thấy giá tiền"}</div>
             }
         },
         {
@@ -314,7 +331,10 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
             </div>
             <div className='flex mb-4'>
                 <div>
-                    <Input placeholder="Nhập mã hoá đơn" />
+                    <Input 
+                    placeholder="Nhập mã hoá đơn"
+                    onSubmit={onHandleSearch as any}
+                     />
                 </div>
                 <div className='px-3'>
                     <Input placeholder="Nhập số điện thoại người mua" />
