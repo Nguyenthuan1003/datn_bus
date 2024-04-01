@@ -97,7 +97,7 @@ class TicketOrderController extends Controller
 
             if (!$ticket) {
                 return response()->json([
-                    'message' => 'Vé này không tồn tại',
+                    'message' => 'Vé này không tồn tại hoặc không hợp lệ',
                     'status' => 'fail'
                 ]);
             }
