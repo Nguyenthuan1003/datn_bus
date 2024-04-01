@@ -25,7 +25,6 @@ class TripController extends Controller
     {
         $this->getSeatDataService = $getSeatDataService;
     }
-
     /**
      * Display a listing of the resource.
      *
