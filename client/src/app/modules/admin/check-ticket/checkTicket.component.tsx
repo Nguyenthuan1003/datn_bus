@@ -31,10 +31,9 @@ const CheckTicketComponent = () => {
         `/ticket/find-ticket?phone_number=${data.phoneNumber}&code_ticket=${data.ticket}`
       )
       if (response.status >= 200 && response.status < 300 && response.data && response.data.ticket) {
-        const isCheckedIn = localStorage.getItem(`ticket_${response.data.ticket.code_ticket}_isCheckedIn`) === 'true'
-        // const isCheckedIn = response.data.ticket.isCheckedIn
+        const isCheckedIn = response.data.ticket.status === 1
         setTicketData(response.data)
-        setIsTicketCheckedIn(isCheckedIn)
+        setIsTicketCheckedIn(isCheckedIn ? 1 : 0)
         setShowModal(false)
         setErrorMessage(null)
       } else {
@@ -66,7 +65,7 @@ const CheckTicketComponent = () => {
       console.log('Checkin API response:', response)
 
       if (response.status >= 200 && response.status < 300) {
-        setIsTicketCheckedIn(true)
+        setIsTicketCheckedIn(0) // Update here
         localStorage.setItem(`ticket_${ticketData.ticket.code_ticket}_isCheckedIn`, 'true')
         alert('Checkin thành công')
       } else {
@@ -193,11 +192,11 @@ const CheckTicketComponent = () => {
                   <div className='font-normal w-[128px]'>{ticketData.ticket.ticket_money}đ</div>
                 </div>
               </div>
-              {isTicketCheckedIn && <div className='used-ticket-overlay'>đã in vé</div>}
+              {isTicketCheckedIn === 0 && <div className='used-ticket-overlay'>đã in vé</div>}
             </div>
           </div>
           <div className='flex justify-center mb-10'>
-            {!isTicketCheckedIn ? (
+            {isTicketCheckedIn === 1 ? (
               <button className='bg-[#fbeeea] rounded-full py-3 px-12 flex mr-5' onClick={handleCheckIn}>
                 <svg
                   className='w-5 h-5'
