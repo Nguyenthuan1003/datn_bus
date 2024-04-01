@@ -190,8 +190,8 @@ class BillController extends Controller
     public function showClient($id) {
         try {
             $bill = Bill::with('discountCode', 'seat', 'trip.route', 'user', 'ticketOrder')
-            ->where('user_id', $id)
-            ->get();
+                ->where('user_id', $id)
+                ->get();
 
             if (!$bill) {
                 return response()->json(['message' => 'Không có hóa đơn nào được tìm thấy'], 404);
@@ -208,13 +208,13 @@ class BillController extends Controller
         try {
             $bill = Bill::find($id);
 
-        if (!$bill) {
-            return response()->json(['message' => 'Không có hóa đơn nào được tìm thấy'], 404);
-        }
+            if (!$bill) {
+                return response()->json(['message' => 'Không có hóa đơn nào được tìm thấy'], 404);
+            }
 
-        $bill->delete();
+            $bill->delete();
 
-        return response()->json(['message' => 'Xóa hóa đơn thành công']);
+            return response()->json(['message' => 'Xóa hóa đơn thành công']);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Đã xảy ra lỗi khi thực hiện hành động', 'error' => $e->getMessage()]);
         }
@@ -222,20 +222,43 @@ class BillController extends Controller
     }
 
     public function checkin (Request $request) {
-        if($request->code_bill) {
-            $bill = Bill::with('ticketOrder')->where('code_bill', $request->code_bill)->get();
-            if(!$bill) {
-                return response()->json(['message' => 'Mã hóa đơn không tồn tại']);
+        try {
+            $request->validate([
+                'code_bill' => 'required|string'
+            ]);
+
+            $bill = Bill::with('ticketOrder')->where('code_bill', $request->code_bill)->first();
+
+            if (!$bill) {
+                return response()->json([
+                    'message' => 'Thông tin hóa đơn không tồn tại',
+                    'status' => 'fail'
+                ]);
             }
-            foreach($bill as $billItem) {
-                foreach($billItem->ticketOrder as $ticket) {
-                    $ticket->status = 1;
-                    $ticket->save();
-                }
+
+            if ($bill->status_pay == 0) {
+                return response()->json([
+                    'message' => 'Hóa đơn không hợp lệ, chưa được thanh toán!',
+                    'status' => 'fail'
+                ]);
             }
-            return response()->json(['message' => 'Checkin hóa đơn thành công']);
+
+            foreach ($bill->ticketOrder as $ticket) {
+                TicketOrder::where('code_ticket', $ticket->code_ticket)->update(['status' => 1]);
+            }
+
+            return response()->json([
+                'message' => 'Cập nhật thành công!',
+                'status' => 'success',
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
+                'status' => 'fail',
+//                'error' => $e->getMessage()
+            ]);
         }
-        return response()->json(['message' => 'Mã hóa đơn không tồn tại']);
     }
 
     /**
