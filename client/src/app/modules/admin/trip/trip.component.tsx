@@ -5,7 +5,7 @@ import { getAllTrip, addTrip, deleteTrip, updateTrip, getCarTrip, getRouteTrip, 
 import { DatePicker, Form, Input, Segmented, Select, Switch, Tag, TimePicker } from 'antd';
 import viVN from 'antd/es/date-picker/locale/vi_VN';
 import { Option } from 'antd/es/mentions';
-import moment, { Moment } from 'moment-timezone';
+import moment, { Moment } from 'moment';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -128,13 +128,10 @@ const TripComponent = () => {
                                 return <div>{record?.trip_price?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</div>
                             }
                             if (itemKey == "start_time") {
-                                //    const dataTime=record?.start_time
-                                //    const doneTime=moment(dataTime).format('YYYY-MM-DD HH:mm:ss')
-                                // record?.start_time = 2024-03-02T12:48:50Z
                                 const utcDateTimeString = record?.start_time;
                                 // const vietnamDateTimeString = moment.utc(utcDateTimeString).local().format('DD/MM/YYYY HH:mm:ss');
-                                // const localDateTimeString = moment.utc(utcDateTimeString).format('YYYY/MM/DD HH:mm:ss')
-                                return <div>{utcDateTimeString}</div>
+                                const localDateTimeString = moment.utc(utcDateTimeString).format('YYYY/MM/DD HH:mm')
+                                return <div>{localDateTimeString}</div>
                             }
                             if (itemKey === "interval_trip") {
                                 const utcDateTimeString = record?.interval_trip;
@@ -207,17 +204,17 @@ const TripComponent = () => {
     const disablePastDate = (current: any) => {
         return current && current < dayjs().startOf('day');
     };
-    const handleDateChange = (date: Moment | null | any) => {
-        if (date) {
-            console.log(date)   ;
+    // const handleDateChange = (date: Moment | null | any) => {
+    //     if (date) {
+    //         console.log(date)   ;
             
-            const jsDate = date.toDate();
-          const convertedDate = moment(jsDate).tz("Asia/Ho_Chi_Minh").format('DD/MM/YYYY HH:mm');
-            console.log(convertedDate);
-        } else {
-            console.log('Ngày không hợp lệ');
-        }
-    };
+    //         const jsDate = date.toDate();
+    //       const convertedDate = moment(jsDate).format('YYYY-MM-DD HH:mm');
+    //         console.log(convertedDate);
+    //     } else {
+    //         console.log('Ngày không hợp lệ');
+    //     }
+    // };
     const acctive = 1;
     const inAcctive = 0
     const handelStatusTrip = (value: any) => {
@@ -262,13 +259,14 @@ const TripComponent = () => {
                             </Select>
                         </Form.Item>
                         <Form.Item label='Thời gian bắt đầu' name='start_time' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                            <DatePicker
+                            {/* <DatePicker
                                    showTime
                                    format="DD/MM/YYYY HH:mm"
                                    placeholder="Chọn ngày và giờ"
                                    onChange={handleDateChange}
                                    disabledDate={disablePastDate}
-                            />
+                            /> */}
+                            <input type='datetime-local' /> 
                             {/* <Input /> */}
                         </Form.Item>
                         <Form.Item label='Địa điểm bắt đầu' name='start_location' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
