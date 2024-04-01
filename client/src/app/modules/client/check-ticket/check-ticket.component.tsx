@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { css } from '@emotion/react'
 import { Controller, useForm } from 'react-hook-form'
 import ButtonRadiusCompoennt from '~/app/component/parts/button/button.component'
@@ -8,6 +8,7 @@ import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { axiosPrivate } from '~/app/api/confighHTTp'
 import { Link } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 
 const CheckTicketComponent = () => {
   const {
@@ -21,6 +22,13 @@ const CheckTicketComponent = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [showModal, setShowModal] = React.useState(false)
   const [ticketData, setTicketData] = useState(null)
+  const location = useLocation()
+
+  useEffect(() => {
+    setErrorMessage(null)
+    setShowModal(false)
+    setTicketData(null)
+  }, [location])
 
   const onSubmit = async (data: any) => {
     event.preventDefault()
@@ -40,6 +48,7 @@ const CheckTicketComponent = () => {
       console.error('Error:', error)
       toast.error('Không tìm thấy vé')
       setShowModal(true)
+      setTicketData(null)
     }
   }
 
@@ -159,7 +168,7 @@ const CheckTicketComponent = () => {
                   <div className='font-normal w-[128px]'>{ticketData.ticket.ticket_money}đ</div>
                 </div>
               </div>
-              {/* {isTicketCheckedIn && <p className='used-ticket-overlay'>Đã in vé</p>} */}
+              {ticketData.ticket.status === 0 && <p className='used-ticket-overlay'>Đã in vé</p>}
             </div>
           </div>
         </div>
