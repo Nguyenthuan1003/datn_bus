@@ -41,32 +41,47 @@ class TicketOrderController extends Controller
 
     public function checkin(Request $request)
     {
-        // Get the phone number from the request
-        // $phoneNumber = $request->input('phone_number');
+        try {
+            $request->validate([
+                'code_ticket' => 'required|string'
+            ]);
 
-        // Get the code ticket from the request
-        $codeTicket = $request->input('code_ticket');
+            $ticketOrder = TicketOrder::with('bill')
+                ->where('code_ticket', $request->input('code_ticket'))->first();
 
-        // Find the ticket order with the given code ticket
-        $ticketOrder = TicketOrder::where('code_ticket', $codeTicket)->first();
+            if (!$ticketOrder) {
+                return response()->json([
+                    'message' => 'Thông tin vé không tồn tại',
+                    'status' => 'fail'
+                ], 404);
+            }
 
-        // Check if ticket order was found
-        if ($ticketOrder) {
-            // Get the associated bill
-            // $bill = $ticketOrder->bill;
+            if ($ticketOrder->bill->status_pay == 0) {
+                return response()->json([
+                    'message' => 'Vé không hợp lệ, chưa được thanh toán!',
+                    'status' => 'fail'
+                ], 404);
+            }
 
-            // Check if the phone number matches
-            // if ($bill && $bill->phone_number === $phoneNumber) {
-                // Update the status of the ticket order
-                // status 1 = chưa checkin, 0 = đã checkin
-                $ticketOrder->update(['status' => 0]);
+            if ($ticketOrder->status == 1) {
+                return response()->json([
+                    'message' => 'Vé đã được sử dụng!',
+                    'status' => 'fail'
+                ], 404);
+            }
 
-                return response()->json(['message' => 'Cập nhật thành công! (^__ ^ ")'], 200);
-            // } else {
-            //     return response()->json(['error' => 'Thông tin không tồn tại'], 404);
-            // }
-        } else {
-            return response()->json(['error' => 'Thông tin không tồn tại'], 404);
+            $ticketOrder->update(['status' => 1]);
+
+            return response()->json([
+                'message' => 'Checkin vé thành công!',
+                'status' => 'success',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
+                'status' => 'fail',
+//                'error' => $e->getMessage()
+            ]);
         }
     }
 
