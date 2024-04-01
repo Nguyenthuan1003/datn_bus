@@ -19,7 +19,7 @@ const Costticketcomponent:FC<any> = ({trip_id,selectData,dataPrice}) => {
       <div className="info__body__line">
         <span className="info__body__text-right ">Giá vé lượt đi</span>
         <span className="info__body__price text-red-600">
-        {dataPrice}đ
+        {dataPrice?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}
         </span>
       </div>
       <div className="info__body__line">
@@ -31,7 +31,7 @@ const Costticketcomponent:FC<any> = ({trip_id,selectData,dataPrice}) => {
       <div className="info__body__line info__body__line__total-price pt-4">
         <span className="info__body__text-right ">Tổng tiền</span>
         <span className="info__body__price text-red-600">
-        {dataPrice}đ
+        {dataPrice?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}
         </span>
       </div>
     </div>

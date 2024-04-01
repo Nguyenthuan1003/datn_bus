@@ -133,6 +133,7 @@ Route::group(['prefix' => 'bill'], function () {
     Route::put('update-admin/{id}', [BillController::class, 'updateAdmin']);
     Route::delete('delete/{id}', [BillController::class, 'destroy']);
     Route::post('checkin', [BillController::class, 'checkin']);
+    Route::get('find-bill', [BillController::class, 'findBill']);
 });
 Route::resource('role', App\Http\Controllers\RoleController::class)->except('create', 'edit');
 Route::group(['prefix' => 'ticket'], function () {
@@ -152,3 +153,4 @@ Route::post('me', [AuthController::class, 'me']);
 
 // reset password
 Route::post('forgotpassword', [AuthController::class, 'forgotPasswordSubmit'])->name('forgot.password.submit');
+Route::get('rt/seat', [TripController::class, 'realTimeSeat']);

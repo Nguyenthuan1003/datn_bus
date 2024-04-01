@@ -38,7 +38,7 @@ class BillController extends Controller
                 'pickup_location' => 'required',
                 'pay_location' => 'required',
             ]);
-    
+
             $bill = new Bill();
             $bill->discount_code_id = $request->input('discount_code_id');
             $bill->seat_id = $request->input('seat_id');
@@ -54,7 +54,7 @@ class BillController extends Controller
             $bill->phone_number = $request->input('phone_number');
             $bill->email = $request->input('email');
             $bill->full_name = $request->full_name;
-            
+
             $bill->save();
             $string = str_replace(['[', ']', "'"], '', $request->code_seat);
             $codeSeats = explode(', ', $string);
@@ -69,7 +69,7 @@ class BillController extends Controller
                 $ticketOrder->save();
             }
             $getBill = Bill::find($bill->id);
-    
+
             return response()->json(['message' => 'Thêm mới đơn hàng thành công','bill' => $getBill]);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Đã xảy ra lỗi khi thêm mới hóa đơn', 'error' => $e->getMessage()]);
@@ -84,12 +84,12 @@ class BillController extends Controller
             if (!$bill) {
                 return response()->json(['message' => 'Không có hóa đơn nào được tìm thấy'], 404);
             }
-    
+
             return response()->json(['message' => 'Lấy dữ liệu hóa đơn thành công', 'bill' => $bill]);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Đã xảy ra lỗi khi lấy dữ liệu', 'error' => $e->getMessage()]);
         }
-       
+
     }
 
     public function update(Request $request, $id)
@@ -105,13 +105,13 @@ class BillController extends Controller
                 'pickup_location' => 'required',
                 'pay_location' => 'required',
             ]);
-    
+
             $bill = Bill::find($id);
-    
+
             if (!$bill) {
                 return response()->json(['message' => 'Bill not found'], 404);
             }
-    
+
             $bill->discount_code_id = $request->input('discount_code_id') ? $request->input('discount_code_id') : $bill->discount_code_id;
             $bill->seat_id = $request->input('seat_id') ? $request->input('seat_id') : $bill->seat_id;
             $bill->trip_id = $request->input('trip_id') ? $request->input('trip_id') : $bill->trip_id;
@@ -149,7 +149,7 @@ class BillController extends Controller
         } catch (\Exception $e) {
             return response()->json(['message' => 'Đã xảy ra lỗi khi cập nhật hóa đơn', 'error' => $e->getMessage()]);
         }
-        
+
     }
 
     public function updateAdmin(Request $request, $id)
@@ -158,13 +158,13 @@ class BillController extends Controller
             $request->validate([
                 'status_pay' => 'required',
             ]);
-    
+
             $bill = Bill::find($id);
-    
+
             if (!$bill) {
                 return response()->json(['message' => 'Bill not found'], 404);
             }
-    
+
             $bill->discount_code_id = $request->input('discount_code_id') ? $request->input('discount_code_id') : $bill->discount_code_id;
             $bill->seat_id = $request->input('seat_id') ? $request->input('seat_id') : $bill->seat_id;
             $bill->trip_id = $request->input('trip_id') ? $request->input('trip_id') : $bill->trip_id;
@@ -184,7 +184,7 @@ class BillController extends Controller
         } catch (\Exception $e) {
             return response()->json(['message' => 'Đã xảy ra lỗi khi cập nhật hóa đơn', 'error' => $e->getMessage()]);
         }
-        
+
     }
 
     public function showClient($id) {
@@ -196,7 +196,7 @@ class BillController extends Controller
             if (!$bill) {
                 return response()->json(['message' => 'Không có hóa đơn nào được tìm thấy'], 404);
             }
-    
+
             return response()->json(['message' => 'Lấy dữ liệu hóa đơn thành công', 'bill' => $bill]);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Đã xảy ra lỗi khi lấy dữ liệu', 'error' => $e->getMessage()]);
@@ -218,7 +218,7 @@ class BillController extends Controller
         } catch (\Exception $e) {
             return response()->json(['message' => 'Đã xảy ra lỗi khi thực hiện hành động', 'error' => $e->getMessage()]);
         }
-        
+
     }
 
     public function checkin (Request $request) {
@@ -236,5 +236,54 @@ class BillController extends Controller
             return response()->json(['message' => 'Checkin hóa đơn thành công']);
         }
         return response()->json(['message' => 'Mã hóa đơn không tồn tại']);
+    }
+
+    /**
+     * Find all data for ticket
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function findBill(Request $request)
+    {
+        try {
+            $request->validate([
+                'phone_number' => 'required',
+                'code_bill' => 'required|string'
+            ]);
+
+            $bill = TicketOrder::join('bills', 'ticket_orders.bill_id', '=', 'bills.id')
+                ->join('trips', 'bills.trip_id', '=', 'trips.id')
+                ->join('routes', 'trips.route_id', '=', 'routes.id')
+                ->join('cars', 'trips.car_id', '=', 'cars.id')
+//                ->select('bills.phone_number', 'bills.status_pay', 'ticket_orders.code_ticket', 'routes.name as route_name', 'trips.start_time', 'cars.license_plate', 'ticket_orders.code_seat', 'bills.total_money_after_discount', 'bills.total_seat', 'ticket_orders.pickup_location', 'ticket_orders.pay_location')
+                ->select('bills.phone_number', 'bills.full_name', 'bills.email', 'bills.status_pay', 'ticket_orders.status' , 'ticket_orders.code_ticket', 'routes.name as route_name', 'trips.start_time', 'cars.license_plate', 'ticket_orders.code_seat', 'ticket_orders.pickup_location', 'ticket_orders.pay_location')
+                ->selectRaw('bills.total_money_after_discount / bills.total_seat as ticket_money')
+                ->where('bills.code_bill', $request->input('code_bill'))
+                ->where('bills.phone_number', $request->input('phone_number'))
+                ->get();
+
+            if ($bill->count() == 0) {
+                return response()->json([
+                    'message' => 'Bill này không tồn tại hoặc không hợp lệ',
+                    'status' => 'fail'
+                ]);
+            }
+
+            return response()->json([
+                'message' => 'Truy vấn dữ liệu thành công',
+                'status' => 'success',
+                'bill' => $bill,
+                'phone_number' => $bill->first()->phone_number,
+                'full_name' => $bill->first()->full_name,
+                'email' => $bill->first()->email
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
+                'status' => 'fail',
+//                'error' => $e->getMessage()
+            ]);
+        }
     }
 }

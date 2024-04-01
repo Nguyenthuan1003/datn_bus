@@ -73,16 +73,16 @@ class TicketOrderController extends Controller
     {
         try {
             $request->validate([
-                'phone_number' => 'required|exists:bills,phone_number',
-                'code_ticket' => 'required|string|exists:ticket_orders,code_ticket'
+                'phone_number' => 'required',
+                'code_ticket' => 'required|string'
             ]);
 
             $ticket = TicketOrder::join('bills', 'ticket_orders.bill_id', '=', 'bills.id')
                 ->join('trips', 'bills.trip_id', '=', 'trips.id')
                 ->join('routes', 'trips.route_id', '=', 'routes.id')
                 ->join('cars', 'trips.car_id', '=', 'cars.id')
-                //                ->select('bills.phone_number', 'bills.status_pay', 'ticket_orders.code_ticket', 'routes.name as route_name', 'trips.start_time', 'cars.license_plate', 'ticket_orders.code_seat', 'bills.total_money_after_discount', 'bills.total_seat', 'ticket_orders.pickup_location', 'ticket_orders.pay_location')
-                ->select('bills.phone_number', 'bills.status_pay', 'ticket_orders.code_ticket', 'routes.name as route_name', 'trips.start_time', 'cars.license_plate', 'ticket_orders.code_seat', 'ticket_orders.pickup_location', 'ticket_orders.pay_location')
+//                ->select('bills.phone_number', 'bills.status_pay', 'ticket_orders.code_ticket', 'routes.name as route_name', 'trips.start_time', 'cars.license_plate', 'ticket_orders.code_seat', 'bills.total_money_after_discount', 'bills.total_seat', 'ticket_orders.pickup_location', 'ticket_orders.pay_location')
+                ->select('bills.phone_number', 'bills.full_name', 'bills.email', 'bills.status_pay', 'ticket_orders.status' , 'ticket_orders.code_ticket', 'routes.name as route_name', 'trips.start_time', 'cars.license_plate', 'ticket_orders.code_seat', 'ticket_orders.pickup_location', 'ticket_orders.pay_location')
                 ->selectRaw('bills.total_money_after_discount / bills.total_seat as ticket_money')
                 ->where('ticket_orders.code_ticket', $request->input('code_ticket'))
                 ->where('bills.phone_number', $request->input('phone_number'))
@@ -90,18 +90,21 @@ class TicketOrderController extends Controller
 
             if (!$ticket) {
                 return response()->json([
-                    'message' => 'Vé này không tồn tại'
+                    'message' => 'Vé này không tồn tại hoặc không hợp lệ',
+                    'status' => 'fail'
                 ]);
             }
 
             return response()->json([
                 'message' => 'Truy vấn dữ liệu thành công',
+                'status' => 'success',
                 'ticket' => $ticket
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
-                'error' => $e->getMessage()
+                'status' => 'fail',
+//                'error' => $e->getMessage()
             ]);
         }
     }

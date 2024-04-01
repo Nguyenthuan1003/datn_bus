@@ -5,7 +5,7 @@ import ParentLocaltion from "./parent-location/parent-location.component";
 import LocaltionComponent from "./location/location.component";
 import RouteComponent from "./route/route.component";
 import TripComponent from "./trip/trip.component";
-
+import CheckTicketComponent from "./check-ticket/checkTicket.component";
 import TypeCarComponent from "./type_car/typeCar.component";
 import CarComponent from "./car/car.component";
 import SeatComponent from "./seat/seat.component";
@@ -61,7 +61,11 @@ export const adminRouter: RouteObject[] = [
         path: 'bill',
         element: <BillComponent />,
         children: []
+    },
+    {
+        path: 'check-ticket',
+        element: <CheckTicketComponent />,
+        children: []
     }
-
 
 ]
