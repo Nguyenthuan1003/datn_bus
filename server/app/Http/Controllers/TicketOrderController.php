@@ -41,9 +41,6 @@ class TicketOrderController extends Controller
 
     public function checkin(Request $request)
     {
-        // Get the phone number from the request
-        // $phoneNumber = $request->input('phone_number');
-
         // Get the code ticket from the request
         $codeTicket = $request->input('code_ticket');
 
@@ -53,21 +50,17 @@ class TicketOrderController extends Controller
         // Check if ticket order was found
         if ($ticketOrder) {
             // Get the associated bill
-            // $bill = $ticketOrder->bill;
+            $bill = $ticketOrder->bill->status_pay;
 
-            // Check if the phone number matches
-            // if ($bill && $bill->phone_number === $phoneNumber) {
-                // Update the status of the ticket order
-                // status 1 = chưa checkin, 0 = đã checkin
-                $ticketOrder->update(['status' => 0]);
+            if ($bill) {
+                // status 0 = chưa checkin, 1 = đã checkin
+                $ticketOrder->update(['status' => 1]);
 
                 return response()->json(['message' => 'Cập nhật thành công! (^__ ^ ")'], 200);
-            // } else {
-            //     return response()->json(['error' => 'Thông tin không tồn tại'], 404);
-            // }
-        } else {
-            return response()->json(['error' => 'Thông tin không tồn tại'], 404);
+            }
         }
+
+        return response()->json(['error' => 'Thông tin không tồn tại'], 404);
     }
 
     /**
@@ -88,7 +81,7 @@ class TicketOrderController extends Controller
                 ->join('trips', 'bills.trip_id', '=', 'trips.id')
                 ->join('routes', 'trips.route_id', '=', 'routes.id')
                 ->join('cars', 'trips.car_id', '=', 'cars.id')
-//                ->select('bills.phone_number', 'bills.status_pay', 'ticket_orders.code_ticket', 'routes.name as route_name', 'trips.start_time', 'cars.license_plate', 'ticket_orders.code_seat', 'bills.total_money_after_discount', 'bills.total_seat', 'ticket_orders.pickup_location', 'ticket_orders.pay_location')
+                //                ->select('bills.phone_number', 'bills.status_pay', 'ticket_orders.code_ticket', 'routes.name as route_name', 'trips.start_time', 'cars.license_plate', 'ticket_orders.code_seat', 'bills.total_money_after_discount', 'bills.total_seat', 'ticket_orders.pickup_location', 'ticket_orders.pay_location')
                 ->select('bills.phone_number', 'bills.status_pay', 'ticket_orders.code_ticket', 'routes.name as route_name', 'trips.start_time', 'cars.license_plate', 'ticket_orders.code_seat', 'ticket_orders.pickup_location', 'ticket_orders.pay_location')
                 ->selectRaw('bills.total_money_after_discount / bills.total_seat as ticket_money')
                 ->where('ticket_orders.code_ticket', $request->input('code_ticket'))
