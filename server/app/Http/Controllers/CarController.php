@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Car;
+use App\Models\Seat;
+use App\Models\TypeCar;
 
 class CarController extends Controller
 {
     public function index()
     {
         $cars = Car::with('typeCar')
-            ->select('id','name', 'color', 'image', 'description','license_plate','status', 'id_type_car')
+            ->select('id', 'name', 'color', 'image', 'description', 'license_plate', 'status', 'id_type_car')
             ->get();
         return response()->json($cars);
     }
@@ -35,16 +37,50 @@ class CarController extends Controller
         $car->license_plate = $request->input('license_plate');
         $car->status = $request->input('status');
         $car->image = $request->input('image');
-        
-        $car->save();
 
-        return response()->json($car, 201);
+        $car = collect($car)->toArray();
+
+        $carId = Car::insertGetId($car);
+
+        $query = Car::where('id', $carId)
+            ->with('TypeCar')
+            ->first();
+
+        $typeSeat =  $query->typeCar->type_seats;
+        $totalSeat = $query->typeCar->total_seat;
+        $upFloorAt = 12;
+
+        $seatRecord = [
+            "car_id" => $carId,
+        ];
+
+        $seatCodeCount = 1;
+        for ($j = 0; $j < $totalSeat; $j++) {
+            // Check if typeSeat is greater than 1 and if loop counter is greater than or equal to upFloorAt
+            if ($typeSeat > 1 && $j >= $upFloorAt) {
+                // Reset seat code count to 1 when reaching "F2"
+                if ($seatCodeCount >= $upFloorAt) {
+                    $seatCodeCount = 1;
+                }
+                // If the condition is met, set the seat code to "Fn"
+                $seatRecord['code_seat'] = "F2-" . $seatCodeCount;
+            } else {
+                // Otherwise, set the seat code to "F1"
+                $seatRecord['code_seat'] = "F1-" . $seatCodeCount;
+            }
+            // Increment seat code count
+            $seatCodeCount++;
+
+            Seat::insert($seatRecord);
+        }
+
+        return response()->json($query, 201);
     }
 
     public function show($id)
     {
         $car = Car::with('typeCar')
-            ->select('id','name', 'color', 'image', 'description','license_plate','status', 'id_type_car')
+            ->select('id', 'name', 'color', 'image', 'description', 'license_plate', 'status', 'id_type_car')
             ->find($id);
 
         if (!$car) {
@@ -79,7 +115,7 @@ class CarController extends Controller
         $car->license_plate = $request->input('license_plate');
         $car->status = $request->input('status');
         $car->image = $request->input('image');
-        
+
         $car->save();
 
         return response()->json($car);
