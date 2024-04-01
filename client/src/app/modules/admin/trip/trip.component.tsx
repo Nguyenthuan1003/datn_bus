@@ -2,16 +2,20 @@ import React, { Fragment, useEffect, useState } from 'react'
 import TemplateTable from '../common/template-table/template-table.component'
 import { getAllTrip, addTrip, deleteTrip, updateTrip, getCarTrip, getRouteTrip, getLocationForRoute, } from './service/trip.service'
 // import  { getAllTypeCar } from '../type_car/service/typeCar.service'
-import { DatePicker, Form, Input, Select, Switch, Tag, TimePicker } from 'antd';
+import { DatePicker, Form, Input, Segmented, Select, Switch, Tag, TimePicker } from 'antd';
 import viVN from 'antd/es/date-picker/locale/vi_VN';
 import { Option } from 'antd/es/mentions';
-
 import moment, { Moment } from 'moment-timezone';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
-
+// Đặt múi giờ mong muốn
+dayjs.tz.setDefault("Asia/Ho_Chi_Minh");
 const TripComponent = () => {
-
     const [column, setColumn] = useState<any>([]);
     const [dataTrip, setDataTrip] = useState<any>([]);
     const [dataCarTrip, setDataCarTrip] = useState<any>([]);
@@ -19,25 +23,31 @@ const TripComponent = () => {
     const [selectedRouteId, setSelectedRouteId] = useState<any>({});
     const [current, setCurrent] = useState<any>(null);
     const [checked, setChecked] = useState<any>(0);
-    console.log('dataTrip',dataTrip);
-    
-    useEffect(() => {
-        getRouteTrip().then((res) => {
-            if (res) {
-                setDataRouteTrip(res?.data?.routes)
-            }
-        })
-    }, [])
+    const [checkStatus, setCheckStatus] = useState<any>("Tất cả chuyến đi")
+    const [checkload, setCheckLoad] = useState<any>(true)
+ 
     useEffect(() => {
         getAllTrip().then((res) => {
             if (res) {
-                console.log(res.data, "-----------------");
-                
-                setDataTrip(res.data?.trips)
+                if (checkStatus == "Tất cả chuyến đi") {
+                    setDataTrip(res.data?.all_trips)
+                    setCheckLoad(false)
+                    
+                }
+                if (checkStatus == "chuyến xe đã đi") {
+                    setDataTrip(res.data?.started_trips)
+                    console.log('started');
+                    
+                }
+                if (checkStatus == "chuyến xe chưa đi") {
+                    setDataTrip(res.data?.not_started_trips),
+                    console.log('not_started');
+                    
+                }
+                // setDataTrip(res.data?.all_trips)
             }
         })
-    }, [])
-
+    }, [checkStatus,checkload])
     const [startLocations, setStartLocations] = useState<any>({});
     const [endLocations, setEndLocations] = useState<any>({});
     // const checkLocation = startLocations?.find((item:any) => item?.route_id ==  selectedRouteId );
@@ -51,6 +61,11 @@ const TripComponent = () => {
             if (res) {
                 setEndLocations(res.data?.end_locations);
             }
+            getRouteTrip().then((res) => {
+                if (res) {
+                    setDataRouteTrip(res?.data?.routes)
+                }
+            })
         });
     }, [selectedRouteId]);
     // useEffect(() => {
@@ -75,13 +90,14 @@ const TripComponent = () => {
         })
     }, [])
 
-
+  
+    
 
     useEffect(() => {
         const columsTemp: any = []
-        const title = ['STT', 'Tên xe' ,'Thời gian bắt đầu ', 'Địa điểm bắt đầu ', 'Trạng Thái', 'Giá chuyến đi', 'Địa điểm kết thúc ', 'Tổng thời gian chuyến đi', 'Tuyến đường ']
+        const title = ['STT', 'Tên xe', 'Thời gian bắt đầu ', 'Địa điểm bắt đầu ', 'Trạng Thái', 'Giá chuyến đi', 'Địa điểm kết thúc ', 'Tổng thời gian chuyến đi', 'Tuyến đường ']
 
-        if (dataTrip.length > 0) {
+        if (dataTrip?.length > 0) {
             Object.keys(dataTrip[0]).forEach((itemKey, key = 0) => {
                 if (!['id', 'created_at', 'updated_at'].includes(itemKey)) {
                     columsTemp.push({
@@ -116,16 +132,16 @@ const TripComponent = () => {
                                 //    const doneTime=moment(dataTime).format('YYYY-MM-DD HH:mm:ss')
                                 // record?.start_time = 2024-03-02T12:48:50Z
                                 const utcDateTimeString = record?.start_time;
-                                const vietnamDateTimeString = moment.utc(utcDateTimeString).local().format('DD/MM/YYYY HH:mm:ss');
+                                // const vietnamDateTimeString = moment.utc(utcDateTimeString).local().format('DD/MM/YYYY HH:mm:ss');
                                 // const localDateTimeString = moment.utc(utcDateTimeString).format('YYYY/MM/DD HH:mm:ss')
-                                return <div>{vietnamDateTimeString}</div>
+                                return <div>{utcDateTimeString}</div>
                             }
                             if (itemKey === "interval_trip") {
                                 const utcDateTimeString = record?.interval_trip;
                                 const momentTime = moment(utcDateTimeString, 'HH:mm');
-                                
+
                                 let time = "";
-                                
+
                                 if (momentTime.hours() === 0 && momentTime.minutes() === 30) {
                                     time = `30 phút`;
                                 } else if (momentTime.hours() === 0 && momentTime.minutes() < 60) {
@@ -133,7 +149,7 @@ const TripComponent = () => {
                                 } else {
                                     time = `${momentTime.hours()} giờ ${momentTime.minutes()} phút`;
                                 }
-                            
+
                                 return <div><span>{time}</span></div>;
                             }
                             return text
@@ -150,8 +166,20 @@ const TripComponent = () => {
     const [reset, setReset] = useState<any>([]);
     useEffect(() => {
         getAllTrip().then((res) => {
-            if (res) {
-                setDataTrip(res?.data?.trips)
+            if (checkStatus == "Tất cả chuyến đi") {
+                setDataTrip(res.data?.all_trips)
+                setCheckLoad(false)
+                
+            }
+            if (checkStatus == "chuyến xe đã đi") {
+                setDataTrip(res.data?.started_trips)
+                console.log('started');
+                
+            }
+            if (checkStatus == "chuyến xe chưa đi") {
+                setDataTrip(res.data?.not_started_trips),
+                console.log('not_started');
+                
             }
         })
     }, [reset])
@@ -176,28 +204,38 @@ const TripComponent = () => {
         console.log(value);
 
     };
+    const disablePastDate = (current: any) => {
+        return current && current < dayjs().startOf('day');
+    };
     const handleDateChange = (date: Moment | null | any) => {
         if (date) {
-            const year = date.year(); // Lấy giá trị năm
-            const month = date.month() + 1; // Lấy giá trị tháng (chú ý là tháng trong Moment bắt đầu từ 0)
-            const day = date.date(); // Lấy giá trị ngày
-            const hour = date.hour(); // Lấy giá trị giờ
-            const minute = date.minute(); // Lấy giá trị phút
-    
-            console.log(`Ngày được chọn: ${year}-${month}-${day} ${hour}:${minute}`);
+            console.log(date)   ;
+            
+            const jsDate = date.toDate();
+          const convertedDate = moment(jsDate).tz("Asia/Ho_Chi_Minh").format('DD/MM/YYYY HH:mm');
+            console.log(convertedDate);
         } else {
             console.log('Ngày không hợp lệ');
         }
     };
-    // const handleDateChange = (date: Moment | null  | any) => {
-    //     // Xử lý thay đổi ngày
-    //     console.log('Ngày được chọn:', date);
-    //   };
     const acctive = 1;
     const inAcctive = 0
-
+    const handelStatusTrip = (value: any) => {
+        setCheckStatus(value)
+        console.log(value);
+    }
     return (
         <div>
+            <Segmented
+                options={[
+                    { value: 'all_trips', label: 'Tất cả chuyến đi' },
+                    { value: 'chuyến xe đã đi', label: 'chuyến xe đã đi' },
+                    { value: 'chuyến xe chưa đi', label: 'chuyến xe chưa đi' }
+                ]}
+                size='large'
+                value={checkStatus}
+                onChange={handelStatusTrip}
+            />
             <TemplateTable
                 title={`Danh sách chuyến đi `}
                 callBack={handelGetList}
@@ -223,19 +261,14 @@ const TripComponent = () => {
                                 ))}
                             </Select>
                         </Form.Item>
-                        {/* <Form.Item label='Ngày bắt đầu' name='start_date' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-
-                            <Input />
-                        </Form.Item> */}
                         <Form.Item label='Thời gian bắt đầu' name='start_time' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                        <DatePicker
-                            // showTime={{ defaultValue: moment('00:00', 'HH:mm'), format: 'HH:mm' }}
-                            showTime
-                            format="DD/MM/YYYY HH:mm:ss"
-                            placeholder="Chọn ngày và giờ"
-                            onChange={handleDateChange}
-                            locale={viVN}
-                        />
+                            <DatePicker
+                                   showTime
+                                   format="DD/MM/YYYY HH:mm"
+                                   placeholder="Chọn ngày và giờ"
+                                   onChange={handleDateChange}
+                                   disabledDate={disablePastDate}
+                            />
                             {/* <Input /> */}
                         </Form.Item>
                         <Form.Item label='Địa điểm bắt đầu' name='start_location' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
@@ -251,7 +284,7 @@ const TripComponent = () => {
                                 {[
                                     { value: acctive, label: "Hoạt động" },
                                     { value: inAcctive, label: "Không hoạt động" }
-                                ].map(option => (
+                                ].map((option:any) => (
                                     <Option key={option?.value} value={option?.value}>
                                         {option.label}
                                     </Option>
