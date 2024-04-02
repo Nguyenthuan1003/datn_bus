@@ -59,7 +59,7 @@ class CarController extends Controller
             // Check if typeSeat is greater than 1 and if loop counter is greater than or equal to upFloorAt
             if ($typeSeat > 1 && $j >= $upFloorAt) {
                 // Reset seat code count to 1 when reaching "F2"
-                if ($seatCodeCount >= $upFloorAt) {
+                if ($seatCodeCount > $upFloorAt) {
                     $seatCodeCount = 1;
                 }
                 // If the condition is met, set the seat code to "Fn"
