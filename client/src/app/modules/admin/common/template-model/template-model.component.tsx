@@ -6,11 +6,12 @@ interface TemplateModalProps{
    handleOk():void
    handleCancel():void
    children: any
+   title: any 
 }
 
-const TemplateModal:FunctionComponent<TemplateModalProps> = ({isModalOpen, handleOk, handleCancel,children}) => {
+const TemplateModal:FunctionComponent<TemplateModalProps> = ({isModalOpen, handleOk, handleCancel,children,title}) => {
   return (
-    <Modal title='Form edit' open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+    <Modal title={title} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
             {children}
         </Modal>
   )

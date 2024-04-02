@@ -1,7 +1,31 @@
 import { css } from '@emotion/react'
+import { useEffect, useState } from 'react';
 import { BsInfoLg } from "react-icons/bs";
+import { getTripId } from '~/app/api/trip/trip.api';
 
-const Reception = () => {
+// const content = (
+//     <SelectLocationComponent />
+//   );
+const Reception = ({trip_id,setSelectData}:any) => {
+    const [data, SetData] = useState<any>([]);
+    // console.log('data', data);    
+    useEffect(() => {
+        getTripId(trip_id).then((res: any) => {
+            if (res) {
+                SetData(res.data);
+            }
+        });
+    }, []);
+
+
+    // useEffect(() => {
+    //     if (selectStart && selectStart) {
+    //         setSelectData({selectStart, selectEnd})
+    //     }
+    // }, [selectEnd,selectStart])
+
+
+
     return (
         <div css={receptioncss} className='bg-white px-4'>
             <div className=''>
@@ -11,24 +35,20 @@ const Reception = () => {
             <div className='flex justify-between'>
                 <div className='w-[340px]'>
                     <h2 className='text-[17px] font-medium'>Điểm đón</h2>
-                    <div className='flex'>
-
-                        <div className='flex items-center'>
-                            <input type="radio" />
-                            <p className='px-2'>Điểm đón</p>
-                        </div>
-
-                        <div className='flex items-center'>
-                            <input type="radio" />
-                            <p className='px-2'>Trung chuyển</p>
-                        </div>
+                    {/* <div className='flex'>
+                        <Radio.Group onChange={onChange} value={value}>
+                            <Radio value={1}>Điểm đón</Radio>
+                            <Radio value={2}>Trung chuyển</Radio>
+                        </Radio.Group>
                         <div>
                             <span><BsInfoLg className='text-orange-600 text-[20px]' /></span>
                         </div>
-                    </div>
+                    </div> */}
 
                     <div className='py-6'>
-                        <input type="text" className='w-[315px]' />
+                         {/* <SelectLocationComponent title="chọn chuyến đi" setSelectStart={setSelectStart} content={dataLocationStart} /> */}
+                        <input type="text" value={data?.trip?.start_location} readOnly />
+
                     </div>
                 </div>
 
@@ -36,24 +56,11 @@ const Reception = () => {
                 <div className='w-[340px]'>
                     <h2 className='text-[17px] font-medium'>Điểm trả</h2>
                     <div className='flex'>
-
-                        <div className='flex items-center'>
-                            <input type="radio" />
-                            <p className='px-2'>Điểm đón</p>
-                        </div>
-
-                        <div className='flex items-center'>
-                            <input type="radio" />
-                            <p className='px-2'>Trung chuyển</p>
-                        </div>
-
-                        <div>
-                            <span><BsInfoLg className='text-orange-600 text-[20px]' /></span>
-                        </div>
                     </div>
 
                     <div className='py-6'>
-                        <input type="text" className='w-[315px]' />
+                     {/* <SelectLocationComponent  title="chọn chuyến đi" setSelectEnd={setSelectEnd} content={dataLocationEnd} /> */}
+                        <input type="text" value={data?.trip?.end_location} readOnly />
                     </div>
                 </div>
             </div>
@@ -73,5 +80,11 @@ input {
 }
 input:focus {
 border-color: black;
-
+}
+.input-form {
+    border-radius: 8px;
+    padding: 9px 16px;
+    height: 36px;
+    border-color: #dde2e8;
+}
 `
