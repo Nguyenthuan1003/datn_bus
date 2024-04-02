@@ -45,7 +45,7 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
     console.log(dataTable);
 
     const trip = dataTable.map((trip: any) => trip?.trip)
-    const route = dataTable.map((route: any) => route?.trip?.route)
+    const route = trip.map((route: any) => route?.route)
     console.log('route', route);
     console.log('trip', trip);
 
@@ -130,23 +130,28 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
         {
             title: 'Chuyến đi',
             key: 'trip_id',
-            render: (_: any, record: any) => {
-                const matchedTrip = trip?.find((trip: any) => trip?.id === record?.trip_id);
-                const matchedRoute = route?.find((route: any) => route?.id)
-                const routeName = matchedRoute?.name
-                console.log('matchedRoute', matchedRoute);
+            // render: (_: any, record: any) => {
+            //     const matchedTrip = trip?.find((trip: any) => trip?.id === record?.trip_id);
+            //     const matchedRoute = route?.find((route: any) => route?.id)
+            //     const routeName = matchedRoute?.name
+            //     console.log('route',matchedRoute);
+                
+            //     console.log('matchedRoute', matchedRoute);
 
-                const time = matchedTrip?.start_time
+            //     const time = matchedTrip?.start_time
 
-                const timetrip = moment.utc(time).local().format('HH:mm')
-                if (!matchedTrip) {
-                    return <span>Tuyến đường không tồn tại </span>
-                }else{
-                    return <span>
-                    {/* {`${matchedTrip.start_location} - ${matchedTrip.end_location} (khởi hành)`} */}
-                    {routeName ? routeName  : " Tuyền đường không còn tồn tại"}  {timetrip}
-                </span>;
-                }
+            //     const timetrip = moment.utc(time).local().format('HH:mm')
+            //     if (!matchedTrip) {
+            //         return <span>Tuyến đường không tồn tại </span>
+            //     }else{
+            //         return <span>
+            //         {/* {`${matchedTrip.start_location} - ${matchedTrip.end_location} (khởi hành)`} */}
+            //         {routeName ? routeName  : " Tuyền đường không còn tồn tại"}  {timetrip}
+            //     </span>;
+            //     }
+            // }
+            render: (_:any, record:any) =>{
+            return <span>{record?.trip.route.name}</span>;
             }
         },
         {
