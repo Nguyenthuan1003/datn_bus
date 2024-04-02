@@ -1,24 +1,25 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import TemplateTable from '../common/template-table/template-table.component'
-import {getAllCar , deleteCar, addCar, updateCar } from './service/car.service';
-import  { getAllTypeCar } from '../type_car/service/typeCar.service'
+import { getAllCar, deleteCar, addCar, updateCar } from './service/car.service';
+import { getAllTypeCar } from '../type_car/service/typeCar.service'
 import { Form, Input, Select, Switch } from 'antd';
 import { Option } from 'antd/es/mentions';
-import CustomSwitch from './component/CustomSwitch'; 
-import { log } from 'console';
+import { ColorPicker, Space } from 'antd';
+import { DownOutlined } from '@ant-design/icons';
 const CarComponent = () => {
-    
+
     const [column, setColumn] = useState<any>([]);
     const [dataCar, setDataCar] = useState<any>([]);
-    const [dataTypecar, setDataTypecar] = useState<any>([]); 
+    const [dataTypecar, setDataTypecar] = useState<any>([]);
     const [checked, setChecked] = useState<any>();
     const [current, setCurrent] = useState<any>();
+    const [selectedColor, setSelectedColor] = useState("#1677ff");
     console.log(dataCar)
-    const handleChange = (value:any) => {
-        setCurrent(value); 
+    const handleChange = (value: any) => {
+        setCurrent(value);
     };
-    
-    
+
+
     useEffect(() => {
         getAllTypeCar().then((res) => {
             if (res) {
@@ -26,12 +27,12 @@ const CarComponent = () => {
             }
         })
     }, [])
-    
+
 
     useEffect(() => {
         const columsTemp: any = []
-        const title = ['STT', 'Tên xe', 'Màu xe', 'Hình ảnh', 'Mô tả' ,'Biển số xe', 'Trạng Thái', 'Kiểu xe']
-        
+        const title = ['STT', 'Tên xe', 'Màu xe', 'Hình ảnh', 'Mô tả', 'Biển số xe', 'Trạng Thái', 'Kiểu xe']
+
         if (dataCar.length > 0) {
             Object.keys(dataCar[0]).forEach((itemKey, key = 0) => {
                 if (!['id', 'created_at', 'updated_at'].includes(itemKey)) {
@@ -49,22 +50,22 @@ const CarComponent = () => {
                                 return <h2>{typeCar ? typeCar.name : 'Chưa phân loại'}</h2>;
                             }
                             if (itemKey === 'status') {
-                                        return <Switch
-                                                style={{ background: text ? 'green' : 'red' }}
-                                                checked={text}
-                                                checkedChildren="Đang hoạt động"
-                                                unCheckedChildren="Ngừng hoạt động"
-                                                disabled
-                                            
-                                            />
+                                return <Switch
+                                    style={{ background: text ? 'green' : 'red' }}
+                                    checked={text}
+                                    checkedChildren="Đang hoạt động"
+                                    unCheckedChildren="Ngừng hoạt động"
+                                    disabled
+
+                                />
                             }
                             return text
                         }
                     })
                 }
-                
+
             })
-            
+
         }
         setColumn(columsTemp)
     }, [dataCar])
@@ -73,11 +74,11 @@ const CarComponent = () => {
     useEffect(() => {
         getAllCar().then((res) => {
             if (res) {
-                setDataCar(res?.data)
+                const sortedData = res.data.sort((a:any , b:any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+                setDataCar(sortedData);
             }
         })
     }, [reset])
-
 
     const handelGetList = () => {
         setReset(!reset)
@@ -85,6 +86,14 @@ const CarComponent = () => {
     const fomatCustomCurrent = (data: any) => {
         setCurrent(data?.status === 1 ? 1 : 0)
     }
+    const [form] = Form.useForm()
+    // const handleColorChange = (color: any) => {
+    //     const valueColor = color.toHexString();
+    //     setSelectedColor(valueColor);
+    //     form.setFieldsValue({
+    //         color: valueColor
+    //     });
+    // };
     const acctive = 1;
     const inAcctive = 0
     return (
@@ -95,7 +104,10 @@ const CarComponent = () => {
                 dataTable={dataCar}
                 columnTable={column}
                 deleteFunc={deleteCar}
-                createFunc={addCar}
+                createFunc={(data:any)=>addCar({
+                    ...data,
+                    color:data?.color.toHexString()
+                })}
                 dataId={fomatCustomCurrent}
                 changeFunc={updateCar}
                 formEdit={
@@ -104,7 +116,11 @@ const CarComponent = () => {
                             <Input />
                         </Form.Item>
                         <Form.Item label='Màu xe' name='color' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                            <Input />
+                                <ColorPicker
+                                    defaultValue="#1677ff"
+                                    // onChange={handleColorChange}
+                                    showText={(color) => color.toHexString()} format="hex"
+                                />
                         </Form.Item>
                         <Form.Item label='Mô tả loại xe' name='description' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
                             <Input />
@@ -116,18 +132,18 @@ const CarComponent = () => {
                             <Input />
                         </Form.Item>
                         <Form.Item label='Kiểu xe' name='id_type_car' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                        <Select placeholder="lựa chọn trạng thái">
+                            <Select placeholder="lựa chọn trạng thái">
                                 {dataTypecar?.map((item: any, index: any) => (
                                     <Option value={item?.id} key={item?.id}>{item?.name}</Option>
                                 ))}
                             </Select>
                         </Form.Item>
                         <Form.Item label='Trạng Thái' name='status' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                        <Select placeholder='Chọn trạng thái' onChange={handleChange} value={`${current}`}>
+                            <Select placeholder='Chọn trạng thái' onChange={handleChange} value={`${current}`}>
                                 {[
                                     { value: acctive, label: "Hoạt động" },
                                     { value: inAcctive, label: "Không hoạt động" }
-                                ].map(option => (
+                                ].map((option: any) => (
                                     <Option key={option?.value} value={option?.value}>
                                         {option.label}
                                     </Option>
@@ -135,7 +151,7 @@ const CarComponent = () => {
                             </Select>
                         </Form.Item>
                     </Fragment>
-                }       
+                }
             />
         </div >
     )
