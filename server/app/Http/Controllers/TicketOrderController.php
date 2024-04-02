@@ -41,26 +41,48 @@ class TicketOrderController extends Controller
 
     public function checkin(Request $request)
     {
-        // Get the code ticket from the request
-        $codeTicket = $request->input('code_ticket');
+        try {
+            $request->validate([
+                'code_ticket' => 'required|string'
+            ]);
 
-        // Find the ticket order with the given code ticket
-        $ticketOrder = TicketOrder::where('code_ticket', $codeTicket)->first();
+            $ticketOrder = TicketOrder::with('bill')
+                ->where('code_ticket', $request->input('code_ticket'))->first();
 
-        // Check if ticket order was found
-        if ($ticketOrder) {
-            // Get the associated bill
-            $bill = $ticketOrder->bill->status_pay;
-
-            if ($bill) {
-                // status 0 = chưa checkin, 1 = đã checkin
-                $ticketOrder->update(['status' => 1]);
-
-                return response()->json(['message' => 'Cập nhật thành công! (^__ ^ ")'], 200);
+            if (!$ticketOrder) {
+                return response()->json([
+                    'message' => 'Thông tin vé không tồn tại',
+                    'status' => 'fail'
+                ], 404);
             }
-        }
 
-        return response()->json(['error' => 'Thông tin không tồn tại'], 404);
+            if ($ticketOrder->bill->status_pay == 0) {
+                return response()->json([
+                    'message' => 'Vé không hợp lệ, chưa được thanh toán!',
+                    'status' => 'fail'
+                ], 404);
+            }
+
+            if ($ticketOrder->status == 1) {
+                return response()->json([
+                    'message' => 'Vé đã được sử dụng!',
+                    'status' => 'fail'
+                ], 404);
+            }
+
+            $ticketOrder->update(['status' => 1]);
+
+            return response()->json([
+                'message' => 'Checkin vé thành công!',
+                'status' => 'success',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
+                'status' => 'fail',
+//                'error' => $e->getMessage()
+            ]);
+        }
     }
 
     /**
