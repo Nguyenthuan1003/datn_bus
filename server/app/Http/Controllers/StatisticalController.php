@@ -99,12 +99,14 @@ class StatisticalController extends Controller
                 'trip_count_current_year' => $tripCountCurrentYear,
                 'user_count_current_year' => $userCountCurrentYear,
                 'total_revenue_current_year' => $totalRevenueCurrentYear,
-                'total_statistical_current_year' => $totalStatisticalByYear
+                'total_statistical_current_year' => $totalStatisticalByYear,
+                'status' => 'success',
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi truy vấn dữ liệu',
-                'error' => $e->getMessage()
+                'status' => 'fail',
+//                'error' => $e->getMessage()
             ]);
         }
     }
@@ -141,11 +143,13 @@ class StatisticalController extends Controller
                 'total_car' => $totalCar,
                 'total_location' => $totalLocation,
                 'total_trip' => $totalTrip,
-                'top_10_Car' => $top10Car
+                'top_10_Car' => $top10Car,
+                'status' => 'success'
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi truy vấn dữ liệu',
+                'status' => 'fail',
                 'error' => $e->getMessage()
             ]);
         }
@@ -205,11 +209,13 @@ class StatisticalController extends Controller
 
             return response()->json([
                 'message' => 'Truy vấn dữ liệu thành công',
-                'total_data' => $totalStatisticalByYear
+                'total_data' => $totalStatisticalByYear,
+                'status' => 'success'
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi truy vấn dữ liệu',
+                'status' => 'fail',
                 'error' => $e->getMessage()
             ]);
         }
@@ -281,11 +287,13 @@ class StatisticalController extends Controller
             return response()->json([
                 'message' => 'Truy vấn dữ liệu thành công',
                 'total_data' => $totalStatisticalAbout,
+                'status' => 'success'
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi truy vấn dữ liệu',
-                'error' => $e->getMessage()
+                'status' => 'fail',
+//                'error' => $e->getMessage()
             ]);
         }
     }
@@ -299,11 +307,15 @@ class StatisticalController extends Controller
     public function user()
     {
         try {
-            dd(234234234);
+            return response()->json([
+                'message' => 'Chức năng đang phát triển',
+                'status' => 'success'
+            ]);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi truy vấn dữ liệu',
-                'error' => $e->getMessage()
+                'status' => 'fail',
+//                'error' => $e->getMessage()
             ]);
         }
     }
@@ -364,12 +376,14 @@ class StatisticalController extends Controller
                 'count_all_route' => $countAllRoute,
                 'count_all_trip' => $countAllTrip,
                 'total_revenue' => $totalRevenue,
-                'top_10_routes' => $top10Routes
+                'top_10_routes' => $top10Routes,
+                'status' => 'success'
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi truy vấn dữ liệu',
-                'error' => $e->getMessage()
+                'status' => 'fail',
+//                'error' => $e->getMessage()
             ]);
         }
     }
@@ -444,12 +458,14 @@ class StatisticalController extends Controller
                 'count_all_trip_for_year' => $countAllTripForYear,
                 'total_revenue_for_year' => $totalRevenueForYear,
                 'count_all_ticket_for_year' => $countAllTicketForYear,
-                'data_for_char' => $dataForChar
+                'data_for_char' => $dataForChar,
+                'status' => 'success',
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi truy vấn dữ liệu',
-                'error' => $e->getMessage()
+                'status' => 'fail',
+//                'error' => $e->getMessage()
             ]);
         }
     }
