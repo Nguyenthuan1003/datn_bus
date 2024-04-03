@@ -45,7 +45,9 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
     const [route, setRoute] = useState<any>()
 
     // console.log("route",route);
+    // const seatId = localStorage.getItem('seat_id')
     const seatId = localStorage.getItem('seat_id')
+
     useEffect(() => {
         getTripId(trip_id).then((res) => {
             setDataTrip(res?.data?.trip)
@@ -99,7 +101,7 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
                 total_money_after_discoun: dataPrice,
                 // seat_id: selectData,
                 // seat_id: JSON.stringify(selectData),
-                seat_id: seatId,
+                seat_id: selectData.map((seat: string) => `'${seat}'`).join(', '),
                 trip_id: trip_id,
                 location: locationData,
                 pickup_location: locationData?.start_location,
@@ -125,7 +127,7 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
                     total_money: dataPrice,
                     total_money_after_discount: dataPrice,
                     code_seat: selectData.map((seat: string) => `'${seat}'`).join(', '),
-                    seat_id: seatId,
+                    seat_id: selectData.map((seat: string) => `'${seat}'`).join(', '),
                     trip_id: trip_id,
                     status_pay: "0",
                     type_pay: "0",
@@ -154,7 +156,7 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
                 total_seat: selectData?.length,
                 // seat_id: selectData,
                 code_seat: selectData.map((seat: string) => `'${seat}'`).join(', '),
-                seat_id: seatId,
+                seat_id: selectData.map((seat: string) => `'${seat}'`).join(', '),
                 trip_id: trip_id,
                 location: locationData,
                 route: route,

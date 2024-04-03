@@ -28,7 +28,7 @@ const CheckChaircomponent:FC<any> = ({trip_id,setSelectData,setDataPrice}) => {
         const seat_id = seat?.id
         // console.log('seat',seat);
 
-        console.log('seat_id',seat_id);
+        console.log('seat_id',seatCode);
         
         const status = seat?.status
         if (status === 1) {
@@ -73,10 +73,9 @@ const CheckChaircomponent:FC<any> = ({trip_id,setSelectData,setDataPrice}) => {
                                 {upperArray?.map((item: any,index: number) => (
                                     <div className='my-4'onClick={()=>handelSelecttion(item)}>
                                         {/* <ChairUiComponent key={index} children={item?.code_seat?.slice(0,2)} /> */}
-                                        <ChairUiComponent key={index} children={item?.code_seat.slice(0,2)} status={item?.status} />
+                                        <ChairUiComponent key={index} children={item?.code_seat.slice(3,5)} status={item?.status} />
                                     </div>
                                 ))}
-
                             </div>
                         </div>
 
@@ -88,7 +87,7 @@ const CheckChaircomponent:FC<any> = ({trip_id,setSelectData,setDataPrice}) => {
                             <div className='flex-wrap grid grid-cols-3'>
                                 {lowarArray?.map((item: any) => (
                                     <div className='my-4'onClick={()=>handelSelecttion(item)}>
-                                        <ChairUiComponent children={item?.code_seat.slice(0,2)} status={item?.status} />
+                                        <ChairUiComponent children={item?.code_seat.slice(3,5)} status={item?.status} />
                                     </div>
                                 ))}
 

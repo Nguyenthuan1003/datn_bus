@@ -99,7 +99,7 @@ const MainSearchResults = () => {
                     <div className=''>
                       <img
                         className='w-[200px] '
-                        src='../../../../../../../public/image/A-car-B-removebg-preview.png'
+                        src='../../../../../../assets/img/A-car-B-removebg-preview.png'
                         alt=''
                       />
                     </div>
