@@ -13,6 +13,11 @@ export const validateCheckTicket = yup.object().shape({
     ticket: yup.string().required('bạn cần nhập đầy đủ thông tin')
 })
 
+export const validateCheckBill = yup.object().shape({
+    phoneNumber: yup.string().length(10, "Độ dài số điện thoại là 10").matches(phoneRegExp, 'Số điện thoại không đúng định dạng').required('Bạn cần nhập đầy đủ thông tin'),
+    bill: yup.string().required('bạn cần nhập đầy đủ thông tin')
+})
+
 export const validateLogin = yup.object().shape({
     email: yup.string().email('Email không hợp lệ').matches(emailregExp, 'Email không đúng định dạng').required('bạn cần nhập đầy đủ thông tin'),
     password: yup.string().required('bạn cần nhập đầy đủ thông tin')

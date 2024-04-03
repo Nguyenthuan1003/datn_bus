@@ -80,7 +80,7 @@ class TicketOrderController extends Controller
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
                 'status' => 'fail',
-//                'error' => $e->getMessage()
+                //                'error' => $e->getMessage()
             ]);
         }
     }
@@ -103,8 +103,8 @@ class TicketOrderController extends Controller
                 ->join('trips', 'bills.trip_id', '=', 'trips.id')
                 ->join('routes', 'trips.route_id', '=', 'routes.id')
                 ->join('cars', 'trips.car_id', '=', 'cars.id')
-//                ->select('bills.phone_number', 'bills.status_pay', 'ticket_orders.code_ticket', 'routes.name as route_name', 'trips.start_time', 'cars.license_plate', 'ticket_orders.code_seat', 'bills.total_money_after_discount', 'bills.total_seat', 'ticket_orders.pickup_location', 'ticket_orders.pay_location')
-                ->select('bills.phone_number', 'bills.full_name', 'bills.email', 'bills.status_pay', 'ticket_orders.status' , 'ticket_orders.code_ticket', 'routes.name as route_name', 'trips.start_time', 'cars.license_plate', 'ticket_orders.code_seat', 'ticket_orders.pickup_location', 'ticket_orders.pay_location')
+                //                ->select('bills.phone_number', 'bills.status_pay', 'ticket_orders.code_ticket', 'routes.name as route_name', 'trips.start_time', 'cars.license_plate', 'ticket_orders.code_seat', 'bills.total_money_after_discount', 'bills.total_seat', 'ticket_orders.pickup_location', 'ticket_orders.pay_location')
+                ->select('bills.phone_number', 'bills.full_name', 'bills.email', 'bills.status_pay', 'ticket_orders.status', 'ticket_orders.code_ticket', 'routes.name as route_name', 'trips.start_time', 'cars.license_plate', 'ticket_orders.code_seat', 'ticket_orders.pickup_location', 'ticket_orders.pay_location')
                 ->selectRaw('bills.total_money_after_discount / bills.total_seat as ticket_money')
                 ->where('ticket_orders.code_ticket', $request->input('code_ticket'))
                 ->where('bills.phone_number', $request->input('phone_number'))
@@ -126,7 +126,7 @@ class TicketOrderController extends Controller
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
                 'status' => 'fail',
-//                'error' => $e->getMessage()
+                //                'error' => $e->getMessage()
             ]);
         }
     }

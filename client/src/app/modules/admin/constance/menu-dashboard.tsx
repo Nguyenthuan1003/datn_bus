@@ -63,7 +63,12 @@ export const menuDashBoard =[
     {
         key: '/admin/check-ticket',
         icon: <BsTicketPerforated />,
-        label: 'Ticket'
+        label: 'Checkin Ticket'
+    },
+    {
+        key: '/admin/check-bill',
+        icon: <UserOutlined />,
+        label: 'Checkin Bill'
     }
 ]
 

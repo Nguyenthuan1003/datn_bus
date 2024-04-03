@@ -3,90 +3,114 @@ import { css } from '@emotion/react'
 import { Controller, useForm } from 'react-hook-form'
 import ButtonRadiusCompoennt from '~/app/component/parts/button/button.component'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { validateCheckTicket } from '../../../utils/validateForm'
+import { validateCheckBill } from '../../../utils/validateForm'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { axiosPrivate } from '~/app/api/confighHTTp'
 import { Link } from 'react-router-dom'
 import { AiOutlineCheck } from 'react-icons/ai'
 
-const CheckTicketComponent = () => {
+const CheckBillComponent = () => {
   const {
     handleSubmit,
     control,
     formState: { errors }
   } = useForm({
-    resolver: yupResolver(validateCheckTicket)
+    resolver: yupResolver(validateCheckBill)
   })
 
   const [errorMessage, setErrorMessage] = useState(null)
   const [showModal, setShowModal] = React.useState(false)
-  const [ticketData, setTicketData] = useState(null)
-  const [isTicketCheckedIn, setIsTicketCheckedIn] = useState(false)
+  const [billData, setBillData] = useState(null)
+  const [isBillCheckedIn, setIsBillCheckedIn] = useState(false)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [successMessage, setSuccessMessage] = useState(null)
 
   const onSubmit = async (data: any) => {
     event.preventDefault()
     try {
-      const response = await axiosPrivate.get(
-        `/ticket/find-ticket?phone_number=${data.phoneNumber}&code_ticket=${data.ticket}`
-      )
-      if (response.status >= 200 && response.status < 300 && response.data && response.data.ticket) {
-        const isCheckedIn = response.data.ticket.status === 1 && response.data.ticket.status_pay === 1
-        setTicketData(response.data)
-        setIsTicketCheckedIn(isCheckedIn ? 1 : 0)
+      const response = await axiosPrivate.get(`/bill/find-bill?phone_number=${data.phoneNumber}&code_bill=${data.bill}`)
+      if (response.status >= 200 && response.status < 300 && response.data && response.data.bill) {
+        setBillData(response.data.bill)
         setShowModal(false)
         setErrorMessage(null)
       } else {
-        setTicketData(null)
+        setBillData(null)
         setShowModal(true)
         setErrorMessage(response.data.message)
       }
     } catch (error) {
       toast.error('Error: ' + error.response.data.message)
-      setTicketData(null)
+      setBillData(null)
       setShowModal(true)
       setErrorMessage(error.response.data.message)
     }
   }
 
-  const handleCheckIn = async () => {
-    console.log('handleCheckIn called')
-
-    if (!ticketData || !ticketData.ticket) {
-      console.log('No ticket data available for checkin')
-      toast.error('No ticket data available for checkin')
+  // Hàm để checkin một vé cụ thể
+  const handleSingleCheckIn = async (ticketCode, status, status_pay) => {
+    if (status === 1 && status_pay === 1) {
       return
     }
-
     try {
-      console.log('Calling checkin API')
-      const response = await axiosPrivate.post('/ticket/checkin', {
-        code_ticket: ticketData.ticket.code_ticket
-      })
+      const response = await axiosPrivate.post(`/ticket/checkin`, { code_ticket: ticketCode })
 
-      console.log('Checkin API response:', response)
-
-      if (response.status >= 200 && response.status < 300) {
-        setIsTicketCheckedIn(1)
-        setTicketData((prevState) => ({
-          ...prevState,
-          ticket: {
-            ...prevState.ticket,
-            status: 1
-          }
-        }))
-        localStorage.setItem(`ticket_${ticketData.ticket.code_ticket}_isCheckedIn`, 'true')
+      if (response.status >= 200 && response.status < 300 && !response.data.error) {
+        setBillData((prevState) =>
+          prevState.map((ticket) =>
+            ticket.code_ticket === ticketCode ? { ...ticket, status: 1, status_pay: 1 } : ticket
+          )
+        )
+        toast.success(response.data.message)
         setSuccessMessage(response.data.message)
         setShowSuccessModal(true)
       } else {
-        console.log('Checkin failed')
+        setShowModal(true)
         setErrorMessage(response.data.message)
       }
     } catch (error) {
       toast.error('Error: ' + error.response.data.message)
-      setTicketData(null)
+      setShowModal(true)
+      setErrorMessage(error.response.data.message)
+    }
+  }
+
+  // Hàm để checkin tất cả vé
+  //   const handleAllCheckIn = async () => {
+  //     for (let ticket of billData) {
+  //       await handleSingleCheckIn(ticket.code_ticket, ticket.status, ticket.status_pay)
+  //     }
+  //   }
+  const handleAllCheckIn = async () => {
+    const checkInPromises = billData
+      .filter((ticket) => ticket.status !== 1 || ticket.status_pay !== 1)
+      .map((ticket) => ({
+        promise: axiosPrivate.post(`/ticket/checkin`, { code_ticket: ticket.code_ticket }),
+        ticket
+      }))
+
+    try {
+      const responses = await Promise.all(checkInPromises.map(({ promise }) => promise))
+
+      responses.forEach((response, index) => {
+        if (response.status >= 200 && response.status < 300 && !response.data.error) {
+          const { ticket } = checkInPromises[index]
+
+          setBillData((prevState) => {
+            // Update the ticket status in the state
+            return prevState.map((t) => (t.code_ticket === ticket.code_ticket ? { ...t, status: 1, status_pay: 1 } : t))
+          })
+
+          toast.success(response.data.message)
+          setSuccessMessage(response.data.message)
+          setShowSuccessModal(true)
+        } else {
+          setShowModal(true)
+          setErrorMessage(response.data.message)
+        }
+      })
+    } catch (error) {
+      toast.error('Error: ' + error.response.data.message)
       setShowModal(true)
       setErrorMessage(error.response.data.message)
     }
@@ -116,7 +140,7 @@ const CheckTicketComponent = () => {
         <div className='my-5'>
           <Controller
             control={control}
-            name='ticket'
+            name='bill'
             render={({ field: { onChange, value, ref }, fieldState: { error } }) => (
               <input
                 placeholder='Vui lòng nhập mã vé'
@@ -128,71 +152,94 @@ const CheckTicketComponent = () => {
               />
             )}
           />
-          {errors && <span className='text-red-600'>{errors.ticket?.message}</span>}
+          {errors && <span className='text-red-600'>{errors.bill?.message}</span>}
         </div>
 
         <div className='text-center'>
           <ButtonRadiusCompoennt type='submit' content='Tra cứu' />
         </div>
       </form>
-      {ticketData && ticketData.ticket && (
-        <div className='border-[2px] border-gray-200 mx-12 mt-5 rounded-[10px] overflow-hidden'>
-          <div className='bg-gray-100'>
-            <h2 className='text-[25px] font-bold py-4 text-center'>Thông tin vé</h2>
-          </div>
-          <div className='flex my-10 gap-10 justify-center'>
-            <div className='flex-col border-[2px] rounded-[8px] border-gray-200 pt-4 w-[380px]'>
-              <div className='flex '>
-                <div className='mx-auto mt-3'>
-                  <p className='font-semibold text-[18px] text-center'>Mã vé {ticketData.ticket.code_ticket}</p>
+      {billData && (
+        <div className='border-[2px] border-gray-200 mt-5 rounded-[10px] overflow-hidden grid grid-cols-2 gap-4 justify-items-center mx-auto'>
+          <h2 className='text-[25px] font-bold py-4 text-center col-span-2'>Thông tin vé</h2>
+          {billData.map((ticket, index) => (
+            <div className='flex my-10 gap-10 justify-center w-full sm:w-auto'>
+              <div className='relative'>
+                <div className='flex-col border-[2px] rounded-[8px] border-gray-200 pt-4 w-full sm:w-[380px]'>
+                  <div className='flex'>
+                    <div className='mt-3 mx-auto'>
+                      <p className='font-semibold text-[18px] text-center'>Mã vé {ticket.code_ticket}</p>
+                    </div>
+                  </div>
+                  <div className='text-justify'>
+                    <div className='flex ml-7 mt-10 justify-between'>
+                      <div className='font-bold text-gray-400'>Tuyến xe</div>
+                      <div className='text-green-700 font-normal w-[200px]'>{ticket.route_name}</div>
+                    </div>
+                    <div className='flex ml-7 mt-2 justify-between'>
+                      <div className='font-bold text-gray-400'>Thời gian</div>
+                      <div className='text-green-700 font-normal w-[170px]'>{ticket.start_time}</div>
+                    </div>
+                    <div className='flex justify-between ml-7 mt-2'>
+                      <div className='font-bold text-gray-400'>Số ghế</div>
+                      <div className='text-green-700 font-normal w-[160px]'>{ticket.code_seat}</div>
+                    </div>
+                    <div className='flex ml-7 mt-2 justify-between'>
+                      <div className='font-bold text-gray-400'>Điểm lên xe</div>
+                      <div className=' font-normal w-[145px]'>{ticket.pickup_location}</div>
+                    </div>
+                    <div className='flex ml-7 mt-2 mb-5 justify-between'>
+                      <div className='font-bold text-gray-400'>Giá vé</div>
+                      <div className='font-normal w-[128px]'>{ticket.ticket_money}đ</div>
+                    </div>
+                  </div>
+                  <div className='used-ticket-overlay'>
+                    {ticket.status === 1 && ticket.status_pay === 1 && <div>đã in vé</div>}
+                  </div>
                 </div>
+                {!(ticket.status === 1 && ticket.status_pay === 1) && (
+                  <button
+                    className='bg-[#fbeeea] rounded-full py-3 px-12 flex mx-auto mt-3'
+                    onClick={() => handleSingleCheckIn(ticket.code_ticket)}
+                  >
+                    <svg
+                      className='w-5 h-5'
+                      stroke='currentColor'
+                      fill='#e48666'
+                      stroke-width='0'
+                      viewBox='0 0 1024 1024'
+                      height='1em'
+                      width='1em'
+                      xmlns='http://www.w3.org/2000/svg'
+                    >
+                      <path d='M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 0 0-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z'></path>
+                    </svg>
+                    <p className='ml-2 text-[#e48666] font-bold'>Checkin</p>
+                  </button>
+                )}
               </div>
-              <div className='text-justify'>
-                <div className='flex ml-7 mt-10 justify-between'>
-                  <div className='font-bold text-gray-400'>Tuyến xe</div>
-                  <div className='text-green-700 font-normal w-[200px]'>{ticketData.ticket.route_name}</div>
-                </div>
-                <div className='flex ml-7 mt-2 justify-between'>
-                  <div className='font-bold text-gray-400'>Thời gian</div>
-                  <div className='text-green-700 font-normal w-[170px]'>{ticketData.ticket.start_time}</div>
-                </div>
-                <div className='flex justify-between ml-7 mt-2'>
-                  <div className='font-bold text-gray-400'>Số ghế</div>
-                  <div className='text-green-700 font-normal w-[160px]'>{ticketData.ticket.code_seat}</div>
-                </div>
-                <div className='flex ml-7 mt-2 justify-between'>
-                  <div className='font-bold text-gray-400'>Điểm lên xe</div>
-                  <div className=' font-normal w-[145px]'>{ticketData.ticket.pickup_location}</div>
-                </div>
-                <div className='flex ml-7 mt-2 mb-5 justify-between'>
-                  <div className='font-bold text-gray-400'>Giá vé</div>
-                  <div className='font-normal w-[128px]'>{ticketData.ticket.ticket_money}đ</div>
-                </div>
-              </div>
-              {ticketData.ticket.status_pay === 1 && ticketData.ticket.status === 1 && (
-                <div className='used-ticket-overlay'>đã in vé</div>
-              )}
             </div>
-          </div>
-          <div className='flex justify-center mb-10'>
-            {ticketData.ticket.status_pay === 1 && ticketData.ticket.status !== 1 && isTicketCheckedIn === 0 ? (
-              <button className='bg-[#fbeeea] rounded-full py-3 px-12 flex mr-5' onClick={handleCheckIn}>
-                <svg
-                  className='w-5 h-5'
-                  stroke='currentColor'
-                  fill='#e48666'
-                  stroke-width='0'
-                  viewBox='0 0 1024 1024'
-                  height='1em'
-                  width='1em'
-                  xmlns='http://www.w3.org/2000/svg'
-                >
-                  <path d='M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 0 0-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z'></path>
-                </svg>
-                <p className='ml-2 text-[#e48666] font-bold'>Checkin</p>
-              </button>
-            ) : null}
-          </div>
+          ))}
+          {billData && billData.some((ticket) => ticket.status !== 1 || ticket.status_pay !== 1) && (
+            <button
+              className='my-4 flex bg-[#fbeeea]  py-3 px-12 text-[#e48666] font-bold rounded-full col-span-2'
+              onClick={handleAllCheckIn}
+            >
+              <svg
+                className='w-5 h-5 mr-2'
+                stroke='currentColor'
+                fill='#e48666'
+                stroke-width='0'
+                viewBox='0 0 1024 1024'
+                height='1em'
+                width='1em'
+                xmlns='http://www.w3.org/2000/svg'
+              >
+                <path d='M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 0 0-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z'></path>
+              </svg>
+              Checkin
+            </button>
+          )}
         </div>
       )}
       {showModal && (
@@ -327,7 +374,7 @@ const CheckTicketComponent = () => {
   )
 }
 
-export default CheckTicketComponent
+export default CheckBillComponent
 
 const ticketCss = css`
   input {
@@ -355,8 +402,6 @@ const ticketCss = css`
     position: absolute;
     top: 50%;
     left: 50%;
-    margin-top: 200px;
-    margin-left: 100px;
     transform: translate(-50%, -50%);
     color: red;
     font-size: 2em;
@@ -364,7 +409,6 @@ const ticketCss = css`
     text-transform: uppercase;
     pointer-events: none; /* allows clicks to pass through the overlay */
     z-index: 2; /* make sure it's above other content */
-    padding: 10px;
     text-align: center;
     width: 100%;
   }
