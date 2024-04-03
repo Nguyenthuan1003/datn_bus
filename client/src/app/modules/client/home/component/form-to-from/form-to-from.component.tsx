@@ -88,8 +88,6 @@ const FormToFromComponent = () => {
     }
 
     window.addEventListener('popstate', handlePopState)
-
-    // Clean up the event listener when the component is unmounted
     return () => {
       window.removeEventListener('popstate', handlePopState)
     }
