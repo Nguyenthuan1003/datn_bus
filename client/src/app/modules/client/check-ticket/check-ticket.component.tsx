@@ -163,12 +163,12 @@ const CheckTicketComponent = () => {
                   <div className='font-bold text-gray-400'>Điểm lên xe</div>
                   <div className=' font-normal w-[145px]'>{ticketData.ticket.pickup_location}</div>
                 </div>
-                <div className='flex ml-7 my-2 justify-between'>
+                <div className='flex ml-7 mt-2 mb-5 justify-between'>
                   <div className='font-bold text-gray-400'>Giá vé</div>
                   <div className='font-normal w-[128px]'>{ticketData.ticket.ticket_money}đ</div>
                 </div>
               </div>
-              {ticketData.ticket.status === 0 && <p className='used-ticket-overlay'>Đã in vé</p>}
+              {ticketData.ticket.status === 1 && <p className='used-ticket-overlay'>Đã in vé</p>}
             </div>
           </div>
         </div>
