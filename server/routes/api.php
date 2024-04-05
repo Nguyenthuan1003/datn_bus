@@ -36,6 +36,7 @@ Route::group(['prefix' => 'user'], function () {
     Route::get('edit/{id}', [UserController::class, 'show']);
     Route::put('update/{id}', [UserController::class, 'update']);
     Route::delete('delete/{id}', [UserController::class, 'destroy']);
+    Route::put('update2', [UserController::class, 'update2']);
 });
 
 
