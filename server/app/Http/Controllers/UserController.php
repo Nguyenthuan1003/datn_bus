@@ -6,6 +6,10 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
+use App\Models\Role;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -152,4 +156,65 @@ class UserController extends Controller
             'password.required' => 'The password is required.',
         ];
     }
+
+    public function update2(Request $request)
+    {
+        try {
+            // Validate only the fields that are being updated
+            $request->validate([
+                'id' => 'required|exists:users,id',
+                'name' => 'nullable',
+                'phone_number' => 'nullable',
+                'address' => 'nullable',
+                'description' => 'nullable',
+                'location' => 'nullable',
+                'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5048', // max size 5MB
+            ]);
+        
+            $user = User::find($request->input('id'));
+        
+            // Check if the user exists
+            if (!$user) {
+                return response()->json(['message' => 'User not found'], 404);
+            }
+        
+            // Update the user fields if they are provided in the request
+            if ($request->has('name')) {
+                $user->name = $request->input('name');
+            }
+            if ($request->has('phone_number')) {
+                $user->phone_number = $request->input('phone_number');
+            }
+            if ($request->has('address')) {
+                $user->address = $request->input('address');
+            }
+            if ($request->has('description')) {
+                $user->description = $request->input('description');
+            }
+            if ($request->has('location')) {
+                $user->location = $request->input('location');
+            }
+            if ($request->has('avatar')) {
+                $saveImageTo = 'images/avatar';
+                $image = $request->file('avatar');
+        
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $image->storeAs($saveImageTo, $imageName, 'public');
+        
+                $user->avatar = Storage::url($saveImageTo . '/' . $imageName);
+            }
+        
+            // Save the user model
+            $user->save();
+        
+            return response()->json(['message' => 'Cập nhật người dùng thành công', 'user' => $user]);
+        } catch (ValidationException $e) {
+            // Return validation error messages if validation fails
+            return response()->json(['error' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            // Return general error message for other exceptions
+            return response()->json(['message' => 'Có lỗi trong quá trình cập nhật người dùng','error' => $e->getMessage()], 422);
+        }
+    }
+
 }
