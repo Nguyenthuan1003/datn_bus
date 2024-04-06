@@ -41,23 +41,47 @@ class TicketOrderController extends Controller
 
     public function checkin(Request $request)
     {
-        // Get the code ticket from the request
-        $codeTicket = $request->input('code_ticket');
+        try {
+            $request->validate([
+                'code_ticket' => 'required|string'
+            ]);
 
-        // Find the ticket order with the given code ticket
-        $ticketOrder = TicketOrder::where('code_ticket', $codeTicket)->first();
+            $ticketOrder = TicketOrder::with('bill')
+                ->where('code_ticket', $request->input('code_ticket'))->first();
 
-        // Check if ticket order was found
-        if ($ticketOrder) {
-            // Get the associated bill
-            $bill = $ticketOrder->bill->status_pay;
-
-            if ($bill) {
-                // status 0 = chưa checkin, 1 = đã checkin
-                $ticketOrder->update(['status' => 1]);
-
-                return response()->json(['message' => 'Cập nhật thành công! (^__ ^ ")'], 200);
+            if (!$ticketOrder) {
+                return response()->json([
+                    'message' => 'Thông tin vé không tồn tại',
+                    'status' => 'fail'
+                ], 404);
             }
+
+            if ($ticketOrder->bill->status_pay == 0) {
+                return response()->json([
+                    'message' => 'Vé không hợp lệ, chưa được thanh toán!',
+                    'status' => 'fail'
+                ], 404);
+            }
+
+            if ($ticketOrder->status == 1) {
+                return response()->json([
+                    'message' => 'Vé đã được sử dụng!',
+                    'status' => 'fail'
+                ], 404);
+            }
+
+            $ticketOrder->update(['status' => 1]);
+
+            return response()->json([
+                'message' => 'Checkin vé thành công!',
+                'status' => 'success',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
+                'status' => 'fail',
+                //                'error' => $e->getMessage()
+            ]);
         }
 
         return response()->json(['error' => 'Thông tin không tồn tại'], 404);
@@ -81,8 +105,8 @@ class TicketOrderController extends Controller
                 ->join('trips', 'bills.trip_id', '=', 'trips.id')
                 ->join('routes', 'trips.route_id', '=', 'routes.id')
                 ->join('cars', 'trips.car_id', '=', 'cars.id')
-//                ->select('bills.phone_number', 'bills.status_pay', 'ticket_orders.code_ticket', 'routes.name as route_name', 'trips.start_time', 'cars.license_plate', 'ticket_orders.code_seat', 'bills.total_money_after_discount', 'bills.total_seat', 'ticket_orders.pickup_location', 'ticket_orders.pay_location')
-                ->select('bills.phone_number', 'bills.full_name', 'bills.email', 'bills.status_pay', 'ticket_orders.status' , 'ticket_orders.code_ticket', 'routes.name as route_name', 'trips.start_time', 'cars.license_plate', 'ticket_orders.code_seat', 'ticket_orders.pickup_location', 'ticket_orders.pay_location')
+                //                ->select('bills.phone_number', 'bills.status_pay', 'ticket_orders.code_ticket', 'routes.name as route_name', 'trips.start_time', 'cars.license_plate', 'ticket_orders.code_seat', 'bills.total_money_after_discount', 'bills.total_seat', 'ticket_orders.pickup_location', 'ticket_orders.pay_location')
+                ->select('bills.phone_number', 'bills.full_name', 'bills.email', 'bills.status_pay', 'ticket_orders.status', 'ticket_orders.code_ticket', 'routes.name as route_name', 'trips.start_time', 'cars.license_plate', 'ticket_orders.code_seat', 'ticket_orders.pickup_location', 'ticket_orders.pay_location')
                 ->selectRaw('bills.total_money_after_discount / bills.total_seat as ticket_money')
                 ->where('ticket_orders.code_ticket', $request->input('code_ticket'))
                 ->where('bills.phone_number', $request->input('phone_number'))
@@ -104,7 +128,7 @@ class TicketOrderController extends Controller
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
                 'status' => 'fail',
-//                'error' => $e->getMessage()
+                //                'error' => $e->getMessage()
             ]);
         }
     }

@@ -5,7 +5,7 @@ import { css } from '@emotion/react'
 import ButtonRadiusCompoennt from '~/app/component/parts/button/button.component'
 import { DatePicker, Select } from 'antd'
 import dayjs from 'dayjs'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { axiosPrivate } from '~/app/api/confighHTTp'
 
 const { RangePicker } = DatePicker
@@ -14,13 +14,21 @@ const { Option } = Select
 const initialFormState = {
   startLocation: '',
   endLocation: '',
-  startDate: dayjs(), 
+  startDate: dayjs(),
   endDate: dayjs(),
   ticketCount: 1
 }
 
 const FormToFromComponent = () => {
-  const [formData, setFormData] = useState<any>(initialFormState)
+  const location = useLocation()
+  const searchParams = new URLSearchParams(location.search)
+  const [formData, setFormData] = useState({
+    startLocation: searchParams.get('start_location') || '',
+    endLocation: searchParams.get('end_location') || '',
+    startDate: searchParams.get('start_time') ? dayjs(searchParams.get('start_time')) : dayjs(),
+    endDate: searchParams.get('end_time') ? dayjs(searchParams.get('end_time')) : dayjs(),
+    ticketCount: searchParams.get('ticket_count') || 1
+  })
   const [value, setValue] = useState(1)
   const [errorMessage, setErrorMessage] = useState<any>(null)
   const [searchResults, setSearchResults] = useState<any>([])
@@ -39,21 +47,6 @@ const FormToFromComponent = () => {
   }
 
   const ButtonRadiusComponent = ({ content, onClick }: any) => <button onClick={onClick}>{content}</button>
-
-  // useEffect(() => {
-  //   const fetchLocations = async () => {
-  //     try {
-  //       const response = await axiosPrivate.get('/getparentlocations')
-  //       setLocations(response.data)
-  //       const searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]')
-  //       setSearchResults(searchHistory)
-  //     } catch (error) {
-  //       console.log('Failed to fetch locations:', error)
-  //     }
-  //   }
-
-  //   fetchLocations()
-  // }, [])
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -81,40 +74,59 @@ const FormToFromComponent = () => {
     fetchLocations()
   }, [])
 
+  useEffect(() => {
+    const handlePopState = () => {
+      const storedFormData = localStorage.getItem('formData')
+      if (storedFormData) {
+        const parsedData = JSON.parse(storedFormData)
+        setFormData({
+          ...parsedData,
+          startDate: dayjs(parsedData.startDate),
+          endDate: dayjs(parsedData.endDate)
+        })
+      }
+    }
+
+    window.addEventListener('popstate', handlePopState)
+    return () => {
+      window.removeEventListener('popstate', handlePopState)
+    }
+  }, [])
+
   const handleSubmit = async (event: any) => {
     event.preventDefault()
-  
+
     try {
       const response = await axiosPrivate.get(
         `/search/trip?start_location=${formData.startLocation}&end_location=${
           formData.endLocation
         }&start_time=${formData.startDate.format('YYYY-MM-DD')}&ticket_count=${formData.ticketCount}`
       )
-  
+
       console.log('Search results:', response.data)
-  
+
       const data = await response.data
       setSearchResults(data)
-  
+
       let searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]')
       searchHistory.unshift(formData)
       if (searchHistory.length > 3) {
         searchHistory = searchHistory.slice(0, 3)
       }
       localStorage.setItem('searchHistory', JSON.stringify(searchHistory))
-  
+      localStorage.setItem('formData', JSON.stringify(formData))
+
       navigate(
         `/buy-search-results?start_location=${formData.startLocation}&end_location=${
           formData.endLocation
-        }&start_time=${formData.startDate.format('YYYY-MM-DD')}&ticket_count=${formData.ticketCount}`
+        }&start_time=${formData.startDate.format('YYYY-MM-DD')}&ticket_count=${formData.ticketCount}`,
+        { state: { formData } }
       )
-  
+
       window.location.reload()
     } catch (error) {
-      console.log('Failed to fetch data')
+      console.log('Failed to fetch data:', error)
     }
-  
-    setFormData(initialFormState)
   }
   return (
     <form onSubmit={handleSubmit}>

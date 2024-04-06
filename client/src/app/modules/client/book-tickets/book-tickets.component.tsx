@@ -6,9 +6,7 @@ import { useParams } from 'react-router-dom'
 const BooktickitsComponent = () => {
     const [selectData,setSelectData]=useState<any>([])
 
-    console.log(selectData,'ss');
     const {id:trip_id} = useParams();
-    console.log('id',trip_id);
     
     
     const [dataPrice,setDataPrice]=useState<any>(0)

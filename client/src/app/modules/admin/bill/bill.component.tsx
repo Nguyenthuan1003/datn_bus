@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import TemplateTable from '../common/template-table/template-table.component'
-import { getAllBill } from './service/bill.service'
+import { deleteBill, getAllBill } from './service/bill.service'
 // import  { getAllTypeCar } from '../type_car/service/typeCar.service'
-import { DatePicker, Form, Input, Select, Switch, Tag, TimePicker } from 'antd';
+import { DatePicker, Form, Input, Select, Skeleton, Switch, Tag, TimePicker } from 'antd';
 import viVN from 'antd/es/date-picker/locale/vi_VN';
 import { Option } from 'antd/es/mentions';
 
@@ -16,6 +16,7 @@ const BillComponent = () => {
 
     // const [column, setColumn] = useState<any>([]);
     const [dataBill, setDataBill] = useState<any>([]);
+    const [isLoading, setIsLoading] = useState(false)
     // const [dataCarTrip, setDataCarTrip] = useState<any>([]);
     // const [dataRouteTrip, setDataRouteTrip] = useState<any>([]);
     // const [selectedRouteId, setSelectedRouteId] = useState<any>({});
@@ -40,6 +41,11 @@ const BillComponent = () => {
         getAllBill().then((res) => {
             if (res) {
                 setDataBill(res?.data?.bills)
+                setIsLoading(true)
+                setTimeout(function () {
+                    setIsLoading(false)
+                }, 2000)
+     
             }
         })
     }, [])
@@ -112,19 +118,19 @@ const BillComponent = () => {
 
 
     
-    // const [reset, setReset] = useState<any>([]);
-    // useEffect(() => {
-    //     getAllBill().then((res) => {
-    //         if (res) {
-    //             setDataBill(res?.data?.bills)
-    //         }
-    //     })
-    // }, [reset])
+    const [reset, setReset] = useState<any>([]);
+    useEffect(() => {
+        getAllBill().then((res) => {
+            if (res) {
+                setDataBill(res?.data?.bills)
+            }
+        })
+    }, [reset])
 
 
-    // const handelGetList = () => {
-    //     setReset(!reset)
-    // }
+    const handelGetList = () => {
+        setReset(!reset)
+    }
 
 
     // const fomatCustomCurrent = (data: any) => {
@@ -192,10 +198,13 @@ const BillComponent = () => {
         //     />
         // </div >
         <div>
-            <TemplateModelBill 
+            {
+                isLoading ? <Skeleton /> : (
+                    <TemplateModelBill 
                 title={`Danh sách hóa đơn `}
                 dataTable={dataBill}
-                  deleteFunc={"huydon hang"}
+                  deleteFunc={deleteBill}
+                  callBack={handelGetList}
                 // columnTable={column}
                 // onRef={(ref) => (this.child = ref)}
                 // handleSearch={handleSearch}
@@ -208,6 +217,8 @@ const BillComponent = () => {
                 // onShowSizeChange={onShowSizeChange}
                 // onChange={onChange}
             />
+                )
+            }
         </div>
     )
 }

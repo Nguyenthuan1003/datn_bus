@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\StatisticalController;
 use App\Http\Controllers\SeatController;
 use App\Http\Controllers\RouteController;
 use App\Http\Controllers\ParentLocationController;
@@ -35,6 +36,18 @@ Route::group(['prefix' => 'user'], function () {
     Route::get('edit/{id}', [UserController::class, 'show']);
     Route::put('update/{id}', [UserController::class, 'update']);
     Route::delete('delete/{id}', [UserController::class, 'destroy']);
+    Route::post('update2', [UserController::class, 'update2']);
+});
+
+
+Route::group(['prefix' => 'statistical'], function () {
+    Route::get('home', [StatisticalController::class, 'home']);
+    Route::get('general', [StatisticalController::class, 'general']);
+    Route::get('revenue-trip-year', [StatisticalController::class, 'revenueTripYear']);
+    Route::get('revenue-trip-about', [StatisticalController::class, 'revenueTripAbout']);
+    Route::get('user', [StatisticalController::class, 'user']);
+    Route::get('route', [StatisticalController::class, 'route']);
+    Route::get('route-for-year', [StatisticalController::class, 'routeForYear']);
 });
 
 Route::group(['prefix' => 'route'], function () {
@@ -44,6 +57,7 @@ Route::group(['prefix' => 'route'], function () {
     Route::put('update/{id}', [RouteController::class, 'update']);
     Route::delete('delete/{id}', [RouteController::class, 'destroy']);
 });
+
 Route::group(['prefix' => 'parent-location'], function () {
     Route::get('/', [ParentLocationController::class, 'index']);
     Route::post('store', [ParentLocationController::class, 'store']);
@@ -59,6 +73,7 @@ Route::group(['prefix' => 'locations'], function () {
     Route::put('update/{id}', [LocationController::class, 'update']);
     Route::delete('delete/{id}', [LocationController::class, 'destroy']);
 });
+
 Route::group(['prefix' => 'trip'], function () {
     Route::get('', [TripController::class, 'index']);
     Route::get('create', [TripController::class, 'create']);
@@ -119,11 +134,13 @@ Route::group(['prefix' => 'type-user'], function () {
 });
 
 Route::get('search/trip', [TripController::class, 'searchTrip']);
+
 Route::get('getparentlocations', [TripController::class, 'getParentLocations']);
 
 Route::group(['prefix' => 'payment'], function () {
     Route::post('/', [PaymentController::class, 'create']);
 });
+
 Route::group(['prefix' => 'bill'], function () {
     Route::get('', [BillController::class, 'index']);
     Route::post('store', [BillController::class, 'store']);
@@ -135,7 +152,9 @@ Route::group(['prefix' => 'bill'], function () {
     Route::post('checkin', [BillController::class, 'checkin']);
     Route::get('find-bill', [BillController::class, 'findBill']);
 });
+
 Route::resource('role', App\Http\Controllers\RoleController::class)->except('create', 'edit');
+
 Route::group(['prefix' => 'ticket'], function () {
     Route::get('', [TicketOrderController::class, 'index']);
     Route::post('store', [TicketOrderController::class, 'store']);
@@ -153,4 +172,5 @@ Route::post('me', [AuthController::class, 'me']);
 
 // reset password
 Route::post('forgotpassword', [AuthController::class, 'forgotPasswordSubmit'])->name('forgot.password.submit');
+
 Route::get('rt/seat', [TripController::class, 'realTimeSeat']);

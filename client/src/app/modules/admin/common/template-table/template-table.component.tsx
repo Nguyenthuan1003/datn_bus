@@ -58,7 +58,10 @@ const TemplateTable:FC<ITemplateTable> = (
         //   }
         if(type=='CREATE'){
             form.validateFields().then((value:any)=>{
-                createFunc(value).then((res:any)=>{
+                console.log(value);
+                
+                createFunc(value)
+                .then((res:any)=>{
                     if(res){
                         callBack(res.data)
                        message.success("thêm thành công") 

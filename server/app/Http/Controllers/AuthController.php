@@ -55,6 +55,7 @@ class AuthController extends Controller
                 ->firstOrFail();
 
             $userDataFormated = [
+                "id" => $userData->id ?? "",
                 "name" => $userData->name ?? "",
                 "email" => $userData->email ?? "",
                 "phone_number" => $userData->phone_number ?? "",

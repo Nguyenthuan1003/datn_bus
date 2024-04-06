@@ -5,7 +5,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import SuccessComponent from '../success/success.component';
 import { Spin } from 'antd';
 import { Link } from 'react-router-dom';
-
+import { useLocation , useNavigate } from 'react-router-dom';
 const ResultPage = () => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [updateSuccess, setUpdateSuccess] = useState(false);
@@ -13,8 +13,15 @@ const ResultPage = () => {
   const [successData, setSuccessData] = useState<any>({});
   const [billUpdated, setBillUpdated] = useState(false);
   const [id,setId]  = useState();
+  const location = useLocation();
+  const route = localStorage.getItem('route');
+  const dataBill: any = localStorage.getItem('bill_user');
+  const ObDataBill = JSON.parse(dataBill);
+  const currentId = ObDataBill?.id;
+  const navigate = useNavigate()
+
   console.log('id',billUpdated);
-  
+  console.log("currentId12222222",currentId);
   console.log('Result Page', successData);
   useEffect(() => {
     const fetchDataAndUpdate = async () => {
@@ -26,14 +33,24 @@ const ResultPage = () => {
         const urlParams = new URLSearchParams(window.location.search);
         const responseCode = urlParams.get('vnp_ResponseCode');
 
-        const dataBill: any = localStorage.getItem('bill_user');
-        const route = localStorage.getItem('route');
-        const ObDataBill = JSON.parse(dataBill);
-        const currentId = ObDataBill?.id;
+        
+        console.log(1);
+        console.log("billUpdated1",billUpdated);
+        console.log("updateSuccess1",updateSuccess);
+        console.log("responseCode1",responseCode);
+        console.log("currentId1",currentId);
 
-        if (responseCode === '00' && !updateCalled && currentId) {
+        
+        
+        if (responseCode === '00') {
           setIsUpdating(true);
-          setUpdateCalled(true);
+          console.log("billUpdated",billUpdated);
+          console.log("updateSuccess",updateSuccess);
+          console.log("updateCalled",updateCalled);
+          
+          console.log(2);
+          
+          // setUpdateCalled(true);
           const splipRoute: any = route?.split("-");
           const idUpdate = currentId;
           const dataUpdate = {
@@ -51,19 +68,30 @@ const ResultPage = () => {
           await new Promise((resolve) => setTimeout(resolve, 2000));
 
           const res = await updateBillAndSendMail(idUpdate, dataUpdate);
-          setUpdateSuccess(true);
-          setSuccessData(res?.data);
-          setIsUpdating(false);
-          setBillUpdated(true);
+          if(res?.data?.message == "Cập nhật đơn hàng thành công"){
+            const urlWithoutQueryParams = location.pathname;
+            setUpdateSuccess(true);
+            setSuccessData(res?.data);
+            setIsUpdating(false);
+            // setBillUpdated(true);
+            console.log(res.data);
+            navigate(urlWithoutQueryParams)
+          }else{
+              const urlWithoutQueryParams = location.pathname;
+              navigate(urlWithoutQueryParams)
+              alert('đơn hàng chưa thanh toán thành công vui lòng thử lại ')
+          }
+     
         }
       } catch (error) {
         console.error("Update failed:", error);
+        window.location.href="/"
         setIsUpdating(false);
       }
     };
 
     fetchDataAndUpdate();
-  }, [billUpdated, updateCalled]);
+  }, []);
   return (
     <div className=''>
       {isUpdating && (
