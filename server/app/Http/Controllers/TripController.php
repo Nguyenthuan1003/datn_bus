@@ -506,6 +506,86 @@ class TripController extends Controller
         }
     }
 
+    /**
+     * Get trip data frontend for select trip.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function tripDetail($id)
+    {
+        try {
+            $tripData = Trip::with(['car', 'route'])->find($id);
+
+//            mess này của tìm kiếm ngoài frontend nên sẽ lệch 4 tiếng
+            if (!$tripData ||  \Carbon\Carbon::parse($tripData->start_time)->subHours(4)->isBefore(now())) {
+                return response()->json([
+                    'message' => 'Chuyến đi không tồn tại',
+                    "status" => "fail"
+                ]);
+            }
+
+            // get data type car to each show seats
+            $type_car = TypeCar::find($tripData->car->id_type_car);
+
+            //seats and status seats
+            $seats = Seat::where('car_id', $tripData->car_id)->get()->toArray();
+            $orderedSeats = TicketOrder::join('bills', 'ticket_orders.bill_id', '=', 'bills.id')
+                ->join('trips', 'bills.trip_id', '=', 'trips.id')
+                ->where('trips.id', $id)
+                ->select('ticket_orders.code_seat', 'bills.created_at', 'bills.status_pay')
+                ->get();
+
+            $seat_count_booked = 0;
+            $seat_count_pending = 0;
+
+            foreach ($seats as &$seat) {
+                $seat['status'] = 'unbooked';
+                $seat['count_unbooked'] = 0;
+                foreach ($orderedSeats as $orderedSeat) {
+                    if ($seat['code_seat'] == $orderedSeat->code_seat) {
+                        if ( $orderedSeat->status_pay == 1) {
+                            $seat['status'] = 'booked';
+                            $seat_count_booked++;
+                        } elseif ($orderedSeat->status_pay == 0 && !$orderedSeat->created_at->addMinutes(20)->isBefore(now())) {
+                            $seat['status'] = 'pending';
+                            $seat_count_pending++;
+                        }
+
+                        if ($orderedSeat->status_pay == 0 && $orderedSeat->created_at->addMinutes(20)->isBefore(now())) {
+                            $seat['count_unbooked'] += 1;
+                        }
+                    }
+                }
+            }
+
+            $seat_count_unbooked = $type_car->total_seat - $seat_count_booked - $seat_count_pending;
+
+            //  get locations for router
+            $pickupLocations = ParentLocation::with('location')->where('name', $tripData->route->start_location)->first();
+            $payLocation = ParentLocation::with('location')->where('name', $tripData->route->end_location)->first();
+
+            return response()->json([
+                'message' => 'Truy vấn dữ liệu thành công',
+                'type_car' => $type_car,
+                'trip' => $tripData,
+                'seats' => $seats,
+                'pickup_location' => $pickupLocations,
+                'pay_location' => $payLocation,
+                'seat_count_booked' => $seat_count_booked,
+                'seat_count_unbooked' => $seat_count_unbooked,
+                'seat_count_pending' => $seat_count_pending,
+                "status" => "success",
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
+                "status" => "fail"
+//                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
     public function searchTrip(Request $request)
     {
         $rtGetSeatData = $this->getSeatDataService->rtGetSeatData();
