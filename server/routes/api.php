@@ -76,6 +76,7 @@ Route::group(['prefix' => 'locations'], function () {
 
 Route::group(['prefix' => 'trip'], function () {
     Route::get('', [TripController::class, 'index']);
+    Route::get('statistical', [TripController::class, 'indexTripStatistical']);
     Route::get('create', [TripController::class, 'create']);
     Route::get('locations-for-route/{routeId}', [TripController::class, 'getLocationsForRoute']);
     Route::post('store', [TripController::class, 'store']);
