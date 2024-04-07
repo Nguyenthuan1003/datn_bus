@@ -1,0 +1,273 @@
+import React, { FC, Fragment, useEffect, useState } from 'react';
+import { Button, Descriptions, DescriptionsProps, Form, Input, Modal, Popconfirm, Select, Table, message } from 'antd'
+import { MdDeleteForever } from "react-icons/md";
+import { MdOutlineBrowserUpdated } from "react-icons/md";
+import TemplateModal from '../template-model/template-model.component';
+import { Option } from 'antd/es/mentions';
+import { IoEyeSharp } from 'react-icons/io5';
+import { log } from 'console';
+interface ITemplateTable {
+    title: any,
+    formEdit?: any,
+    dataTable?: any,
+    columnTable?: any
+    deleteFunc?: any
+    createFunc?: any
+    callBack?: any
+    changeFunc?: any
+    dataId?: any
+    buttonAdd?: any,
+    formDetail?:any,
+    dataDetail?:any
+}
+const TemplateTableTrip: FC<ITemplateTable> = (
+    {
+        formEdit,
+        dataTable,
+        columnTable,
+        deleteFunc,
+        createFunc,
+        callBack,
+        changeFunc,
+        title,
+        dataId,
+        buttonAdd,
+    }) => {
+    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [obJectDetail, setObjectDetail] = useState({})
+    const [type, setType] = useState('CREATE')
+    const [defaultValue, setDefaultValue] = useState<any>(null)
+    const [form] = Form.useForm()
+    const [detailRecord, setDetailRecord] = useState<any>()
+        
+
+    // const [current, setCurrent] = useState(null);
+    // console.log(current)
+    const showModal = (typeAction: string, recordTable?: any) => {
+        setIsModalOpen(true);
+        setType(typeAction)
+        setObjectDetail({
+            carName:recordTable?.car?.name
+        })
+        if (typeAction == "CHANGE") {
+            // setCurrent(recordTable
+            setDefaultValue(recordTable)
+            dataId(recordTable)
+            form.setFieldsValue(recordTable)
+        }
+        else {
+            form.resetFields()
+        }
+
+        if (typeAction == "DETAIL") {    
+            setDetailRecord(recordTable);            
+        }
+    };
+    const items: DescriptionsProps['items'] = [
+        {
+            key: "1",
+            label: "tên xe",
+            children: detailRecord?.car?.name
+        },
+        {
+            key: "2",
+            label: "Biển số xe",
+            children: detailRecord?.car?.license_plate
+        }
+
+    ]
+    const handleOk = () => {
+        // if (form.getFieldValue('image')) {
+        //     const dataList = [...form.getFieldValue('image')].map((item: any) => (console.log(item)))
+
+        //     form.setFieldsValue({
+        //       images: dataList
+        //     })
+        //   }
+        if (type == 'CREATE') {
+            form.validateFields().then((value: any) => {
+                console.log(value);
+
+                createFunc(value)
+                    .then((res: any) => {
+                        if (res) {
+                            callBack(res.data)
+                            message.success("thêm thành công")
+                        }
+                    })
+                form.resetFields()
+            })
+        }
+
+        if (type === 'CHANGE') {
+            form.validateFields().then((value: any) => {
+                // Kiểm tra xem dữ liệu có thay đổi hay không
+                const isDataChanged = Object.keys(value).some(key => value[key] !== defaultValue[key]);
+                if (isDataChanged) {
+                    // Nếu có thay đổi, thực hiện cập nhật
+                    changeFunc(value, defaultValue.id).then((res: any) => {
+                        if (res) {
+                            callBack(res.data);
+                            message.success('Cập nhật thành công');
+
+                        }
+                    });
+                } else {
+                    // Nếu không có thay đổi, hiển thị thông báo
+                    message.warning('Cập nhật không có thay đổi');
+                }
+                form.resetFields();
+            });
+        }
+
+
+        setIsModalOpen(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
+    const cancel = (e: any) => {
+        message.info('huỷ xoá');
+    };
+    const confirmDelete = (itemId: any) => {
+        deleteFunc(itemId).then((res: any) => {
+            if (res) {
+                callBack(res.data)
+                message.success('xoá thành công');
+            }
+            else {
+                message.error('xoá thất bại');
+            }
+        })
+    };
+
+    const columns: any = [
+        {
+            title: 'STT', // Tiêu đề cột số thứ tự
+            dataIndex: 'stt', // Khai báo dataIndex, giá trị này sẽ được sử dụng trong render
+            render: (text: any, record: any, index: number) => {
+                return index + 1; // Sử dụng index để tạo số thứ tự, bắt đầu từ 1
+            },
+        },
+        ...columnTable,
+        {
+            title: 'Thao tác',
+            key: "action",
+            render: (_: any, record: any) => {
+                return (
+                    <div className='flex'>
+                        <div className='px-2'>
+                            <Popconfirm
+                                title="xác nhận xoá"
+                                description="bạn có chắc chắn muốn xoá không ?"
+                                onConfirm={() => confirmDelete(record.id)}
+                                onCancel={cancel}
+                                okText="Yes"
+                                cancelText="No"
+                            >       <button
+                                className='text-[23px] text-red-600'
+                                title={`Xoá theo ID: ${record.id}`}
+                            >
+                                    <MdDeleteForever />
+                                </button>
+                            </Popconfirm>
+                        </div>
+
+                        <div className='px-2'>
+                            <button
+                                className='text-[23px] text-blue-600' onClick={() => showModal('CHANGE', record)}
+                                title={`Cập nhật Truyến đi : ${record.route.name}`}
+                            >
+                                <MdOutlineBrowserUpdated />
+                            </button>
+                        </div>
+
+                        <div className='px-2'>
+                            <IoEyeSharp
+                                onClick={() => showModal('DETAIL', record)}
+                                className='text-[23px] cursor-pointer text-green-500 hover:text-green-700 dark:hover:text-green-800 '
+                                style={{ cursor: 'pointer' }}
+                                title={`Chi tiết chuyến đi: ${record.id}`}
+                            />
+                        </div>
+
+                    </div>
+                )
+            }
+        },
+    ];
+
+
+
+    const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+        console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+        setSelectedRowKeys(newSelectedRowKeys);
+    };
+
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: onSelectChange,
+    };
+    return (
+        <div>
+            <div className='pb-4 text-[20px] font-semibold'>
+                {title}
+            </div>
+
+            <hr className='py-3' />
+            {buttonAdd && (
+                <button className='p-3 bg-success text-white w-[150px] text-center font-medium rounded-md' onClick={() => showModal('CREATE')}>
+                    Thêm mới +
+                </button>
+            )}
+            <div className='flex mb-4 mt-4'>
+                <div>
+                    <input type="datetime-local" />
+                </div>
+                <div className='px-3'>
+                    <Select placeholder="-- Chọn tuyến đường --">
+                        <Option value="1" />
+                    </Select>
+                </div>
+                <div className='px-3'>
+                    <Select placeholder="-- Chọn điểm đi --">
+                        <Option value="1" />
+                    </Select>
+                </div>
+
+                <div className='px-3'>
+                    <Select placeholder="-- Chọn điểm đến --">
+                        <Option value="1" />
+                    </Select>
+                </div>
+            </div>
+            <hr className='py-3' />
+            <Table rowSelection={rowSelection} columns={columns} dataSource={dataTable} />
+            <div className=''>
+                <TemplateModal
+                    title={type === "CREATE" ? 'Thêm mới' : type === "CHANGE" ? 'Cập nhật' : 'Chi tiết'} isModalOpen={isModalOpen} handleOk={handleOk} handleCancel={handleCancel}
+                    actionType={type}
+                    
+                >
+                    {
+                        type == 'DETAIL' ? (
+                                <div>
+                                      <Descriptions title="THÔNG TIN XE " items={items} />
+                                </div>
+                        ) : (
+                            <Form form={form} layout='vertical' name='form_in_modal'>
+                                {formEdit}
+                            </Form>
+                        )
+                    }
+
+                </TemplateModal>
+
+            </div>
+        </div>
+    )
+}
+
+export default TemplateTableTrip

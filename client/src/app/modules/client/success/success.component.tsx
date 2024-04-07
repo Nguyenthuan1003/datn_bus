@@ -60,6 +60,11 @@ const SuccessComponent = () => {
           setTimeout(() => {
             localStorage.removeItem('bill_user');
             localStorage.removeItem('cart');
+            localStorage.removeItem('route');
+            localStorage.removeItem('seat_id');
+            localStorage.removeItem('seat');
+            localStorage.removeItem('location');
+
           }, 3000); // Đợi 3 giây trước khi xóa localStorage
         }
       } catch (error) {

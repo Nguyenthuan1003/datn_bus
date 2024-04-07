@@ -9,12 +9,12 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { validateTicket } from '~/app/utils/validateForm';
 import { addBill } from '~/app/api/bill/bill.api';
-import { message } from 'antd';
+import { Spin, message } from 'antd';
 import { useCartRedux } from '../../redux/hook/useCartReducer';
 import { useNavigate } from 'react-router-dom';
 import { getTripId } from '~/app/api/trip/trip.api';
 import { getOneUser } from '~/app/api/auth/auth.api';
-import { assert } from 'console';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, selectData, dataPrice, seat_id }) => {
     const accsetoken: any = localStorage.getItem('token')
@@ -39,14 +39,12 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
 
     const [startLocation, setStartLocation] = useState<any>();
     const [endLocation, setEndLocation] = useState<any>();
-    // const [seatId , setSeatId] = useState<any>()
+    const [loading, setLoading] = useState(false);
 
     const [idUser, setIdUser] = useState<any>()
     const [route, setRoute] = useState<any>()
 
-    // console.log("route",route);
-    // const seatId = localStorage.getItem('seat_id')
-    const seatId = localStorage.getItem('seat_id')
+
 
     useEffect(() => {
         getTripId(trip_id).then((res) => {
@@ -68,18 +66,10 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
     };
 
 
-    // const billUser = localStorage.getItem("bill_user") ? JSON.parse(localStorage.getItem("bill_user")!) : [];
-   
-
-
-    // useEffect( ()=>{
-    //     if(dataBillUser){
-    //         console.log("Bill User", dataBillUser);
-    //     }
-    // },[])
-
     const { data: { cart }, actions } = useCartRedux()
-
+    console.log('cart',cart);
+    console.log('slect',selectData);
+    
 
 
     const navigate = useNavigate()
@@ -101,7 +91,8 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
                 total_money_after_discoun: dataPrice,
                 // seat_id: selectData,
                 // seat_id: JSON.stringify(selectData),
-                seat_id: selectData.map((seat: string) => `'${seat}'`).join(', '),
+                // seat_id: selectData.map((seat: string) => `'${seat}'`).join(', '),
+                seat_id: JSON.stringify(selectData),      
                 trip_id: trip_id,
                 location: locationData,
                 pickup_location: locationData?.start_location,
@@ -127,7 +118,9 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
                     total_money: dataPrice,
                     total_money_after_discount: dataPrice,
                     code_seat: selectData.map((seat: string) => `'${seat}'`).join(', '),
-                    seat_id: selectData.map((seat: string) => `'${seat}'`).join(', '),
+                    // seat_id: selectData.map((seat: string) => `'${seat}'`).join(', '),
+                    // code_seat: JSON.stringify(selectData),
+                    seat_id: JSON.stringify(selectData),
                     trip_id: trip_id,
                     status_pay: "0",
                     type_pay: "0",
@@ -147,25 +140,27 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
                 const dataBillUser = localStorage.getItem("bill_user");
                 const objBillUser = JSON.parse(dataBillUser!);
                 console.log('ssss',objBillUser)
-                localStorage.setItem('cart', JSON.stringify(actions.setDataBill({
-                full_name: data?.name,
-                phone_number: data?.phone_number,
-                email: data?.email,
-                total_money: dataPrice,
-                total_money_after_discoun: dataPrice,
-                total_seat: selectData?.length,
-                // seat_id: selectData,
-                code_seat: selectData.map((seat: string) => `'${seat}'`).join(', '),
-                seat_id: selectData.map((seat: string) => `'${seat}'`).join(', '),
-                trip_id: trip_id,
-                location: locationData,
-                route: route,
-                code_bill: objBillUser?.code_bill,
-             
-                user_id: idUser || null,
-                discount_code_id: null
-            })));
-            
+    
+            const dataCart = actions.setDataBill({
+                    full_name: data?.name,
+                    phone_number: data?.phone_number,
+                    email: data?.email,
+                    total_money: dataPrice,
+                    total_money_after_discoun: dataPrice,
+                    total_seat: selectData?.length,
+                    // seat_id: selectData,
+                    code_seat: selectData.map((seat: string) => `'${seat}'`).join(', '),
+                    seat_id: selectData,
+                    trip_id: trip_id,
+                    location: locationData,
+                    route: route,
+                    code_bill: objBillUser?.code_bill,
+                    user_id: idUser || null,
+                    discount_code_id: null
+                })
+            const dataCartTolocal = dataCart.payload;
+            localStorage.setItem("cart",JSON.stringify(dataCartTolocal))
+          
             
         } catch (error: any) {
             if (error.response) {
@@ -179,29 +174,46 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
                 console.error('Error:', error.message);
             }
         }
-        navigate("/payment")
+        setLoading(true);
+        setTimeout(() => {
+          navigate(`/payment`);
+          
+        }, 5000); // Thời gian delay: 1000ms = 1 giây
+        // navigate(`/payment?codeBook=${cart?.code_bill}&phone=${cart?.phone_number}`)
     };
 
     return (
         <div css={leftBookCss}>
-            <form onSubmit={handleSubmit(onSubmit)} >
-                <div className='py-4 '>
-                    <BreadCrumb dataTrip={dataTrip} />
-                </div>
-                <div>
-                    <CheckChaircomponent seat_id={seat_id} trip_id={trip_id} setSelectData={setSelectData} setDataPrice={setDataPrice} />
-                </div>
-                <div>
-                    <CustomerInformation trip_id={trip_id} control={control} errors={errors} />
-                </div>
-                <div className='py-4'>
-                    {/* setSelectData={setSelectLocation}  */}
-                    <Reception trip_id={trip_id} />
-                </div>
-                <div className='py-4'>
-                    <FutapayComponent trip_id={trip_id} selectData={selectData} dataPrice={dataPrice} setSelectData={setSelectData} setDataPrice={setDataPrice} />
-                </div>
-            </form>
+           {loading && (
+                 <div className="fixed inset-0 z-50 bg-black opacity-50"></div>
+             )}
+             {
+                loading  ?  (
+                    <div className="fixed z-50 transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+                        <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} />
+                    </div>
+                ) : (
+                    <form onSubmit={handleSubmit(onSubmit)} >
+                    <div className='py-4 '>
+                        <BreadCrumb dataTrip={dataTrip} />
+                    </div>
+                    <div>
+                        <CheckChaircomponent seat_id={seat_id} trip_id={trip_id} setSelectData={setSelectData} setDataPrice={setDataPrice} />
+                    </div>
+                    <div>
+                        <CustomerInformation trip_id={trip_id} control={control} errors={errors} />
+                    </div>
+                    <div className='py-4'>
+                        {/* setSelectData={setSelectLocation}  */}
+                        <Reception trip_id={trip_id} />
+                    </div>
+                    <div className='py-4'>
+                        <FutapayComponent trip_id={trip_id} selectData={selectData} dataPrice={dataPrice} setSelectData={setSelectData} setDataPrice={setDataPrice} />
+                    </div>
+                </form>
+                )
+             }
+          
         </div>
     );
 };
