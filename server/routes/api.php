@@ -36,6 +36,7 @@ Route::group(['prefix' => 'user'], function () {
     Route::get('edit/{id}', [UserController::class, 'show']);
     Route::put('update/{id}', [UserController::class, 'update']);
     Route::delete('delete/{id}', [UserController::class, 'destroy']);
+    Route::post('update2', [UserController::class, 'update2']);
 });
 
 
@@ -82,6 +83,7 @@ Route::group(['prefix' => 'trip'], function () {
     Route::put('update/{id}', [TripController::class, 'update']);
     Route::delete('delete/{id}', [TripController::class, 'destroy']);
     Route::get('trip-select/{id}', [TripController::class, 'tripSelect']);
+    Route::get('trip-detail/{id}', [TripController::class, 'tripDetail']);
 });
 
 Route::group(['prefix' => 'type-discount-code'], function () {
