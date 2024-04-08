@@ -20,9 +20,8 @@ class UserController extends Controller
 
             return response()->json(['message' => 'Lấy dữ liệu thành công', 'uesrs' => $users]);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Có lỗi trong quá trình lấy dữ liệu','error' => $e->getMessage()]);
+            return response()->json(['message' => 'Có lỗi trong quá trình lấy dữ liệu', 'error' => $e->getMessage()]);
         }
-        
     }
 
     public function show($userId)
@@ -36,9 +35,8 @@ class UserController extends Controller
 
             return response()->json(['message' => 'Lấy dữ liệu thành công', 'uesr' => $user]);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Có lỗi trong quá trình lấy dữ liệu','error' => $e->getMessage()]);
+            return response()->json(['message' => 'Có lỗi trong quá trình lấy dữ liệu', 'error' => $e->getMessage()]);
         }
-        
     }
 
     public function store(Request $request)
@@ -56,7 +54,7 @@ class UserController extends Controller
                 'avatar' => 'nullable',
                 'location' => 'nullable',
             ], $this->getValidationMessages());
-    
+
             $user = new User();
             $user->user_type_id = $request->input('user_type_id');
             $user->email = $request->input('email');
@@ -69,10 +67,10 @@ class UserController extends Controller
             $user->avatar = $request->input('avatar');
             $user->location = $request->input('location');
             $user->save();
-    
+
             return response()->json(['message' => 'Thêm mới người dùng thành công', 'uesr' => $user]);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Có lỗi trong quá trình  thêm người dùng','error' => $e->getMessage()]);
+            return response()->json(['message' => 'Có lỗi trong quá trình  thêm người dùng', 'error' => $e->getMessage()]);
         }
     }
 
@@ -95,13 +93,13 @@ class UserController extends Controller
                 'avatar' => 'nullable',
                 'location' => 'nullable',
             ], $this->getValidationMessages());
-    
+
             $user = User::find($userId);
-    
+
             if (!$user) {
                 return response()->json(['message' => 'User not found'], 404);
             }
-    
+
             $user->user_type_id = $request->input('user_type_id');
             $user->email = $request->input('email');
             $user->role_id = $request->input('role_id');
@@ -113,12 +111,11 @@ class UserController extends Controller
             $user->avatar = $request->input('avatar');
             $user->location = $request->input('location');
             $user->save();
-    
+
             return response()->json(['message' => 'Cập nhật người dùng thành công', 'uesr' => $user]);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Có lỗi trong quá trình  cập nhật người dùng','error' => $e->getMessage()]);
+            return response()->json(['message' => 'Có lỗi trong quá trình  cập nhật người dùng', 'error' => $e->getMessage()]);
         }
-        
     }
 
     public function destroy($userId)
@@ -170,14 +167,14 @@ class UserController extends Controller
                 'location' => 'nullable',
                 'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5048', // max size 5MB
             ]);
-        
+
             $user = User::find($request->input('id'));
-        
+
             // Check if the user exists
             if (!$user) {
                 return response()->json(['message' => 'User not found'], 404);
             }
-        
+
             // Update the user fields if they are provided in the request
             if ($request->has('name')) {
                 $user->name = $request->input('name');
@@ -197,24 +194,23 @@ class UserController extends Controller
             if ($request->has('avatar')) {
                 $saveImageTo = 'images/avatar';
                 $image = $request->file('avatar');
-        
+
                 $imageName = time() . '.' . $image->getClientOriginalExtension();
                 $image->storeAs($saveImageTo, $imageName, 'public');
-        
-                $user->avatar = Storage::url($saveImageTo . '/' . $imageName);
+                $imageTruePath = substr(Storage::url($saveImageTo . '/' . $imageName), 1);
+                $user->avatar = $imageTruePath;
             }
-        
+
             // Save the user model
             $user->save();
-        
+
             return response()->json(['message' => 'Cập nhật người dùng thành công', 'user' => $user]);
         } catch (ValidationException $e) {
             // Return validation error messages if validation fails
             return response()->json(['error' => $e->errors()], 422);
         } catch (\Exception $e) {
             // Return general error message for other exceptions
-            return response()->json(['message' => 'Có lỗi trong quá trình cập nhật người dùng','error' => $e->getMessage()], 422);
+            return response()->json(['message' => 'Có lỗi trong quá trình cập nhật người dùng', 'error' => $e->getMessage()], 422);
         }
     }
-
 }
