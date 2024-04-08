@@ -76,6 +76,7 @@ Route::group(['prefix' => 'locations'], function () {
 
 Route::group(['prefix' => 'trip'], function () {
     Route::get('', [TripController::class, 'index']);
+    Route::get('statistical', [TripController::class, 'indexTripStatistical']);
     Route::get('create', [TripController::class, 'create']);
     Route::get('locations-for-route/{routeId}', [TripController::class, 'getLocationsForRoute']);
     Route::post('store', [TripController::class, 'store']);
@@ -83,6 +84,7 @@ Route::group(['prefix' => 'trip'], function () {
     Route::put('update/{id}', [TripController::class, 'update']);
     Route::delete('delete/{id}', [TripController::class, 'destroy']);
     Route::get('trip-select/{id}', [TripController::class, 'tripSelect']);
+    Route::get('trip-detail/{id}', [TripController::class, 'tripDetail']);
 });
 
 Route::group(['prefix' => 'type-discount-code'], function () {
