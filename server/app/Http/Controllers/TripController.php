@@ -25,6 +25,7 @@ class TripController extends Controller
     {
         $this->getSeatDataService = $getSeatDataService;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -33,7 +34,7 @@ class TripController extends Controller
     public function index()
     {
         try {
-            $currentDateTime =  \Carbon\Carbon::now();
+            $currentDateTime = \Carbon\Carbon::now();
             $allTrips = Trip::with(['car', 'route'])
                 ->get();
             $notStartedTrips = Trip::with(['car', 'route'])
@@ -125,7 +126,7 @@ class TripController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
@@ -243,7 +244,7 @@ class TripController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
@@ -275,8 +276,8 @@ class TripController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $id)
@@ -397,7 +398,7 @@ class TripController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function destroy($id)
@@ -444,7 +445,7 @@ class TripController extends Controller
     /**
      * Get trip data frontend for select trip.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function tripSelect($id)
@@ -453,7 +454,7 @@ class TripController extends Controller
             $tripData = Trip::with(['car', 'route'])->find($id);
 
 //            mess này của tìm kiếm ngoài frontend nên sẽ lệch 4 tiếng
-            if (!$tripData ||  \Carbon\Carbon::parse($tripData->start_time)->subHours(4)->isBefore(now())) {
+            if (!$tripData || \Carbon\Carbon::parse($tripData->start_time)->subHours(4)->isBefore(now())) {
                 return response()->json([
                     'message' => 'Chuyến đi không tồn tại',
                     "status" => "fail"
@@ -509,7 +510,7 @@ class TripController extends Controller
     /**
      * Get trip data frontend for select trip.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function tripDetail($id)
@@ -518,7 +519,7 @@ class TripController extends Controller
             $tripData = Trip::with(['car', 'route'])->find($id);
 
 //            mess này của tìm kiếm ngoài frontend nên sẽ lệch 4 tiếng
-            if (!$tripData ||  \Carbon\Carbon::parse($tripData->start_time)->subHours(4)->isBefore(now())) {
+            if (!$tripData || \Carbon\Carbon::parse($tripData->start_time)->subHours(4)->isBefore(now())) {
                 return response()->json([
                     'message' => 'Chuyến đi không tồn tại',
                     "status" => "fail"
@@ -544,7 +545,7 @@ class TripController extends Controller
                 $seat['count_unbooked'] = 0;
                 foreach ($orderedSeats as $orderedSeat) {
                     if ($seat['code_seat'] == $orderedSeat->code_seat) {
-                        if ( $orderedSeat->status_pay == 1) {
+                        if ($orderedSeat->status_pay == 1) {
                             $seat['status'] = 'booked';
                             $seat_count_booked++;
                         } elseif ($orderedSeat->status_pay == 0 && !$orderedSeat->created_at->addMinutes(20)->isBefore(now())) {
@@ -582,6 +583,63 @@ class TripController extends Controller
                 'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
                 "status" => "fail"
 //                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function indexTripStatistical(Request $request)
+    {
+        try {
+            $request->validate([
+                'start_date' => 'required|date',
+                'end_date' => 'required|date',
+            ]);
+
+            $trips = Trip::with(['car', 'route'])
+                ->where('start_time', '>=', $request->input('start_date'))
+                ->where('start_time', '<=', $request->input('end_date'))
+                ->get()->toArray();
+
+            foreach ($trips as &$trip) {
+                $trip['total_seat'] = TypeCar::find($trip['car']['id_type_car'])->total_seat;
+                $trip['seat_count_booked'] = 0;
+                $trip['seat_count_pending'] = 0;
+                $seats = Seat::where('car_id', $trip['car_id'])->get()->toArray();
+                $orderedSeats = TicketOrder::join('bills', 'ticket_orders.bill_id', '=', 'bills.id')
+                    ->join('trips', 'bills.trip_id', '=', 'trips.id')
+                    ->where('trips.id', $trip['id'])
+                    ->select('ticket_orders.code_seat', 'bills.created_at', 'bills.status_pay')
+                    ->get();
+
+
+                foreach ($seats as &$seat) {
+                    foreach ($orderedSeats as $orderedSeat) {
+                        if ($seat['code_seat'] == $orderedSeat->code_seat) {
+                            if ($orderedSeat->status_pay == 1) {
+                                $trip['seat_count_booked']++;
+                            } elseif ($orderedSeat->status_pay == 0 && !$orderedSeat->created_at->addMinutes(20)->isBefore(now())) {
+                                $trip['seat_count_pending']++;
+                            }
+                        }
+                    }
+                }
+
+                $trip['seat_count_unbooked'] = $trip['total_seat'] - $trip['seat_count_booked'] - $trip['seat_count_pending'];
+                $trip['fill_rate'] = round($trip['seat_count_booked'] / $trip['total_seat'], 2) * 100;
+                $trip['fill_pending_rate'] = round($trip['seat_count_pending'] / $trip['total_seat'], 2) * 100;
+                $trip['fill_unbooked_rate'] = 100 - $trip['fill_rate'] - $trip['fill_pending_rate'];
+            }
+
+            return response()->json([
+                'message' => 'Truy vấn dữ liệu thành công',
+                'trips' => $trips,
+                "status" => "success",
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Đã xảy ra lỗi khi truy vấn dữ liệu',
+//                'error' => $e->getMessage(),
+                "status" => "fail"
             ]);
         }
     }
@@ -690,7 +748,7 @@ class TripController extends Controller
                     // Check if totalSeat and totalSeatUsed are not null before comparing
                     if ($trip['total_seat'] !== null && $trip['total_seat_used'] !== null) {
                         // Calculate the available seats
-                        $trip['total_seat_available'] =  $trip['total_seat'] - $trip['total_seat_used'];
+                        $trip['total_seat_available'] = $trip['total_seat'] - $trip['total_seat_used'];
 
                         if ($trip['total_seat_available'] >= $ticketCount) {
                             return $trip;
@@ -707,9 +765,9 @@ class TripController extends Controller
                     });
 
                     // format car image url
-                    $carImageName =  $trip->car->image;
+                    $carImageName = $trip->car->image;
                     if ($trip->car->image[0] !== "/") {
-                        $carImageName =  "/" . $trip->car->image ?? '';
+                        $carImageName = "/" . $trip->car->image ?? '';
                     }
                     $carImageName = "http://" . $request->getHttpHost() . $carImageName;
 
@@ -772,6 +830,7 @@ class TripController extends Controller
 
         return $locations;
     }
+
     public function realTimeSeat()
     {
         $this->getSeatDataService->rtGetSeatData();
