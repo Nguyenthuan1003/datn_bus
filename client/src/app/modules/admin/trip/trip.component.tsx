@@ -11,11 +11,11 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import { log } from 'console';
 
-dayjs.extend(utc);
-dayjs.extend(timezone);
+// dayjs.extend(utc);
+// dayjs.extend(timezone);
 
-// Đặt múi giờ mong muốn
-dayjs.tz.setDefault("Asia/Ho_Chi_Minh");
+// // Đặt múi giờ mong muốn
+// dayjs.tz.setDefault("Asia/Ho_Chi_Minh");
 const TripComponent = () => {
 
 
@@ -29,7 +29,7 @@ const TripComponent = () => {
     const [selectedRouteId, setSelectedRouteId] = useState<any>({});
     const [current, setCurrent] = useState<any>(null);
     const [checked, setChecked] = useState<any>(0);
-    const [checkStatus, setCheckStatus] = useState<any>("all_trips")
+    const [checkStatus, setCheckStatus] = useState<any>("not_started_trips")
     const [checkload, setCheckLoad] = useState<any>(true)
     const [buttonAdd , setButtonAdd] = useState<any>(false)
 
@@ -41,7 +41,7 @@ const TripComponent = () => {
                 if (checkStatus == "all_trips") {
                     setDataTrip(res.data?.all_trips)
                     setCheckLoad(false)
-                    setButtonAdd(true);       
+                    setButtonAdd(false);       
                 }
                 if (checkStatus == "started_trips") {
                     setDataTrip(res.data?.started_trips)
@@ -49,7 +49,8 @@ const TripComponent = () => {
                 }
                 if (checkStatus == "not_started_trips") {
                     setDataTrip(res.data?.not_started_trips),
-                    setButtonAdd(false);
+                    setCheckLoad(false)
+                    setButtonAdd(true);
                 }
                 // setDataTrip(res.data?.all_trips)
                 console.log('use1');
@@ -95,33 +96,23 @@ const TripComponent = () => {
         console.log('use3');
     }, [])
 
-    const items: DescriptionsProps['items'] = [
-        {
-            key: "1",
-            label: "Mã hóa đơn",
-            children: 'ssss'
-        },
-    ]
 
     useEffect(() => {
         const columsTemp: any = []
-        const items : any = []
-        const title = ['', 'Tên xe', 'Thời gian bắt đầu ', 'Địa điểm bắt đầu ', 'Trạng Thái', 'Giá chuyến đi', 'Địa điểm kết thúc ', 'Tổng thời gian chuyến đi' , 'Tuyến đường ', ' ']
+        const title = ['', 'Tên xe', 'Thời gian bắt đầu ', 'Địa điểm bắt đầu ', 'Trạng Thái', 'Giá chuyến đi', 'Địa điểm kết thúc ', ' ' ,'Tuyến đường ', ' ']
         const titleDetail = ['tên xe', 'biển số xe']
         if (dataTrip?.length > 0) {
             Object.keys(dataTrip[0]).forEach((itemKey, key = 0) => {
-                if (!['id','car' , 'created_at', 'updated_at', 'route'].includes(itemKey)) {
+                if (!['id','car' , 'interval_trip', 'created_at', 'updated_at', 'route'].includes(itemKey)) {
                     columsTemp.push({
                         title: title[key++],
                         dataIndex: itemKey,
                         key: itemKey,
                         render: (text: any, record: any, index: any) => {
                             if (itemKey === 'car_id') {
-                                const nameCar = dataCarTrip.find((val: any) => val.id === text)?.name;
-                                return <>{nameCar ? nameCar : "Not Car"}</>;
+                                return <>{record?.car?.name ? record?.car?.name : "Not Car"}</>;
                             }
                             if (itemKey === 'status') {
-                                // return <Tag color={text ? 'green' : 'red'}>{text ? 'Active' : 'Inactive'}</Tag>
                                 return <Switch
                                     style={{ background: text ? 'green' : 'red' }}
                                     checked={text}
@@ -131,34 +122,34 @@ const TripComponent = () => {
                                 />
                             }
                             if (itemKey === 'route_id') {
-                                const nameRoute = record?.route?.name                   
-                                return <h2>{nameRoute ? nameRoute : "Not route"}</h2>
+                                // const nameRoute = record?.route?.name                   
+                                return <h2>{record?.route?.name ? record?.route?.name : "Not route"}</h2>                        
                             }
                             if (itemKey == "trip_price") {
                                 return <div>{record?.trip_price?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</div>
                             }
                             if (itemKey == "start_time") {
                                 const utcDateTimeString = record?.start_time;
-                                // const vietnamDateTimeString = moment.utc(utcDateTimeString).local().format('DD/MM/YYYY HH:mm:ss');
-                                const localDateTimeString = moment.utc(utcDateTimeString).format('DD/MM/YYYY HH:mm')
-                                return <div>{localDateTimeString}</div>
+                                const localDateTimeString = moment.utc(utcDateTimeString).format('DD/MM/YYYY')
+                                const time =  moment.utc(utcDateTimeString).format('HH:mm')
+                                return <div>{`${localDateTimeString} (${time})`}</div>
                             }
-                            if (itemKey === "interval_trip") {
-                                const utcDateTimeString = record?.interval_trip;
-                                const momentTime = moment(utcDateTimeString, 'HH:mm');
+                            // if (itemKey === "interval_trip") {
+                            //     const utcDateTimeString = record?.interval_trip;
+                            //     const momentTime = moment(utcDateTimeString, 'HH:mm');
 
-                                let time = "";
+                            //     let time = "";
 
-                                if (momentTime.hours() === 0 && momentTime.minutes() === 30) {
-                                    time = `30 phút`;
-                                } else if (momentTime.hours() === 0 && momentTime.minutes() < 60) {
-                                    time = `${momentTime.minutes()} phút`;
-                                } else {
-                                    time = `${momentTime.hours()} giờ ${momentTime.minutes()} phút`;
-                                }
+                            //     if (momentTime.hours() === 0 && momentTime.minutes() === 30) {
+                            //         time = `30 phút`;
+                            //     } else if (momentTime.hours() === 0 && momentTime.minutes() < 60) {
+                            //         time = `${momentTime.minutes()} phút`;
+                            //     } else {
+                            //         time = `${momentTime.hours()} giờ ${momentTime.minutes()} phút`;
+                            //     }
 
-                                return <div><span>{time}</span></div>;
-                            }
+                            //     return <div><span>{time}</span></div>;
+                            // }
                             return text
                         }
                     })
@@ -166,32 +157,14 @@ const TripComponent = () => {
             })
         }
         setColumn(columsTemp)
-        // if (dataTrip?.length > 0) {
-        //     Object.keys(dataTrip[0]).forEach((itemKey, key = 0) => {
-        //         if (!['id', 'created_at', 'updated_at',].includes(itemKey)) {
-        //             items.push({
-        //                 title: titleDetail[key++],
-        //                 dataIndex: itemKey,
-        //                 key: itemKey,
-        //                 render: (text: any, record: any, index: any) => {
-        //                     if (itemKey === 'car_id') {
-        //                         return <h1>aaaaaaaa</h1>
-        //                     }
-        //                     return text
-        //                 }
-        //             })
-        //         }
-        //     })
-        // }
-        // setDataDetail(items)
 
     }, [dataTrip])
     
     const [reset, setReset] = useState<any>([]);
     useEffect(() => {
         getAllTrip().then((res) => {
-            if (checkStatus == "all_trips") {
-                setDataTrip(res.data?.all_trips);
+            if (checkStatus == "not_started_trips") {
+                setDataTrip(res.data?.not_started_trips);
                 setButtonAdd(true);
                 setCheckLoad(false);
             }
@@ -206,33 +179,17 @@ const TripComponent = () => {
 
 
     const fomatCustomCurrent = (data: any) => {
-        setCurrent(data?.status === 1 ? 1 : 0)
+        setCurrent(data)
+        console.log("current", data)
     }
-    // const handleChange = (checked: number) => {
-    //     setCurrent(checked ? 1 : 0);
-    //     console.log(checked);
 
-    // };
     const handleChange = (value: any) => {
         setCurrent(value);
         setChecked(value);
         console.log(value);
 
     };
-    const disablePastDate = (current: any) => {
-        return current && current < dayjs().startOf('day');
-    };
-    // const handleDateChange = (date: Moment | null | any) => {
-    //     if (date) {
-    //         console.log(date)   ;
-            
-    //         const jsDate = date.toDate();
-    //       const convertedDate = moment(jsDate).format('YYYY-MM-DD HH:mm');
-    //         console.log(convertedDate);
-    //     } else {
-    //         console.log('Ngày không hợp lệ');
-    //     }
-    // };
+
     const acctive = 1;
     const inAcctive = 0
     const handelStatusTrip = (value: any) => {
@@ -241,23 +198,20 @@ const TripComponent = () => {
     }
     
     console.log(dataDetail);
-    
-    
-    
- 
-
-    
+     
     return (
         <div>
             <Segmented
                 options={[
-                    { value: 'all_trips', label: 'Tất cả chuyến đi' },
+                    { value: 'not_started_trips', label: 'chuyến xe chưa đi' },
                     { value: 'started_trips', label: 'chuyến xe đã đi' },
-                    { value: 'not_started_trips', label: 'chuyến xe chưa đi' }
+                    { value: 'all_trips', label: 'Tất cả chuyến đi' },
                 ]}
                 size='large'
+                style={{color: "blue"}}
                 value={checkStatus}
                 onChange={handelStatusTrip}
+
             />
             <TemplateTableTrip
                 title={`Danh sách chuyến đi `}

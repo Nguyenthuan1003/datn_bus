@@ -6,6 +6,7 @@ import TemplateModal from '../template-model/template-model.component';
 import { Option } from 'antd/es/mentions';
 import { IoEyeSharp } from 'react-icons/io5';
 import { log } from 'console';
+import DetailComponent from './detail.component';
 interface ITemplateTable {
     title: any,
     formEdit?: any,
@@ -40,18 +41,16 @@ const TemplateTableTrip: FC<ITemplateTable> = (
     const [defaultValue, setDefaultValue] = useState<any>(null)
     const [form] = Form.useForm()
     const [detailRecord, setDetailRecord] = useState<any>()
-        
+    const [selectedOption, setSelectedOption] = useState('week');
+    const [showCustomDateInput, setShowCustomDateInput] = useState(false);
 
     // const [current, setCurrent] = useState(null);
     // console.log(current)
     const showModal = (typeAction: string, recordTable?: any) => {
         setIsModalOpen(true);
         setType(typeAction)
-        setObjectDetail({
-            carName:recordTable?.car?.name
-        })
         if (typeAction == "CHANGE") {
-            // setCurrent(recordTable
+            console.log('CHANGE'); 
             setDefaultValue(recordTable)
             dataId(recordTable)
             form.setFieldsValue(recordTable)
@@ -64,19 +63,7 @@ const TemplateTableTrip: FC<ITemplateTable> = (
             setDetailRecord(recordTable);            
         }
     };
-    const items: DescriptionsProps['items'] = [
-        {
-            key: "1",
-            label: "tên xe",
-            children: detailRecord?.car?.name
-        },
-        {
-            key: "2",
-            label: "Biển số xe",
-            children: detailRecord?.car?.license_plate
-        }
 
-    ]
     const handleOk = () => {
         // if (form.getFieldValue('image')) {
         //     const dataList = [...form.getFieldValue('image')].map((item: any) => (console.log(item)))
@@ -86,9 +73,11 @@ const TemplateTableTrip: FC<ITemplateTable> = (
         //     })
         //   }
         if (type == 'CREATE') {
+            console.log('create');
+            
             form.validateFields().then((value: any) => {
                 console.log(value);
-
+                
                 createFunc(value)
                     .then((res: any) => {
                         if (res) {
@@ -101,6 +90,8 @@ const TemplateTableTrip: FC<ITemplateTable> = (
         }
 
         if (type === 'CHANGE') {
+            console.log('change');
+            
             form.validateFields().then((value: any) => {
                 // Kiểm tra xem dữ liệu có thay đổi hay không
                 const isDataChanged = Object.keys(value).some(key => value[key] !== defaultValue[key]);
@@ -110,7 +101,8 @@ const TemplateTableTrip: FC<ITemplateTable> = (
                         if (res) {
                             callBack(res.data);
                             message.success('Cập nhật thành công');
-
+                            console.log('value',value);
+                            
                         }
                     });
                 } else {
@@ -210,6 +202,10 @@ const TemplateTableTrip: FC<ITemplateTable> = (
         selectedRowKeys,
         onChange: onSelectChange,
     };
+    const handleSelectChange = (value:any) => {
+        setSelectedOption(value);
+        setShowCustomDateInput(value === 'Ngày tự chọn');
+    };
     return (
         <div>
             <div className='pb-4 text-[20px] font-semibold'>
@@ -223,8 +219,21 @@ const TemplateTableTrip: FC<ITemplateTable> = (
                 </button>
             )}
             <div className='flex mb-4 mt-4'>
-                <div>
-                    <input type="datetime-local" />
+              
+                <div className='px-3'>
+                    <Select  placeholder="-- Ngày cố định  --" value={selectedOption} onChange={handleSelectChange}>
+                        <Option value='all'>Tất cả</Option>
+                        <Option value='today'>Hôm nay</Option>
+                        <Option value='week'>Tuần</Option>
+                        <Option value='month'>Tháng</Option>
+
+                    </Select>
+                </div>
+                <div className='px-3' style={{ display: showCustomDateInput ? 'none' : 'block' }}>
+                <Button onClick={() => setShowCustomDateInput(true)}>Ngày tự chọn</Button>
+            </div>
+            <div>
+                <input type="datetime-local" style={{ display: showCustomDateInput ? 'block' : 'none' }} />
                 </div>
                 <div className='px-3'>
                     <Select placeholder="-- Chọn tuyến đường --">
@@ -248,13 +257,14 @@ const TemplateTableTrip: FC<ITemplateTable> = (
             <div className=''>
                 <TemplateModal
                     title={type === "CREATE" ? 'Thêm mới' : type === "CHANGE" ? 'Cập nhật' : 'Chi tiết'} isModalOpen={isModalOpen} handleOk={handleOk} handleCancel={handleCancel}
-                    actionType={type}
-                    
+                    actionType={type} 
                 >
                     {
                         type == 'DETAIL' ? (
                                 <div>
-                                      <Descriptions title="THÔNG TIN XE " items={items} />
+                                      {/* <Descriptions title="THÔNG TIN XE " items={items} /> */}
+                                      {/* <DetailForm onRef={(ref) => this.onRef(ref)}/> */}
+                                      <DetailComponent data={detailRecord} />
                                 </div>
                         ) : (
                             <Form form={form} layout='vertical' name='form_in_modal'>
