@@ -13,7 +13,7 @@ class GetSeatDataService
           // Get the current date
           $currentTime  = Carbon::now('Asia/Ho_Chi_Minh');
           // Format the start time as a string to match the database format
-          $currentTime = $currentTime->toDateTimeLocalString();
+          $currentTime = $currentTime->toDateTimeString();
 
           $tripQuery = Trip::where('status', 1)
                ->where('start_time', '>=', $currentTime)
