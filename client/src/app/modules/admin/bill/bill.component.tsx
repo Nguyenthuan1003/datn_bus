@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import TemplateTable from '../common/template-table/template-table.component'
-import { deleteBill, getAllBill } from './service/bill.service'
+import { createBill, deleteBill, getAllBill } from './service/bill.service'
 // import  { getAllTypeCar } from '../type_car/service/typeCar.service'
-import { Button, DatePicker, Form, Input, Modal, Select, Skeleton, Switch, Tag, TimePicker } from 'antd';
+import { Button, DatePicker, Form, Input, Modal, Select, Skeleton, Switch, Tag, TimePicker, message } from 'antd';
 import TemplateModelBill from '../common/template-model-bill/template-model-bill.component';
 
 
@@ -118,7 +118,7 @@ const BillComponent = () => {
     useEffect(() => {
         getAllBill().then((res) => {
             if (res) {
-                setDataBill(res?.data?.bills)
+                setDataBill(res?.data?.bills?.sort((a:any , b:any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()))
             }
         })
     }, [reset])
@@ -152,7 +152,16 @@ const BillComponent = () => {
     };
 
     const handleOk = () => {
-        setIsModalOpen(false);
+        form.validateFields().then((value: any) => {
+            createBill(value).then((res: any) => {
+                setIsModalOpen(true);
+                if (res) {
+                    setIsModalOpen(false);
+                    message.success("thêm thành công")
+                }
+            })
+        })
+
     };
 
     const handleCancel = () => {
@@ -211,37 +220,37 @@ const BillComponent = () => {
                 <div>
 
                 </div>
-                <Modal title="Thêm đơn hàng" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}  centered width={800}>
+                <Modal title="Thêm đơn hàng" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered width={800}>
                     <Form form={form} layout='vertical' >
-                    <Fragment>
-                     <Form.Item label='Chuyến đi' name='trip_id' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                        <Input />
-                     </Form.Item>
-                     <Form.Item label='Khách hàng' name='discount_code_id' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                         <Input />
-                     </Form.Item>
-                     <Form.Item label='Tổng chỗ ngồi' name='total_seat' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                             <Input />
-                     </Form.Item>
-                     <Form.Item label='Mã ghế' name='seat_id' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                             <Input />
-                     </Form.Item>
-                     <Form.Item label='Khách hàng' name='user_id' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                         <Input />
-                     </Form.Item>
-                     <Form.Item label='Tổng tiền' name='total_money' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                         <Input />
-                     </Form.Item>
-                     <Form.Item label='Tổng số tiền Hóa đơn' name='total_money_after_discount' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                             <Input />
-                     </Form.Item>
-                     <Form.Item label='Tên khách hàng' name='full_name' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                            <Input />
-                     </Form.Item>
-                     <Form.Item label='email' name='email' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                            <Input />
-                     </Form.Item>
-                 </Fragment>
+                        <Fragment>
+                            <Form.Item label='Chuyến đi' name='trip_id' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item label='Khách hàng' name='discount_code_id' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item label='Tổng chỗ ngồi' name='total_seat' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item label='Mã ghế' name='seat_id' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item label='Khách hàng' name='user_id' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item label='Tổng tiền' name='total_money' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item label='Tổng số tiền Hóa đơn' name='total_money_after_discount' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item label='Tên khách hàng' name='full_name' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+                                <Input />
+                            </Form.Item>
+                            <Form.Item label='email' name='email' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+                                <Input />
+                            </Form.Item>
+                        </Fragment>
                     </Form>
                 </Modal>
             </div>

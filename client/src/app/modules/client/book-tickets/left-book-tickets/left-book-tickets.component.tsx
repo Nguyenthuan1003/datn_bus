@@ -136,6 +136,23 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
 
 
                 await addBill(billData);
+
+                fetch('http://127.0.0.1:8000/api/rt/seat')
+                .then(
+                    function(response) {
+                    if (response.status !== 200) {
+                        console.log('Lỗi, mã lỗi ' + response.status);
+                        return;
+                    }
+                    // parse response data
+                    response.json().then(data => {
+                        console.log(data);
+                    })
+                    }
+                )
+                .catch(err => {
+                    console.log('Error :-S', err)
+                });
                 // localStorage.setItem('billData', JSON.stringify(billData));
                 const dataBillUser = localStorage.getItem("bill_user");
                 const objBillUser = JSON.parse(dataBillUser!);

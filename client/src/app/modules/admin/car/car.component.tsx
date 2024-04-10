@@ -6,6 +6,7 @@ import { Form, Input, Select, Switch } from 'antd';
 import { Option } from 'antd/es/mentions';
 import { ColorPicker, Space } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
+import { log } from 'console';
 const CarComponent = () => {
 
     const [column, setColumn] = useState<any>([]);

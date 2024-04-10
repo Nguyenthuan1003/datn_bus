@@ -7,6 +7,7 @@ import { Option } from 'antd/es/mentions';
 import { IoEyeSharp } from 'react-icons/io5';
 import { log } from 'console';
 import DetailComponent from './detail.component';
+import dayjs from 'dayjs';
 interface ITemplateTable {
     title: any,
     formEdit?: any,
@@ -72,18 +73,23 @@ const TemplateTableTrip: FC<ITemplateTable> = (
         //       images: dataList
         //     })
         //   }
-        if (type == 'CREATE') {
-            console.log('create');
-            
+        if (type == 'CREATE') {            
             form.validateFields().then((value: any) => {
-                console.log(value);
-                
-                createFunc(value)
+               
+                const data = {
+                    ...value,
+                    start_time: dayjs(value?.start_time).format('YYYY-MM-DD HH:mm:ss') 
+                }
+                createFunc(data)
                     .then((res: any) => {
-                        if (res) {
+                        if (res.data.status == "success") {
                             callBack(res.data)
-                            message.success("thêm thành công")
+                            message.success(res.data.message)
+                            console.log(res);
+                        }else{
+                            message.error(res.data.message)
                         }
+
                     })
                 form.resetFields()
             })
@@ -98,11 +104,12 @@ const TemplateTableTrip: FC<ITemplateTable> = (
                 if (isDataChanged) {
                     // Nếu có thay đổi, thực hiện cập nhật
                     changeFunc(value, defaultValue.id).then((res: any) => {
-                        if (res) {
+                        if (res?.data?.status == "success") {                   
                             callBack(res.data);
                             message.success('Cập nhật thành công');
                             console.log('value',value);
-                            
+                        }else{
+                            message.error(res.data.message)
                         }
                     });
                 } else {

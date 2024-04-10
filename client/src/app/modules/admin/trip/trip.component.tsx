@@ -32,26 +32,40 @@ const TripComponent = () => {
     const [checkStatus, setCheckStatus] = useState<any>("not_started_trips")
     const [checkload, setCheckLoad] = useState<any>(true)
     const [buttonAdd , setButtonAdd] = useState<any>(false)
-
+    const [reset, setReset] = useState<any>([]);
     // Lấy dữ liệu từ API
+    useEffect(() => {
+        getAllTrip()
+        .then((res) => {
+            if (checkStatus === "not_started_trips") {
+                setDataTrip(res?.data?.not_started_trips?.sort((a:any , b:any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()));
+                setButtonAdd(true);
+                setCheckLoad(false);
+            }
+        })
+        console.log('ressssss');
+    }, [reset])
 
     useEffect(() => {
         getAllTrip().then((res) => {
             if (res) {
+                if (checkStatus == "not_started_trips") {
+                    setDataTrip(res?.data?.not_started_trips?.sort((a:any , b:any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())),
+                    setCheckLoad(false)
+                    setButtonAdd(true);
+                    console.log('nooot');
+                    
+                }
                 if (checkStatus == "all_trips") {
-                    setDataTrip(res.data?.all_trips)
+                    setDataTrip(res?.data?.all_trips?.sort((a:any , b:any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()))
                     setCheckLoad(false)
                     setButtonAdd(false);       
                 }
                 if (checkStatus == "started_trips") {
-                    setDataTrip(res.data?.started_trips)
+                    setDataTrip(res?.data?.started_trips?.sort((a:any , b:any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()))
                     setButtonAdd(false);    
                 }
-                if (checkStatus == "not_started_trips") {
-                    setDataTrip(res.data?.not_started_trips),
-                    setCheckLoad(false)
-                    setButtonAdd(true);
-                }
+                
                 // setDataTrip(res.data?.all_trips)
                 console.log('use1');
                 
@@ -77,7 +91,6 @@ const TripComponent = () => {
                     
                 }
             })
-            console.log('use2');
         });
     }, [selectedRouteId]);
 
@@ -93,7 +106,6 @@ const TripComponent = () => {
                 alert(`Lỗi khi đấy data getCarRouteTrip :((`)
             }
         })
-        console.log('use3');
     }, [])
 
 
@@ -134,22 +146,6 @@ const TripComponent = () => {
                                 const time =  moment.utc(utcDateTimeString).format('HH:mm')
                                 return <div>{`${localDateTimeString} (${time})`}</div>
                             }
-                            // if (itemKey === "interval_trip") {
-                            //     const utcDateTimeString = record?.interval_trip;
-                            //     const momentTime = moment(utcDateTimeString, 'HH:mm');
-
-                            //     let time = "";
-
-                            //     if (momentTime.hours() === 0 && momentTime.minutes() === 30) {
-                            //         time = `30 phút`;
-                            //     } else if (momentTime.hours() === 0 && momentTime.minutes() < 60) {
-                            //         time = `${momentTime.minutes()} phút`;
-                            //     } else {
-                            //         time = `${momentTime.hours()} giờ ${momentTime.minutes()} phút`;
-                            //     }
-
-                            //     return <div><span>{time}</span></div>;
-                            // }
                             return text
                         }
                     })
@@ -160,17 +156,8 @@ const TripComponent = () => {
 
     }, [dataTrip])
     
-    const [reset, setReset] = useState<any>([]);
-    useEffect(() => {
-        getAllTrip().then((res) => {
-            if (checkStatus == "not_started_trips") {
-                setDataTrip(res.data?.not_started_trips);
-                setButtonAdd(true);
-                setCheckLoad(false);
-            }
-        })
-    }, [reset])
 
+    
 
 
     const handelGetList = () => {
@@ -197,8 +184,10 @@ const TripComponent = () => {
         console.log(value);
     }
     
-    console.log(dataDetail);
-     
+
+    const [startTime, setStartTime] = useState<string>('');
+  
+
     return (
         <div>
             <Segmented
@@ -240,15 +229,13 @@ const TripComponent = () => {
                             </Select>
                         </Form.Item>
                         <Form.Item label='Thời gian bắt đầu' name='start_time' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                            {/* <DatePicker
-                                   showTime
-                                   format="DD/MM/YYYY HH:mm"
-                                   placeholder="Chọn ngày và giờ"
-                                   onChange={handleDateChange}
-                                   disabledDate={disablePastDate}
-                            /> */}
-                            <input type='datetime-local'/> 
-                            {/* <Input /> */}
+                    
+                        <Input 
+                            type='datetime-local' 
+                            style={{width:200}}  
+                            value={startTime} 
+                        /> 
+          
                         </Form.Item>
                         <Form.Item label='Địa điểm bắt đầu' name='start_location' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
                             <Select placeholder="lựa chọn địa điểm bắt đầu">
