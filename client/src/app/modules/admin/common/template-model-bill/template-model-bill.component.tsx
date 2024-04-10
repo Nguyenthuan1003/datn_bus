@@ -53,7 +53,6 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
 
     const showModal = (record: any) => {
         console.log(record)
-
         setIsModalOpen(true);
         setDetailRecord({
             code_bill: record?.code_bill,
@@ -68,12 +67,7 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
             trip: record?.trip,
             total_seat: record?.total_seat
         })
-        // setObjectTicket([
-        //     { 
-        //       route: record?.trip?.route?.name,
-        //       ticket_order: record?.ticket_order?.map((item: any) => item?.code_ticket).join(', ') // lấy ra mã ticket từ mảng ticket_order và nối chúng thành một chuỗi
-        //     }
-        //   ]);
+  
         const combinedTickets = record.ticket_order.map((ticket: any) => ({
             route: record?.trip?.route.name,
             codeSeat: ticket?.code_seat,
@@ -130,28 +124,8 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
         {
             title: 'Chuyến đi',
             key: 'trip_id',
-            // render: (_: any, record: any) => {
-            //     const matchedTrip = trip?.find((trip: any) => trip?.id === record?.trip_id);
-            //     const matchedRoute = route?.find((route: any) => route?.id)
-            //     const routeName = matchedRoute?.name
-            //     console.log('route',matchedRoute);
-                
-            //     console.log('matchedRoute', matchedRoute);
-
-            //     const time = matchedTrip?.start_time
-
-            //     const timetrip = moment.utc(time).local().format('HH:mm')
-            //     if (!matchedTrip) {
-            //         return <span>Tuyến đường không tồn tại </span>
-            //     }else{
-            //         return <span>
-            //         {/* {`${matchedTrip.start_location} - ${matchedTrip.end_location} (khởi hành)`} */}
-            //         {routeName ? routeName  : " Tuyền đường không còn tồn tại"}  {timetrip}
-            //     </span>;
-            //     }
-            // }
             render: (_:any, record:any) =>{
-            return <span>{record?.trip.route.name}</span>;
+            return <span>{record?.trip?.route?.name ? record?.trip?.route?.name : ' tuyến đường không tồn tại'}</span>;
             }
         },
         {
@@ -254,9 +228,10 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
             children: detailRecord?.email
         },
         {
+            
             key: "4",
             label: "Thời gian mua",
-            children: detailRecord?.created_at
+            children: moment.utc(detailRecord?.created_at).local().format('DD/MM/YYYY HH:mm:ss') 
         },
         {
             key: "5",
@@ -304,7 +279,7 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
             dataIndex: 'price',
             sorter: (a: any, b: any) => a.price - b.price,
             render: (_: any, record: any) => {
-                return <div>{record.price ? record.price : "Tuyến xe không tồn tại không thấy giá tiền"}</div>
+                return <div>{record.price ? record.price?.toLocaleString('vi', { style: 'currency', currency: 'VND' }) : "Tuyến xe không tồn tại không thấy giá tiền"}</div>
             }
         },
         {
@@ -314,19 +289,14 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
             colSpan: 1,
             render: (_: any, record: any, index: number) => {
                 return {
-                    children: <div>{record.totalPrice}</div>,
+                    children: <div>{record.totalPrice?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</div>,
                     props: {
                         rowSpan: index === 0 ? objectTicket.length : 0,
                     },
                 };
             },
         },
-        // {
-        //     title: '', // Để trống vì cột "Tổng số tiền" sẽ chiếm cả cột "Giá vé"
-        //     key: 'empty',
-        //     dataIndex: 'empty',
-        //     render: () => null, // Đảm bảo không có gì được hiển thị trong ô này
-        // },
+
     ]
 
     return (

@@ -15,7 +15,6 @@ const PaymentComponent = () => {
             paymentRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }, [price]); // Trigger lại useEffect khi giá trị của cart thay đổi
-
     useEffect(() => {
         const countdownInterval = setInterval(() => {
             setRemainingTime(prevTime => prevTime - 1);
@@ -28,11 +27,14 @@ const PaymentComponent = () => {
     const dataBill: any = localStorage.getItem('bill_user')
     const ObDataBill = JSON.parse(dataBill)
     const idBill =ObDataBill?.id
+
+    
     useEffect(() => {
         const deleteOrderAsync = async () => {
             try {
                 // Gọi API để xóa đơn hàng
                 await  cancelBill(idBill);
+                localStorage.removeItem("bill_user")
                 setOrderCancelled(true);
                 // Sau khi xóa đơn hàng thành công, điều hướng về trang chủ
                 window.location.href = '/';
@@ -50,6 +52,8 @@ const PaymentComponent = () => {
         }
         
     }, [remainingTime]);
+    const codeSeat = cart?.seat_id.map((seat: string) => `'${seat}'`).join(', ')
+    console.log('codeSeat',codeSeat);
     
     return (
         <div className='w-full'>
@@ -136,7 +140,7 @@ const PaymentComponent = () => {
                                 <div className="mt-1 flex items-center justify-between">
                                     <span className="text-gray w-28">Số ghế</span>
                                     {/* <span className="text-[#00613D]">{cart && cart.seat_id ? cart.seat_id.join(", ") : ''}</span> */}
-                                    <span className="text-[#00613D]">{cart?.code_seat}</span>
+                                    <span className="text-[#00613D]">{codeSeat}</span>
 
                                 </div>
                                 <div className="mt-1 flex items-center justify-between">
