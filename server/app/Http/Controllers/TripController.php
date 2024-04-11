@@ -390,7 +390,7 @@ class TripController extends Controller
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
                 "status" => "fail",
-                'error' => $e->getMessage()
+//                'error' => $e->getMessage()
             ]);
         }
     }
