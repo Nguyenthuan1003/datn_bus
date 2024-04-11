@@ -358,7 +358,7 @@ class TripController extends Controller
                     ]);
                 }
 
-                if ($trip->bill()->exists() || $trip->comments()->exists()) { //nếu comment chỉ giành cho khi đi xong mới được đánh giá thì có thể xóa điều kiện comment
+                if ($trip->bill()->exists() || $trip->comment()->exists()) { //nếu comment chỉ giành cho khi đi xong mới được đánh giá thì có thể xóa điều kiện comment
                     $trip->status = $request->input('status');
                     $trip->save();
 
@@ -389,8 +389,8 @@ class TripController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
-                "status" => "fail"
-                //                'error' => $e->getMessage()
+                "status" => "fail",
+                'error' => $e->getMessage()
             ]);
         }
     }
