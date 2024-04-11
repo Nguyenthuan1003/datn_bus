@@ -54,7 +54,7 @@ class TripController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi truy vấn dữ liệu',
-//                'error' => $e->getMessage(),
+                //                'error' => $e->getMessage(),
                 "status" => "fail"
             ]);
         }
@@ -80,7 +80,7 @@ class TripController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi truy vấn dữ liệu',
-//                'error' => $e->getMessage(),
+                //                'error' => $e->getMessage(),
                 "status" => "fail"
             ]);
         }
@@ -117,7 +117,7 @@ class TripController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi truy vấn dữ liệu',
-//                'error' => $e->getMessage(),
+                //                'error' => $e->getMessage(),
                 "status" => "fail"
             ]);
         }
@@ -236,7 +236,7 @@ class TripController extends Controller
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
                 "status" => "fail"
-//                'error' => $e->getMessage()
+                //                'error' => $e->getMessage()
             ]);
         }
     }
@@ -268,7 +268,7 @@ class TripController extends Controller
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
                 "status" => "fail",
-//                'error' => $e->getMessage()
+                //                'error' => $e->getMessage()
             ]);
         }
     }
@@ -390,7 +390,7 @@ class TripController extends Controller
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
                 "status" => "fail"
-//                'error' => $e->getMessage()
+                //                'error' => $e->getMessage()
             ]);
         }
     }
@@ -437,7 +437,7 @@ class TripController extends Controller
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
                 "status" => "fail"
-//                'error' => $e->getMessage()
+                //                'error' => $e->getMessage()
             ]);
         }
     }
@@ -453,7 +453,7 @@ class TripController extends Controller
         try {
             $tripData = Trip::with(['car', 'route'])->find($id);
 
-//            mess này của tìm kiếm ngoài frontend nên sẽ lệch 4 tiếng
+            //            mess này của tìm kiếm ngoài frontend nên sẽ lệch 4 tiếng
             if (!$tripData || \Carbon\Carbon::parse($tripData->start_time)->subHours(4)->isBefore(now())) {
                 return response()->json([
                     'message' => 'Chuyến đi không tồn tại',
@@ -502,7 +502,7 @@ class TripController extends Controller
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
                 "status" => "fail"
-//                'error' => $e->getMessage()
+                //                'error' => $e->getMessage()
             ]);
         }
     }
@@ -581,7 +581,7 @@ class TripController extends Controller
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
                 "status" => "fail"
-//                'error' => $e->getMessage()
+                //                'error' => $e->getMessage()
             ]);
         }
     }
@@ -637,7 +637,7 @@ class TripController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi truy vấn dữ liệu',
-//                'error' => $e->getMessage(),
+                //                'error' => $e->getMessage(),
                 "status" => "fail"
             ]);
         }
@@ -645,8 +645,6 @@ class TripController extends Controller
 
     public function searchTrip(Request $request)
     {
-        $rtGetSeatData = $this->getSeatDataService->rtGetSeatData();
-
         try {
             // Validate the incoming request data
             $request->validate([
@@ -670,22 +668,29 @@ class TripController extends Controller
             Carbon::setLocale('Asia/Ho_Chi_Minh');
             // Parse the start time string into a Carbon instance
             $startTime = Carbon::createFromFormat('Y-m-d', $startTime, 'Asia/Ho_Chi_Minh');
+
             // Get the current date
             $currentDate = Carbon::now('Asia/Ho_Chi_Minh');
 
-            // nếu tìm kiếm trong ngày thì check thời gian tìm kiếm từ giờ phút
+            // Format the start time as a string to match the database format
+            // if same day
             if ($startTime->isSameDay($currentDate)) {
                 // chỉnh giờ theo nghiệp vụ không đặt chuyến trước giờ xuất phát 4h
-                $startTime->addHours(4);
+                $startTime = $startTime->addHours(4);
+                $startTimeDate = $startTime->toDateString();
+                $startTimeTime = $startTime->toTimeString();
+                $startTime = $startTime->toDateTimeString();
             } else {
                 // validate $startTime cant in the past
                 if ($startTime < $currentDate) {
                     return response()->json(['error' => 'start_time không thể là thời gian đã qua'], 500);
                 }
+                // if future
+                $startTime = $startTime->startOfHour();
+                $startTimeDate = $startTime->toDateString();
+                $startTimeTime = $startTime->toTimeString();
+                $startTime = $startTime->toDateTimeString();
             }
-
-            // Format the start time as a string to match the database format
-            $startTime = $startTime->toDateTimeLocalString();
 
             $isRouteExist = Route::where('status', true)
                 ->where('start_location', $startLocation)
@@ -697,22 +702,32 @@ class TripController extends Controller
                 ->orderBy('name', 'asc')
                 ->select('id', 'name', 'image')
                 ->get();
-            // format image url
-            // $parentLocationImage->each(function ($location) use ($request) {
-            //     $imageName = $location->image ?? '';
-            //     if ($location->image[0] !== "/") {
-            //         $imageName =  "/" . $location->image ?? '';
-            //     }
-            //     $location->image = "http://" . $request->getHttpHost() . $imageName;
-            // });
 
             $totalTripData = collect();
+            $totalMoreTrips = collect();
             // Check if route exists
             if ($isRouteExist->isNotEmpty()) {
                 // Iterate over each route
-                $isRouteExist->each(function ($route) use (&$totalTripData, $startTime) {
+                $isRouteExist->each(function ($route) use (&$totalTripData, &$totalMoreTrips, $startTime, $startTimeDate, $startTimeTime) {
                     // Retrieve trips associated with the current route
                     $trips = Trip::where('route_id', $route->id)
+                        ->where('status', true)
+                        ->whereDate('start_time', '=', $startTimeDate)
+                        ->whereTime('start_time', '>=', $startTimeTime)
+                        ->with(['car.typeCar' => function ($query) {
+                            // Select the total_seat from the associated type_car relationship
+                            $query->select('id', 'name', 'total_seat', 'type_seats');
+                        }])
+                        ->with(['bill' => function ($query) {
+                            // Select the total_seat from the associated bill relationship
+                            $query->select('trip_id', 'total_seat as total_seat_used', 'seat_id as seat_code_used', 'created_at');
+                        }])
+                        ->with(['route' => function ($query) {
+                            $query->select('id', 'name as route_name');
+                        }])
+                        ->get();
+
+                    $moreTrips = Trip::where('route_id', $route->id)
                         ->where('status', true)
                         ->where('start_time', '>=', $startTime)
                         ->with(['car.typeCar' => function ($query) {
@@ -730,8 +745,10 @@ class TripController extends Controller
 
                     // Append trips to the totalTripData collection
                     $totalTripData = $totalTripData->merge($trips);
+                    $totalMoreTrips = $totalMoreTrips->merge($moreTrips);
                 });
 
+                // for trip data
                 $formatedData = [];
 
                 $filteredTrips = $totalTripData->map(function ($trip) use ($ticketCount) {
@@ -776,9 +793,9 @@ class TripController extends Controller
                         "start_time" => $trip->start_time,
                         "route_name" => $trip->route->route_name,
                         "start_location_parent" => $startLocation,
-                        "start_location_parent_image" => $startLocationImage->image,
+                        "start_location_parent_image" => "http://" . $request->getHttpHost() . "/" . $startLocationImage->image,
                         "end_location_parent" => $endLocation,
-                        "end_location_parent_image" => $endLocationImage->image,
+                        "end_location_parent_image" => "http://" . $request->getHttpHost() . "/" . $endLocationImage->image,
                         "start_location" => $trip->start_location,
                         "end_location" => $trip->end_location,
                         "trip_price" => $trip->trip_price,
@@ -801,9 +818,96 @@ class TripController extends Controller
                     ];
                 };
 
+                // for more trip data
+                $formatedMoreTripData = [];
+
+                $filteredMoreTrips = $totalMoreTrips->map(function ($trip) use ($ticketCount) {
+                    $trip['total_seat'] = optional(optional($trip->car)->typeCar)->total_seat;
+                    $trip['total_seat_used'] = collect($trip->bill)->sum('total_seat_used') ?? 0;
+                    // Pluck 'seat_code_used' from each bill and flatten the array
+                    $seatCodes = collect($trip->bill)->pluck('seat_code_used')->flatten()->toArray();
+                    // Decode JSON strings to arrays
+                    $seatCodes = array_map('json_decode', $seatCodes);
+                    // Flatten again to merge all seat codes into a single array
+                    $trip['array_seat_code_used'] = collect($seatCodes)->flatten()->toArray();
+
+                    // Check if totalSeat and totalSeatUsed are not null before comparing
+                    if ($trip['total_seat'] !== null && $trip['total_seat_used'] !== null) {
+                        // Calculate the available seats
+                        $trip['total_seat_available'] = $trip['total_seat'] - $trip['total_seat_used'];
+
+                        if ($trip['total_seat_available'] >= $ticketCount) {
+                            return $trip;
+                        }
+                    }
+                })->filter();
+
+                foreach ($filteredMoreTrips as $trip) {
+                    $startLocationImage = $parentLocationImage->first(function ($location) use ($startLocation) {
+                        return $location->name === $startLocation;
+                    });
+                    $endLocationImage = $parentLocationImage->first(function ($location) use ($endLocation) {
+                        return $location->name === $endLocation;
+                    });
+
+                    // format car image url
+                    $carImageName = $trip->car->image;
+                    if ($trip->car->image[0] !== "/") {
+                        $carImageName = "/" . $trip->car->image ?? '';
+                    }
+                    $carImageName = "http://" . $request->getHttpHost() . $carImageName;
+
+                    $formatedMoreTripData[] = [
+                        // trip
+                        "trip_id" => $trip->id,
+                        "start_time" => $trip->start_time,
+                        "route_name" => $trip->route->route_name,
+                        "start_location_parent" => $startLocation,
+                        "start_location_parent_image" => "http://" . $request->getHttpHost() . "/" . $startLocationImage->image,
+                        "end_location_parent" => $endLocation,
+                        "end_location_parent_image" => "http://" . $request->getHttpHost() . "/" . $endLocationImage->image,
+                        "start_location" => $trip->start_location,
+                        "end_location" => $trip->end_location,
+                        "trip_price" => $trip->trip_price,
+                        "interval_trip" => $trip->interval_trip,
+                        // seat
+                        "total_seat" => $trip->total_seat,
+                        "total_seat_used" => $trip->total_seat_used,
+                        "total_seat_available" => $trip->total_seat_available,
+                        "array_seat_code_used" => $trip->array_seat_code_used,
+                        //car
+                        "car_name" => $trip->car->name,
+                        "car_type" => $trip->car->typeCar->name,
+                        "car_color" => $trip->car->color,
+                        "car_image" => $carImageName,
+                        "car_license_plate" => $trip->car->license_plate,
+                        "car_color" => $trip->car->color,
+                        // trip time create, update
+                        "created_at" => $trip->created_at,
+                        "updated_at" => $trip->updated_at,
+                    ];
+                };
+
+                // Extract IDs from array A
+                $idsFormatedData = array_column($formatedData, 'trip_id');
+
+                // Filter array B
+                $arrayFormatedMoreTripData = array_filter($formatedMoreTripData, function ($item) use ($idsFormatedData) {
+                    return !in_array($item['trip_id'], $idsFormatedData);
+                });
+
+                // Limit the array length to 12
+                $arrayFormatedMoreTripData = array_slice($arrayFormatedMoreTripData, 0, 10);
+
+                // Convert array B back to indexed array
+                $formatedMoreTripData = array_values($arrayFormatedMoreTripData);
+
                 return response()->json([
                     'message' => 'ok',
+                    'total_data_records' => count($formatedData),
+                    'total_extra_data_records' => count($formatedMoreTripData),
                     'data' => $formatedData,
+                    'extra_data' => $formatedMoreTripData
                 ], 200);
             } else {
                 return response()->json([
@@ -835,4 +939,3 @@ class TripController extends Controller
         $this->getSeatDataService->rtGetSeatData();
     }
 }
-

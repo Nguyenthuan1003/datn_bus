@@ -83,6 +83,8 @@ class TicketOrderController extends Controller
                 //                'error' => $e->getMessage()
             ]);
         }
+
+        return response()->json(['error' => 'Thông tin không tồn tại'], 404);
     }
 
     /**
