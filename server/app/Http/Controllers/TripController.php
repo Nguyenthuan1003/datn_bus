@@ -518,8 +518,7 @@ class TripController extends Controller
         try {
             $tripData = Trip::with(['car', 'route'])->find($id);
 
-            //            mess này của tìm kiếm ngoài frontend nên sẽ lệch 4 tiếng
-            if (!$tripData || \Carbon\Carbon::parse($tripData->start_time)->subHours(4)->isBefore(now())) {
+            if (!$tripData) {
                 return response()->json([
                     'message' => 'Chuyến đi không tồn tại',
                     "status" => "fail"
