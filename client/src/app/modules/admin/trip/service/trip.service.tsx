@@ -39,4 +39,6 @@ export const addTrip = async (data: any) => {
 export const updateTrip = async (data: any,id:any) => {
     return await axiosPrivate.put(`/trip/update/${id}`,data)
 }
-
+export const getDetailTripByid = async (id:any) =>{
+    return await axiosPrivate.get(`/trip/trip-detail/${id}`)
+}

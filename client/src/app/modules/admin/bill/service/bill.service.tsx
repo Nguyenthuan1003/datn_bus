@@ -5,6 +5,10 @@ export const getAllBill = async () => {
     return await axiosPrivate.get("/bill")
 }
 
+export const createBill = async (data:any) => {
+    return await axiosPrivate.post("/bill/store",data)
+}
+
 export const deleteBill = async (id: any) => {
     return await axiosPrivate.delete(`/bill/delete/${id}`)
 }

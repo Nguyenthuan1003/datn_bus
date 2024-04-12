@@ -81,7 +81,11 @@ const CheckChaircomponent:FC<any> = ({trip_id,setSelectData,setDataPrice}) => {
 
                         <div className='px-3'>
                             <div>
-                                <h3 className='font-medium py-2'>Tầng trên</h3>
+                                {
+                                    lowarArray?.length == 0 ? "" : (
+                                        <h3 className='font-medium py-2'>Tầng trên</h3>
+                                    )
+                                }
                             </div>
 
                             <div className='flex-wrap grid grid-cols-3'>
