@@ -686,7 +686,7 @@ class TripController extends Controller
                     return response()->json(['error' => 'start_time không thể là thời gian đã qua'], 500);
                 }
                 // if future
-                $startTime = $startTime->startOfHour();
+                $startTime = $startTime->startOfDay();
                 $startTimeDate = $startTime->toDateString();
                 $startTimeTime = $startTime->toTimeString();
                 $startTime = $startTime->toDateTimeString();
