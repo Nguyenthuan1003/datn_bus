@@ -32,7 +32,7 @@ class StatisticalController extends Controller
             $currentMonth = $currentDateTime->month;
             $currentYear = $currentDateTime->year;
 
-//            get total current month
+            //            get total current month
             $tripCountCurrentMonth = Trip::whereMonth('start_time', $currentMonth)
                 ->where('status', 1) // Chỉ lấy các chuyến xe có status = 1
                 ->where('start_time', '<=', $currentDateTime) // Chỉ lấy các chuyến xe có start_time bé hơn hoặc bằng thời điểm hiện tại
@@ -42,7 +42,7 @@ class StatisticalController extends Controller
                 ->where('status_pay', 1) // Chỉ lấy các bản ghi có status_pay = 1
                 ->sum('total_money_after_discount');
 
-//            get total current year
+            //            get total current year
             $tripCountCurrentYear = Trip::whereYear('start_time', $currentYear)
                 ->where('status', 1)
                 ->where('start_time', '<=', $currentDateTime)
@@ -52,7 +52,7 @@ class StatisticalController extends Controller
                 ->where('status_pay', 1) // Chỉ lấy các bản ghi có status_pay = 1
                 ->sum('total_money_after_discount');
 
-//            get totals by month by year
+            //            get totals by month by year
             $totalStatisticalByYear = [];
 
             $tripCountsByMonth = Trip::whereYear('start_time', $currentYear)
@@ -83,7 +83,7 @@ class StatisticalController extends Controller
             $userCountsByMonth = array_replace(array_fill_keys($months, 0), $userCountsByMonth);
             $totalRevenueByMonth = array_replace(array_fill_keys($months, 0), $totalRevenueByMonth);
 
-            for ($month = 1; $month <=12; $month++) {
+            for ($month = 1; $month <= 12; $month++) {
                 $totalStatisticalByYear[$month] = [
                     'trip_count_by_month' => $tripCountsByMonth[$month],
                     'user_count_by_month' => $userCountsByMonth[$month],
@@ -106,7 +106,7 @@ class StatisticalController extends Controller
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi truy vấn dữ liệu',
                 'status' => 'fail',
-//                'error' => $e->getMessage()
+                //                'error' => $e->getMessage()
             ]);
         }
     }
@@ -167,11 +167,11 @@ class StatisticalController extends Controller
             $year = $request->input('year');
             $currentDateTime = Carbon::now();
 
-//            if (!$year) {
-//                return response()->json([
-//                    'message' => 'Không có thông tin trường year'
-//                ]);
-//            }
+            //            if (!$year) {
+            //                return response()->json([
+            //                    'message' => 'Không có thông tin trường year'
+            //                ]);
+            //            }
 
             $request->validate([
                 'year' => 'required|integer'
@@ -200,7 +200,7 @@ class StatisticalController extends Controller
             //  Điền giá trị cho các tháng không có bản ghi
             $tripCountsByMonth = array_replace(array_fill_keys($months, 0), $tripCountsByMonth);
             $totalRevenueByMonth = array_replace(array_fill_keys($months, 0), $totalRevenueByMonth);
-            for ($month = 1; $month <=12; $month++) {
+            for ($month = 1; $month <= 12; $month++) {
                 $totalStatisticalByYear[$month] = [
                     'trip_count_by_month' => $tripCountsByMonth[$month],
                     'total_revenue_by_month' => $totalRevenueByMonth[$month]
@@ -234,11 +234,11 @@ class StatisticalController extends Controller
             $endDate = $request->input('end_date');
             $currentDateTime = Carbon::now();
 
-//            if (!$startDate || !$endDate) {
-//                return response()->json([
-//                    'message' => 'Không có đủ thông tin trường start_time hoặc end_time'
-//                ]);
-//            }
+            //            if (!$startDate || !$endDate) {
+            //                return response()->json([
+            //                    'message' => 'Không có đủ thông tin trường start_time hoặc end_time'
+            //                ]);
+            //            }
 
             $request->validate([
                 'start_time' => 'required|date',
@@ -293,7 +293,7 @@ class StatisticalController extends Controller
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi truy vấn dữ liệu',
                 'status' => 'fail',
-//                'error' => $e->getMessage()
+                //                'error' => $e->getMessage()
             ]);
         }
     }
@@ -315,7 +315,7 @@ class StatisticalController extends Controller
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi truy vấn dữ liệu',
                 'status' => 'fail',
-//                'error' => $e->getMessage()
+                //                'error' => $e->getMessage()
             ]);
         }
     }
@@ -337,11 +337,11 @@ class StatisticalController extends Controller
             $totalRevenue = Bill::where('status_pay', 1)
                 ->sum('total_money_after_discount');
             $top10Routes = Route::select('routes.id', 'routes.name')
-                ->leftJoin('trips as T', function($join) {
+                ->leftJoin('trips as T', function ($join) {
                     $join->on('routes.id', '=', 'T.route_id')
                         ->where('T.status', '=', '1');
                 })
-                ->leftJoin('bills as B', function($join) {
+                ->leftJoin('bills as B', function ($join) {
                     $join->on('B.trip_id', '=', 'T.id')
                         ->where('B.status_pay', '=', '1');
                 })
@@ -352,24 +352,24 @@ class StatisticalController extends Controller
                 ->orderByDesc('total_revenue')
                 ->limit(10)
                 ->get();
-// cách 2:
-//            $top10Routes = Route::select('routes.id', 'routes.name')
-//                ->leftJoin('trips as TR', function($join) {
-//                    $join->on('routes.id', '=', 'TR.route_id')
-//                        ->where('TR.status', '=', '1');
-//                })
-//                ->leftJoin('bills as B', function($join) {
-//                    $join->on('B.trip_id', '=', 'TR.id')
-//                        ->where('B.status_pay', '=', '1');
-//                })
-//                ->leftJoin('ticket_orders as TC', 'TC.bill_id', '=', 'B.id')
-//                ->groupBy('routes.id', 'routes.name')
-//                ->selectRaw('SUM(B.total_money_after_discount) as total_revenue')
-//                ->selectRaw('COUNT(TC.id) as total_tickets')
-//                ->selectRaw('COUNT(TR.id) as total_trips')
-//                ->orderByDesc('total_revenue')
-//                ->limit(10)
-//                ->get();
+            // cách 2:
+            //            $top10Routes = Route::select('routes.id', 'routes.name')
+            //                ->leftJoin('trips as TR', function($join) {
+            //                    $join->on('routes.id', '=', 'TR.route_id')
+            //                        ->where('TR.status', '=', '1');
+            //                })
+            //                ->leftJoin('bills as B', function($join) {
+            //                    $join->on('B.trip_id', '=', 'TR.id')
+            //                        ->where('B.status_pay', '=', '1');
+            //                })
+            //                ->leftJoin('ticket_orders as TC', 'TC.bill_id', '=', 'B.id')
+            //                ->groupBy('routes.id', 'routes.name')
+            //                ->selectRaw('SUM(B.total_money_after_discount) as total_revenue')
+            //                ->selectRaw('COUNT(TC.id) as total_tickets')
+            //                ->selectRaw('COUNT(TR.id) as total_trips')
+            //                ->orderByDesc('total_revenue')
+            //                ->limit(10)
+            //                ->get();
 
             return response()->json([
                 'message' => 'Truy vấn dữ liệu thành công',
@@ -383,7 +383,7 @@ class StatisticalController extends Controller
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi truy vấn dữ liệu',
                 'status' => 'fail',
-//                'error' => $e->getMessage()
+                //                'error' => $e->getMessage()
             ]);
         }
     }
@@ -444,7 +444,7 @@ class StatisticalController extends Controller
             $tripCountsByMonth = array_replace(array_fill_keys($months, 0), $tripCountsByMonth);
             $totalRevenueByMonth = array_replace(array_fill_keys($months, 0), $totalRevenueByMonth);
             $userCountsByMonth = array_replace(array_fill_keys($months, 0), $userCountsByMonth);
-            for ($month = 1; $month <=12; $month++) {
+            for ($month = 1; $month <= 12; $month++) {
                 $dataForChar[$month] = [
                     'trip_count_by_month' => $tripCountsByMonth[$month],
                     'total_revenue_by_month' => $totalRevenueByMonth[$month],
@@ -465,7 +465,7 @@ class StatisticalController extends Controller
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi truy vấn dữ liệu',
                 'status' => 'fail',
-//                'error' => $e->getMessage()
+                //                'error' => $e->getMessage()
             ]);
         }
     }

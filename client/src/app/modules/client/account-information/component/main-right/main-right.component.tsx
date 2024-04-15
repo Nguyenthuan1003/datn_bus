@@ -1,5 +1,5 @@
 import { Upload, Modal, Button, Form, Input, message } from 'antd'
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import ButtonRadiusCompoennt from '~/app/component/parts/button/button.component'
 import { axiosFormData } from '~/app/api/confighHTTp'
 
@@ -10,6 +10,7 @@ const MainRight = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [previewImage, setPreviewImage] = useState(null)
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('isLoggedIn') === 'true')
+  const [form] = Form.useForm()
   const formRef = useRef<FormInstance>(null)
 
   const handleUpdateClick = () => {
@@ -25,6 +26,12 @@ const MainRight = () => {
   const handleCancel = () => {
     setUpdateFormVisible(false)
   }
+
+  useEffect(() => {
+    if (userData) {
+      form.setFieldsValue(userData)
+    }
+  }, [userData])
 
   const onFinish = async () => {
     try {
@@ -60,6 +67,11 @@ const MainRight = () => {
       setUserData((prevState) => ({ ...prevState, avatar: file }))
       setPreviewImage(URL.createObjectURL(file))
     }
+  }
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target
+    setUserData((prevState) => ({ ...prevState, [name]: value }))
   }
 
   const url = 'http://localhost:8000/'
@@ -146,9 +158,11 @@ const MainRight = () => {
           }}
         >
           <Form
+            form={form}
             ref={formRef}
             initialValues={userData}
             onFinish={onFinish}
+            onValuesChange={(changedValues, allValues) => setUserData(allValues)}
             style={{
               border: '1px solid white',
               borderRadius: '10px',
@@ -158,7 +172,7 @@ const MainRight = () => {
             }}
           >
             <Form.Item label='Tên' name='name' rules={[{ required: true, message: 'Vui lòng nhập tên!' }]}>
-              <Input />
+              <Input onChange={handleInputChange} />
             </Form.Item>
 
             <Form.Item
@@ -166,11 +180,11 @@ const MainRight = () => {
               name='phone_number'
               rules={[{ required: true, message: 'Vui lòng nhập số điện thoại!', type: 'phone_number' }]}
             >
-              <Input />
+              <Input onChange={handleInputChange} />
             </Form.Item>
 
             <Form.Item label='Địa chỉ' name='address' rules={[{ required: true, message: 'Vui lòng nhập địa chỉ!' }]}>
-              <Input />
+              <Input onChange={handleInputChange} />
             </Form.Item>
 
             <Form.Item
@@ -178,11 +192,11 @@ const MainRight = () => {
               name='description'
               rules={[{ required: true, message: 'Vui lòng Không để trông!' }]}
             >
-              <Input />
+              <Input onChange={handleInputChange} />
             </Form.Item>
 
             <Form.Item label='Vị trí' name='location' rules={[{ required: true, message: 'Vui lòng Không để trông!' }]}>
-              <Input />
+              <Input onChange={handleInputChange} />
             </Form.Item>
 
             <Form.Item label='Ảnh' rules={[{ required: true, message: 'Vui lòng Không để trông!' }]}>
