@@ -3,8 +3,6 @@ import ButtonRadiusCompoennt from '../../../component/parts/button/button.compon
 import { yupResolver } from '@hookform/resolvers/yup';
 import { validateForgot } from '../../../utils/validateForm';
 import { css } from '@emotion/react';
-import { FaFacebook } from "react-icons/fa";
-import { FaGoogle } from "react-icons/fa";
 
 const ForgotPassComponent = () => {
     const { handleSubmit, control, formState: { errors } } = useForm({
@@ -48,7 +46,7 @@ const ForgotPassComponent = () => {
                         <ButtonRadiusCompoennt type="submit" content='Đặt lại mật khẩu ' />
                     </div>
 
-                    <div className="w-full relative my-6 flex items-center py-3">
+                    {/* <div className="w-full relative my-6 flex items-center py-3">
                         <hr className="bg-[#66666640] w-full h-[2px]" />
 
                         <span className="subtitle-4 text-[#666666] bg-white absolute top-[3px] w-[12%] left-[44%] text-center"> OR </span>
@@ -63,7 +61,7 @@ const ForgotPassComponent = () => {
                             <FaGoogle className='text-red-500 -mb-[20px] ml-[45px]' /> 
                             Đăng nhập với Google
                         </button>
-                    </div>
+                    </div> */}
                 </form>
             </div>
         </div>
