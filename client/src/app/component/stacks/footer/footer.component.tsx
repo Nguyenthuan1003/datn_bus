@@ -1,34 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import logo from '../../../../assets/img/logo_book_bus.png'
-import Pusher from 'pusher-js'
-const FooterComponent = () => {
 
-
-    useEffect(() => {
-       // Enable pusher logging - you can disable this in production
-    Pusher.logToConsole = false
-
-    const pusher = new Pusher('c4f8e2d57cd915c9e6b6', {
-      cluster: 'ap1'
-    })
-
-    const channel = pusher.subscribe('hold-seat-channel')
-    channel.bind('hold-seat-event', function (data) {
-      // console.log(data)
-      if (data.message) {
-        localStorage.setItem('rt_seatData', JSON.stringify(data.message))
-      }
-    })
-
-    // Clean up subscription when component unmounts
-    return () => {
-      //   channel.unbind_all()
-      //   channel.unsubscribe()
-    }
-      }, [])
-
-
-
+const FooterComponent = ({dataSeatHold}:any) => {
+    console.log('FooterComponent', dataSeatHold);
+    
     return (
 
              <footer className="bg-[#FFF7F5]  mt-10">

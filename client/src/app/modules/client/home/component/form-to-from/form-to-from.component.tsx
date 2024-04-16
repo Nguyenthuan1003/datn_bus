@@ -43,7 +43,7 @@ const FormToFromComponent = () => {
   }
 
   const disablePastDate = (current: any) => {
-    return current && current < dayjs().endOf('day')
+    return current && current < dayjs().startOf('day')
   }
 
   const ButtonRadiusComponent = ({ content, onClick }: any) => <button onClick={onClick}>{content}</button>
@@ -195,7 +195,8 @@ const FormToFromComponent = () => {
                     setFormData({ ...formData, startDate: dayjs(date) })
                   }
                 }}
-                disabledDate={disablePastDate}
+                // disabledDate={disablePastDate}
+                minDate={dayjs()}
               />
             </p>
           </div>

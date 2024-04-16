@@ -27,7 +27,8 @@ const PaymentComponent = () => {
     const dataBill: any = localStorage.getItem('bill_user')
     const ObDataBill = JSON.parse(dataBill)
     const idBill =ObDataBill?.id
-
+    
+    
     
     useEffect(() => {
         const deleteOrderAsync = async () => {
@@ -38,6 +39,22 @@ const PaymentComponent = () => {
                 setOrderCancelled(true);
                 // Sau khi xóa đơn hàng thành công, điều hướng về trang chủ
                 window.location.href = '/';
+                 fetch('http://127.0.0.1:8000/api/rt/seat')
+                .then(
+                    function(response) {
+                    if (response.status !== 200) {
+                        console.log('Lỗi, mã lỗi ' + response.status);
+                        return;
+                    }
+                    // parse response data
+                    response.json().then(data => {
+                        console.log("data",data);
+                    })
+                    }
+                )
+                .catch(err => {
+                    console.log('Error :-S', err)
+                });
             } catch (error) {
                 // Xử lý lỗi nếu có
                 console.error('Error deleting order:', error);
@@ -52,7 +69,7 @@ const PaymentComponent = () => {
         }
         
     }, [remainingTime]);
-    const codeSeat = cart?.seat_id.map((seat: string) => `'${seat}'`).join(', ')
+    const codeSeat = cart?.seat_id?.map((seat: string) => `'${seat}'`).join(', ')
     console.log('codeSeat',codeSeat);
     
     return (

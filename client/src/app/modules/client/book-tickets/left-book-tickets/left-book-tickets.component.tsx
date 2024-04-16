@@ -16,14 +16,13 @@ import { getTripId } from '~/app/api/trip/trip.api';
 import { getOneUser } from '~/app/api/auth/auth.api';
 import { LoadingOutlined } from '@ant-design/icons';
 
-const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, selectData, dataPrice, seat_id }) => {
+const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, selectData, dataPrice, seat_id ,dataSeatHold}) => {
     const accsetoken: any = localStorage.getItem('token')
     // console.log(accsetoken)
     const arrayFilter = ['phone_number', 'name', 'email']
     const { handleSubmit, control, formState: { errors } } = useForm({
         mode: "onChange",
-        resolver: yupResolver(validateTicket),
-        defaultValues: async () => {
+        resolver: yupResolver(validateTicket),defaultValues: async () => {
             const userData = (await getOneUser(accsetoken)).data.user
             // console.log("1",userData)
             const filterData: any = {}
@@ -44,6 +43,30 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
     const [idUser, setIdUser] = useState<any>()
     const [route, setRoute] = useState<any>()
 
+    // console.log('dataSeatHold',dataSeatHold?.map((item:any)=> item).find((trip:any)=> trip.trip_id == trip_id ));
+   
+    // const dataSeatHold = dataRT?.map((item:any)=> item).find((trip:any)=> trip.trip_id == trip_id )?.trip_id
+    
+    useEffect(()=>{
+        fetch('http://127.0.0.1:8000/api/rt/seat')
+        .then(
+            function(response) {
+            if (response.status !== 200) {
+                console.log('Lỗi, mã lỗi ' + response.status);
+                return;
+            }
+            // parse response data
+            response.json().then(data => {
+                console.log("data",data);
+            })
+            }
+        )
+        .catch(err => {
+            console.log('Error :-S', err)
+        });
+
+    },[])
+
 
 
     useEffect(() => {
@@ -56,7 +79,7 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
         getOneUser(accsetoken).then((res: any) => {
             setIdUser(res?.data?.user?.id)
         })
-
+        
     }, [trip_id])
     // console.log("userdđ",idUser);
 
@@ -67,14 +90,13 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
 
 
     const { data: { cart }, actions } = useCartRedux()
-    console.log('cart',cart);
-    console.log('slect',selectData);
-    
+    // console.log('dataRTChair',dataRTChair);
+
 
 
     const navigate = useNavigate()
     const onSubmit = async (data: any) => {
-
+       
         if (selectData.length == 0) {
             message.error("vui lòng chọn chỗ ngồi")
             return
@@ -215,7 +237,7 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
                         <BreadCrumb dataTrip={dataTrip} />
                     </div>
                     <div>
-                        <CheckChaircomponent seat_id={seat_id} trip_id={trip_id} setSelectData={setSelectData} setDataPrice={setDataPrice} />
+                        <CheckChaircomponent seat_id={seat_id} dataSeatHold={dataSeatHold} trip_id={trip_id} seatData={selectData} setSelectData={setSelectData} setDataPrice={setDataPrice} />
                     </div>
                     <div>
                         <CustomerInformation trip_id={trip_id} control={control} errors={errors} />

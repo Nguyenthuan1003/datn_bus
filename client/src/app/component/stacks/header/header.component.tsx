@@ -33,7 +33,7 @@ const HeaderComponent = () => {
         }
     }, []);
         const [roleId, setRoleId] = useState<any>(null);
-        console.log(user);
+        // console.log(user);
         // const history = useHistory();
         const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
             message.info('Click on left button.');
