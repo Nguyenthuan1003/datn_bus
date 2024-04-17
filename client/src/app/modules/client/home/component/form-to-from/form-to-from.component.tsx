@@ -198,7 +198,8 @@ const FormToFromComponent = () => {
                     setFormData({ ...formData, startDate: dayjs(date) })
                   }
                 }}
-                disabledDate={disablePastDate}
+                // disabledDate={disablePastDate}
+                minDate={dayjs()}
               />
             </p>
           </div>

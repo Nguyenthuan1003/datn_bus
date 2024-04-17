@@ -42,7 +42,23 @@ const LeftComponent = () => {
             const confirmed = window.confirm('Bạn có muốn hủy đơn hàng không ?');
             if (confirmed) {
                 const { data }: any = await cancelBill(idBill);
-                console.log('delete data', data);
+
+                fetch('http://127.0.0.1:8000/api/rt/seat')
+                .then(
+                    function(response) {
+                    if (response.status !== 200) {
+                        console.log('Lỗi, mã lỗi ' + response.status);
+                        return;
+                    }
+                    // parse response data
+                    response.json().then(data => {
+                        console.log("data",data);
+                    })
+                    }
+                )
+                .catch(err => {
+                    console.log('Error :-S', err)
+                });
 
                 if (data) {
                     message.success(data.message);
@@ -50,6 +66,7 @@ const LeftComponent = () => {
                     setTimeout(() => {
                         window.location.href = '/'; // Điều hướng đến trang chủ
                     }, 2000); // 10 giây
+                   
                 } else {
                     // Xử lý khi có lỗi hoặc không có kết quả từ hàm cancelBill
                     message.error('Failed to delete bill.');

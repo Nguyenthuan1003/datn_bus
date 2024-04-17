@@ -4,7 +4,6 @@ import { CiCircleInfo } from "react-icons/ci";
 import { getTripId } from '~/app/api/trip/trip.api';
 const Costticketcomponent:FC<any> = ({trip_id,selectData,dataPrice}) => {
   const [dataChair,setDataChair]=useState<any>()
-  console.log("dataChair",dataChair);
   
     useEffect(()=>{
         getTripId(trip_id).then((res:any)=>{
