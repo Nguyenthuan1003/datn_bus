@@ -17,17 +17,22 @@ interface ITemplateModelBill {
 const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFunc, callBack }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [state, setState] = useState({});
+    const [searchTerm, setSearchTerm] = useState('')
+    const [selectedRoute, setSelectedRoute] = useState('')
     const [detailRecord, setDetailRecord] = useState<any>({})
     const [objectTicket, setObjectTicket] = useState<any>([])
-    console.log('objectTicket', objectTicket);
-    console.log('detailRecord', detailRecord);
+    const [selectedPaymentStatus, setSelectedPaymentStatus] = useState('')
+    const [searchPhoneNumber, setSearchPhoneNumber] = useState('');
+    const routes = [...new Set(dataTable.map((trip: any) => trip?.trip?.route?.name))]
+    // console.log('objectTicket', objectTicket);
+    // console.log('detailRecord', detailRecord);
+    console.log('searchTerm', searchTerm);
 
     
 
     const paymentTypes = [
         { key: '0', name: 'VNP' },
-        { key: '1', name: 'Thanh toán tại quầy' },
-        { key: '2', name: 'Mono' }
+        { key: '1', name: 'Mono' },
     ];
     const getTypePayName = (typePayKey: any) => {
         const foundType = paymentTypes.find(type => type.key === typePayKey);;
@@ -42,7 +47,13 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
             return <h3 style={{ color: 'red' }}>Chưa thanh toán</h3>;
         }
     };
-    console.log(dataTable);
+    const getStatusTicket = (status: any) => {
+        if (status === 1) {
+            return <h3 style={{ color: 'green' }}>Đã check vé </h3>;
+        } else {
+            return <h3 style={{ color: 'orange' }}>Chưa check</h3>;
+        }
+    };
 
     const trip = dataTable.map((trip: any) => trip?.trip)
     const route = trip.map((route: any) => route?.route)
@@ -65,7 +76,8 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
             total_money_after_discount: record?.total_money_after_discount,
             ticket_order: record?.ticket_order,
             trip: record?.trip,
-            total_seat: record?.total_seat
+            total_seat: record?.total_seat,
+            phoneNumber : record?.phone_number,
         })
   
         const combinedTickets = record.ticket_order.map((ticket: any) => ({
@@ -74,7 +86,8 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
             price: record?.trip?.trip_price,
             quantity: 1,
             totalPrice: record?.total_money,
-            phoneNumber : record?.phone_number
+            codeTicket: ticket?.code_ticket,
+            statusTicket: ticket?.status
         }));
         setObjectTicket(combinedTickets);
 
@@ -103,6 +116,12 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
     const cancel = (e: any) => {
         message.info('huỷ xoá');
     };
+    const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(event.target.value)
+      }
+      const handleSearchPhone = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchPhoneNumber(event.target.value)
+      }
     const onHandleSearch = async (value: any) => {
         try {
             const searchOptions: any = {
@@ -113,6 +132,32 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
             console.log(error);
         }
     }
+    const handlePaymentStatusChange = (value: string) => {
+        if (value === '-- Trạng thái thanh toán --') {
+          setSelectedPaymentStatus('')
+        } else {
+          setSelectedPaymentStatus(value)
+        }
+      }
+      const handleRouteChange = (value: string) => {
+        if (value === '-- Chọn tuyến đường --') {
+          setSelectedRoute('')
+        } else {
+          setSelectedRoute(value)
+        }
+      }
+      const filteredData = dataTable.filter((item: any) => {
+        console.log(item);
+        
+        const paymentStatusText = item.status_pay === 1 ? 'Thanh toán thành công' : 'Chưa thanh toán'
+        return (
+          item.code_bill.includes(searchTerm) && 
+          (selectedRoute === '' || item.trip?.route?.name === selectedRoute) &&
+          (selectedPaymentStatus === '' || paymentStatusText === selectedPaymentStatus) &&
+          item.phone_number.includes(searchPhoneNumber)
+        //   (searchPhoneNumber === '' || item.phone?.phone_number.includes(searchPhoneNumber))
+        )
+      })
     const columns: any = [
         {
             title: 'Mã hoá đơn',
@@ -182,9 +227,11 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
         {
             title: 'Hành động',
             key: 'action',
-            render: (_: any, record: any) => (
+            render: (_: any, record: any) => (            
                 <div className='flex'>
-                    <Popconfirm
+                    {
+                        record?.status_pay === 0  ? (
+                            <Popconfirm
                         title="xác nhận xoá"
                         description="bạn có chắc chắn muốn xoá không ?"
                         onConfirm={() => confirmDelete(record.id)}
@@ -199,6 +246,14 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
                             
                         </button>
                     </Popconfirm>
+                        ) : (
+                            <div>
+
+                            </div>
+
+                        )
+                    }
+                    
                     <IoEyeSharp 
                         onClick={() => showModal(record)}
                         className= 'text-[23px] cursor-pointer text-green-500 hover:text-green-700 dark:hover:text-green-800 ml-4'
@@ -248,7 +303,11 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
             label: "Trạng thái",
             children: getStatusText(detailRecord?.status_pay)
         },
-
+        {
+            key: "8",
+            label: "Số điện thoại",
+            children: detailRecord?.phoneNumber
+        },
     ]
 
     const columsTicket = [
@@ -282,6 +341,23 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
                 return <div>{record.price ? record.price?.toLocaleString('vi', { style: 'currency', currency: 'VND' }) : "Tuyến xe không tồn tại không thấy giá tiền"}</div>
             }
         },
+        
+        {
+            title: 'Mã vé ghế',
+            key: 'codeTicket',
+            dataIndex: 'codeTicket',
+            render: (_: any, record: any) => {
+                return <div>{record?.codeTicket}</div>;
+            },
+        },
+        {
+            title: 'Trạng thái vé',
+            key: 'statusTicket',
+            dataIndex: 'statusTicket',
+            render: (_: any, record: any) => {
+                return <div>{getStatusTicket(record?.statusTicket)}</div>;
+            },
+        },
         {
             title: 'Tổng số tiền',
             key: 'totalPrice',
@@ -296,7 +372,6 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
                 };
             },
         },
-
     ]
 
     return (
@@ -308,31 +383,32 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
                 <div>
                     <Input 
                     placeholder="Nhập mã hoá đơn"
-                    onSubmit={onHandleSearch as any}
+                    onChange={handleSearch as any}
                      />
                 </div>
                 <div className='px-3'>
-                    <Input placeholder="Nhập số điện thoại người mua" />
+                    <Input placeholder="Nhập số điện thoại người mua" onChange={handleSearchPhone as any} />
                 </div>
                 <div className='px-3'>
-                  <Select placeholder="-- Chọn tuyến đường --">
-                    <Option value="1"/>
-                  </Select>
+                <Select placeholder='-- Chọn tuyến đường --' onChange={handleRouteChange}>
+                    <Option value='-- Chọn tuyến đường --' />
+                    {routes.filter(Boolean).map((routeName: any , index: any) => (
+                    <Option key={index} value={routeName}>
+                        {routeName}
+                    </Option>
+                    ))}
+                </Select>
                 </div>
                 <div className='px-3'>
-                  <Select placeholder="-- Loại thanh toán --">
-                    <Option value="1"/>
-                  </Select>
-                </div>
-
-                <div className='px-3'>
-                  <Select placeholder="-- Trạng thái thanh toán --">
-                    <Option value="1"/>
-                  </Select>
+                <Select className='w-[210px]' placeholder='-- Trạng thái thanh toán --' onChange={handlePaymentStatusChange}>
+                    <Option value='-- Trạng thái thanh toán --' />
+                    <Option value='Thanh toán thành công' />
+                    <Option value='Chưa thanh toán' />
+                </Select>
                 </div>
             </div>
             <hr className='py-3' />
-            <Table columns={columns} dataSource={dataTable} />
+            <Table columns={columns} dataSource={filteredData} />
             <Modal title="" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} width={1000}>
                 <Descriptions title="THÔNG TIN HOÁ ĐƠN" items={items} />
                 <div>
