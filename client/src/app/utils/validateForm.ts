@@ -23,9 +23,16 @@ export const validateLogin = yup.object().shape({
     password: yup.string().required('bạn cần nhập đầy đủ thông tin')
 })
 
+export const validateResetPass = yup.object().shape({
+    password: yup.string().required('bạn cần nhập đầy đủ thông tin').length(8, "Mật khẩu phải có ít nhất 8 kí tự"),
+    newpassword: yup.string().required('bạn cần nhập đầy đủ thông tin').length(8, "Mật khẩu phải có ít nhất 8 kí tự"),
+    confirmpassword: yup.string().oneOf([yup.ref("newpassword")], 'mật khẩu xác nhận phải trùng với mật khẩu mới').required('bạn cần nhập đầy đủ thông tin')
+})
+
 export const validateRegister = yup.object().shape({
     phone_number: yup.string().length(10, "Độ dài số điện thoại là 10").matches(phoneRegExp, 'Số điện thoại không đúng định dạng').required('cần nhập đầy đủ thông tin'),
     email: yup.string().email('Email không hợp lệ').matches(emailregExp, 'Email không đúng định dạng').required('cần nhập đầy đủ thông tin'),
+    name: yup.string().required('cần nhập đầy đủ thông tin'),
     password: yup.string().min(8, 'Mật khẩu phải có ít nhất 8 kí tự').required('cần nhập đầy đủ thông tin'),
     comfirmPassWord: yup.string().oneOf([yup.ref("password")], 'mật khẩu xác nhận phải trùng với mật khẩu bắt buộc').required('cần nhập đầy đủ thông tin'),
 });

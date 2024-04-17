@@ -14,6 +14,9 @@ import ForgotPassComponent from "./forgot-pass/forgot-pass.component"
 import SuccessComponent from "./success/success.component";
 import PaymentComponent from "./payment/payment.component";
 import ResultPage from "./result/result_page";
+import AccountInformation from "./account-information/account-information.component";
+import TicketPurchaseHistory from "./ticket-purchase-history/ticket-purchase-history.component";
+import ResetPassComponent from "./reset-pass/reset-pass.component";
 
 export const clientRouter: RouteObject[] = [
     {
@@ -71,5 +74,17 @@ export const clientRouter: RouteObject[] = [
     {
         path: "/result-payment",
         element: <ResultPage />
-    }
+    },
+    {
+        path: "/account-information",
+        element: <AccountInformation />
+    },
+    {
+        path: "/ticket-purchase-history",
+        element: <TicketPurchaseHistory />
+    },
+    {
+        path: "/reset-pass",
+        element: <ResetPassComponent />
+    },
 ]

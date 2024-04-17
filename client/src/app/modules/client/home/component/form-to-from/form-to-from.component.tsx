@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Radio } from 'antd'
+import { Radio, Spin } from 'antd'
 import type { RadioChangeEvent } from 'antd'
 import { css } from '@emotion/react'
 import ButtonRadiusCompoennt from '~/app/component/parts/button/button.component'
@@ -33,6 +33,7 @@ const FormToFromComponent = () => {
   const [errorMessage, setErrorMessage] = useState<any>(null)
   const [searchResults, setSearchResults] = useState<any>([])
   const [locations, setLocations] = useState<any>([])
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
   const inputWidth = value === 1 ? '250px' : '200px'
@@ -45,7 +46,6 @@ const FormToFromComponent = () => {
   const disablePastDate = (current: any) => {
     return current && current < dayjs().startOf('day')
   }
-
   const ButtonRadiusComponent = ({ content, onClick }: any) => <button onClick={onClick}>{content}</button>
 
   useEffect(() => {
@@ -96,6 +96,8 @@ const FormToFromComponent = () => {
   const handleSubmit = async (event: any) => {
     event.preventDefault()
 
+    setLoading(true)
+
     try {
       const response = await axiosPrivate.get(
         `/search/trip?start_location=${formData.startLocation}&end_location=${
@@ -123,9 +125,10 @@ const FormToFromComponent = () => {
         { state: { formData } }
       )
 
-      window.location.reload()
+      setLoading(false)
     } catch (error) {
       console.log('Failed to fetch data:', error)
+      setLoading(false)
     }
   }
   return (
