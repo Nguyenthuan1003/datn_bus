@@ -78,6 +78,25 @@ const ResultPage = () => {
             navigate(urlWithoutQueryParams)
           }
         }
+ 
+          fetch('http://127.0.0.1:8000/api/rt/seat')
+          .then(
+              function(response) {
+              if (response.status !== 200) {
+                  console.log('Lỗi, mã lỗi ' + response.status);
+                  return;
+              }
+              // parse response data
+              response.json().then(data => {
+                  console.log("data",data);
+              })
+              }
+          )
+          .catch(err => {
+              console.log('Error :-S', err)
+          });
+  
+
       //   else{
       //     const urlWithoutQueryParams = location.pathname;
       //     navigate(urlWithoutQueryParams)

@@ -27,6 +27,20 @@ const HeaderComponent = () => {
   }
   const [user, setUser] = useState<any>(null) // Sử dụng state để lưu trữ thông tin người dùng
 
+    useEffect(() => {
+        // Lấy dữ liệu người dùng từ localStorage khi component được render
+        const userString = localStorage.getItem('user');
+        if (userString) {
+            const userData = JSON.parse(userString);
+            setUser(userData);
+        }
+    }, []);
+        const [roleId, setRoleId] = useState<any>(null);
+        // console.log(user);
+        // const history = useHistory();
+          
+
+    
   useEffect(() => {
     // Lấy dữ liệu người dùng từ localStorage khi component được render
     const userString = localStorage.getItem('user')
@@ -35,7 +49,7 @@ const HeaderComponent = () => {
       setUser(userData)
     }
   }, [])
-  const [roleId, setRoleId] = useState<any>(null)
+
   console.log(user)
   // const history = useHistory();
   const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
