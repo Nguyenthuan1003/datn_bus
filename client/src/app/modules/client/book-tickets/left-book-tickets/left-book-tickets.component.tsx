@@ -70,18 +70,26 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
 
 
     useEffect(() => {
-        getTripId(trip_id).then((res) => {
-            setDataTrip(res?.data?.trip)
-            setStartLocation(res?.data?.trip?.start_location);
-            setEndLocation(res?.data?.trip?.end_location);
-            setRoute(res?.data?.trip?.route?.name);
+        getTripId(trip_id).then((res:any) => {
+            console.log('res',res);
+            if(res.data.message === "Truy vấn dữ liệu thành công"){
+                setDataTrip(res?.data?.trip)
+                setStartLocation(res?.data?.trip?.start_location);
+                setEndLocation(res?.data?.trip?.end_location);
+                setRoute(res?.data?.trip?.route?.name);
+            }else{
+                message.error(res.data.message)
+                setTimeout(() => {
+                    navigate("/")
+                }, 3000);
+            }
         });
         getOneUser(accsetoken).then((res: any) => {
             setIdUser(res?.data?.user?.id)
         })
         
     }, [trip_id])
-    // console.log("userdđ",idUser);
+    console.log("userdđ",idUser);
 
     const locationData = {
         start_location: startLocation,
@@ -151,7 +159,7 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
                     total_seat: selectData.length,
                     // code_bill: cart?.code_bill,
                     discount_code_id: null,
-                    user_id: idUser?.id || null
+                    user_id: idUser || null
                 };
                 // Gọi API để lưu hóa đơn
                 console.log('billData', billData);
