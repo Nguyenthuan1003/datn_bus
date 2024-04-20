@@ -82,8 +82,8 @@ const ResultPage = () => {
           }
         } 
         if( responseCode === "24"){
-          const resCancel = await cancelBill(idBill);
-          message.error(resCancel.data.message);
+          await cancelBill(idBill);
+          // message.error(resCancel.data.message);
           navigate('/fail-payment')
         }
           fetch('http://127.0.0.1:8000/api/rt/seat')
