@@ -10,8 +10,8 @@ import Swal from 'sweetalert2'
 import { useState } from 'react'
 const RegisterComponent = () => {
   const [spinning, setSpinning] = useState<boolean>(false)
-  const [error, setError] = useState<any>(null)
-  console.log('error', error)
+  // const [error, setError] = useState<any>(null)
+  // console.log('error', error)
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const {
@@ -21,11 +21,13 @@ const RegisterComponent = () => {
   } = useForm({
     resolver: yupResolver(validateRegister)
   })
-  const onSubmit = (data: any) => {
+  const onSubmit = async (value: any)  =>  {
+    setSpinning(true)
     try {
-      setSpinning(true)
-      register(data).then((res) => {
-        if (res.data.message === 'ok') {
+      const data:any = await register(value)
+      console.log("data",data);
+      
+        if (data.data.message === 'ok') {
           setOpen(true)
           Swal.fire({
             position: 'top',
@@ -34,29 +36,38 @@ const RegisterComponent = () => {
             showConfirmButton: false,
             timer: 2000
           })
-          return
-        } else if (res?.data?.error) {
-          setOpen(true)
-          Swal.fire({
-            position: 'top',
-            icon: 'warning',
-            title: 'Opps!',
-            text: res.data.error.email[0] || res.data.error.phone_number[0], // Hiển thị lỗi từ API
-            timer: 2000
-          })
-        }
-      })
-    } catch (error) {
-      Swal.fire({
-        title: 'Opps!',
-        text: `${data?.error?.email[0]}`,
-        icon: 'error',
-        confirmButtonText: 'Quay lại'
-      })
-    } finally {
-      setSpinning(false)
-    }
-    navigate('/login')
+          navigate('/login')
+        } 
+        // else if (res?.data?.error) {
+        //   setOpen(true)
+        //   Swal.fire({
+        //     position: 'top',
+        //     icon: 'warning',
+        //     title: 'Opps!',
+        //     text: res.data.error.email[0] || res.data.error.phone_number[0], // Hiển thị lỗi từ API
+        //     timer: 2000
+        //   })
+        // }
+    } catch (error:any) {
+      console.log(error);
+      
+      if(error?.response?.data.error.phone_number[0] === "số điện thoại đã được sử dụng."){
+        Swal.fire({
+          title: 'Opps!',
+          text: `${error?.response?.data.error.phone_number[0]}`,
+          icon: 'error',
+          confirmButtonText: 'Quay lại'
+        })
+      }
+      if(error?.response?.data.error.email[0] === "email đã được sử dụng."){
+        Swal.fire({
+          title: 'Opps!',
+          text: `${error?.response?.data.error.email[0]}`,
+          icon: 'error',
+          confirmButtonText: 'Quay lại'
+        })
+      }
+    } 
   }
   return (
     <div css={loginCss} className='w-[1128px] m-auto flex '>
@@ -129,7 +140,7 @@ const RegisterComponent = () => {
               )}
             />
             {errors && <span className='text-red-600'>{errors.phone_number?.message}</span>}
-            {error && <span className='text-red-600'>{error.phone_number[0]}</span>}
+
           </div>
 
           <div className='my-2'>

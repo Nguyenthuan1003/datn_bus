@@ -7,10 +7,13 @@ import { Link, useNavigate } from 'react-router-dom'
 import { login } from '~/app/api/auth/auth.api'
 import { message, Spin } from 'antd'
 import { useState } from 'react'
+import { data } from 'autoprefixer'
+import Swal from 'sweetalert2'
 
 const LoginComponent = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [showSuccessMessage, setShowSuccessMessage] = useState(false)
+  const [open, setOpen] = useState(false)
   const navigate = useNavigate()
   const {
     handleSubmit,
@@ -19,32 +22,56 @@ const LoginComponent = () => {
   } = useForm({
     resolver: yupResolver(validateLogin)
   })
-  const onSubmit = (data: any) => {
+  const onSubmit = async (value: any) => {
     setIsLoading(true)
-    login(data).then((res: any) => {
-      if (res) {
-        console.log(res)
-        localStorage.setItem('token', res?.data?.data?.jwt?.original?.access_token)
-        localStorage.setItem('user', JSON.stringify(res?.data?.data?.user))
-
-        message.success('đăng nhập thành công')
-        setTimeout(() => {
-          setShowSuccessMessage(true)
-          setIsLoading(false) // Đặt isLoading về false để dừng loading spinner
-        }, 2000)
-
-        // Kiểm tra type_user và navigate đến trang tương ứng
-        const type_user = res?.data?.data?.user?.type_user
-        if (type_user === 'admin' || type_user === 'driver' || type_user === 'assistant') {
-          navigate('/admin')
-        } else if (type_user === 'user') {
-          navigate('/')
-        }
-        window.location.reload()
-      } else {
-        message.error('thất bại')
-      }
-    })
+    try {
+      const data:any = await login(value)
+        if (data) {
+          if(data.data.message === "ok"){
+          localStorage.setItem('token', data?.data?.data?.jwt?.original?.access_token)
+          localStorage.setItem('user', JSON.stringify(data?.data?.data?.user))
+          setTimeout(() => {
+            setShowSuccessMessage(true)
+            setIsLoading(false) // Đặt isLoading về false để dừng loading spinner
+          }, 2000)
+                  // Kiểm tra type_user và navigate đến trang tương ứng
+          const type_user = data?.data?.data?.user?.type_user
+          if (type_user === 'admin' || type_user === 'driver' || type_user === 'assistant') {
+            setOpen(true)
+              Swal.fire({
+                position: 'top',
+                icon: 'success',
+                title: `Chào Mừng bạn quay lại trang quản trị!`,
+                showConfirmButton: false,
+                timer: 1000
+              })
+                navigate('/admin')
+          } else if (type_user === 'user') {
+            setOpen(true)
+            Swal.fire({
+              position: 'top',
+              icon: 'success',
+              title: `Đăng nhập thành công !`,
+              showConfirmButton: false,
+              timer: 1000
+            })
+            navigate('/')
+            setTimeout(() => {
+              window.location.reload()
+            }, 1000);
+          }
+          }else{
+            if(data.error){
+              message.warning("Tài khoản hoặc mật khẩu sai!")
+            setIsLoading(false)
+            }
+          }     
+        } 
+    
+    } catch (error:any) {
+       message.error(error.response.data.error)
+       setIsLoading(false)
+    }
   }
   return (
     <div css={loginCss} className='w-[1128px] m-auto flex '>

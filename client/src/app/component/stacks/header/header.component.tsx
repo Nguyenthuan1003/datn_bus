@@ -26,7 +26,6 @@ const HeaderComponent = () => {
     navigate('/')
   }
   const [user, setUser] = useState<any>(null) // Sử dụng state để lưu trữ thông tin người dùng
-
     useEffect(() => {
         // Lấy dữ liệu người dùng từ localStorage khi component được render
         const userString = localStorage.getItem('user');
@@ -50,7 +49,6 @@ const HeaderComponent = () => {
     }
   }, [])
 
-  console.log(user)
   // const history = useHistory();
   const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     message.info('Click on left button.')
@@ -63,7 +61,7 @@ const HeaderComponent = () => {
     }
     console.log('click', e)
   }
-  const items: MenuProps['items'] = [
+  const menuItems : MenuProps['items'] = [
     {
       label: <Link to={'/account-information'}>Thông tin khách hàng</Link>,
       key: '1',
@@ -85,9 +83,17 @@ const HeaderComponent = () => {
         handleLogout()
       }
     }
-  ]
+  ];
+  if (user && user.type_user === 'admin') {
+  menuItems.push({
+    label: <Link to={'/admin'}>Trang quản trị</Link>,
+    key: '4',
+    style: { color: '#1890ff', fontSize: '16px', cursor: 'pointer', padding: '20px' },
+    icon: <UserOutlined />
+  });
+}
   const menuProps = {
-    items,
+    items:menuItems,
     onClick: handleMenuClick
   }
 
