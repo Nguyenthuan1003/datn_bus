@@ -2,12 +2,30 @@ import React, { useEffect, useRef, useState } from 'react'
 import LeftComponent from '../payment/component/left.component'
 import { useCartRedux } from '../redux/hook/useCartReducer'
 import { cancelBill } from '~/app/api/bill/bill.api'
+import moment from 'moment-timezone'
+import { Button, Modal } from 'antd'
+import { useNavigate } from 'react-router-dom'
+
 const PaymentComponent = () => {
-    const {data:{cart}}=useCartRedux()
+    // const {data:{cart}}=useCartRedux()
+    // const cart:any = localStorage.getItem("cart")\
+    const navigate = useNavigate()
+    const getBillData:any = localStorage.getItem("bill_user")
+    const billUser = JSON.parse(getBillData)
+    const getCart:any = localStorage.getItem("cart")
+    const cart = JSON.parse(getCart)
+    const  [delayEmptyCart, setDelayEmptycart] = useState(!cart)
+    setTimeout(() => {
+        setDelayEmptycart(!cart)
+    }, 3000);
+    // const time =  moment.utc(billUser?.created_at).local().format('DD/MM/YYYY HH:mm:ss')
+    const createdAt = moment.utc(billUser?.created_at).local().valueOf();
+
     const price = cart?.total_money_after_discoun
     const paymentRef = useRef<any>(null);
-    const [remainingTime, setRemainingTime] = useState(100); 
+    const [remainingTime, setRemainingTime] = useState(100);
     const [orderCancelled, setOrderCancelled] = useState(false);
+    const [modalEmptyCart, setModalEmptyCart] = useState(false);
     useEffect(() => {
         // Kiểm tra nếu paymentRef tồn tại và không phải là null
         if (paymentRef.current) {
@@ -16,26 +34,40 @@ const PaymentComponent = () => {
         }
     }, [price]); // Trigger lại useEffect khi giá trị của cart thay đổi
     useEffect(() => {
+        const currentTime = moment().valueOf();
+        const elapsedTime = currentTime - createdAt;
+        const timeRemaining = 5 * 60 * 1000 - elapsedTime; // 5 phút tính bằng millisecond
+
+        // Khởi tạo thời gian đếm ngược ban đầu
+        setRemainingTime(timeRemaining);
+
+        // Đếm ngược thời gian
         const countdownInterval = setInterval(() => {
-            setRemainingTime(prevTime => prevTime - 1);
+            setRemainingTime(prevTime => prevTime - 1000);
         }, 1000);
 
+        // Xóa interval khi component unmount
         return () => clearInterval(countdownInterval);
     }, []);
-    const minutes = Math.floor(remainingTime / 60);
-    const seconds = remainingTime % 60;
+    const minutes = Math.floor(remainingTime / (1000 * 60));
+    const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
     const dataBill: any = localStorage.getItem('bill_user')
     const ObDataBill = JSON.parse(dataBill)
     const idBill =ObDataBill?.id
     
-    
-    
+    const handleOk = () =>{
+        setModalEmptyCart(true)
+        navigate("/")
+    }
+
     useEffect(() => {
+
         const deleteOrderAsync = async () => {
             try {
                 // Gọi API để xóa đơn hàng
                 await  cancelBill(idBill);
                 localStorage.removeItem("bill_user")
+                localStorage.removeItem("cart")
                 setOrderCancelled(true);
                 // Sau khi xóa đơn hàng thành công, điều hướng về trang chủ
                 window.location.href = '/';
@@ -68,14 +100,30 @@ const PaymentComponent = () => {
             deleteOrderAsync();
         }
         
+    
     }, [remainingTime]);
     const codeSeat = cart?.seat_id?.map((seat: string) => `'${seat}'`).join(', ')
-    console.log('codeSeat',codeSeat);
     
     return (
         <div className='w-full'>
-           
-            <div className='layout flex flex-wrap  py-5 px-40'>
+           {
+             delayEmptyCart ? ( <Modal
+                title='Có điều gì đó sai, vui lòng tìm chuyến xe đặt lại vé'
+                visible={true}
+                onOk={handleOk}
+                width={450}
+                centered
+                footer={
+                  <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+                    <Button onClick={handleOk} style={{ width: '90px' }}>
+                      ok
+                    </Button>
+                  </div>
+                }
+              >
+              </Modal>) : (
+                <div>
+                     <div className='layout flex flex-wrap  py-5 px-40'>
                 
                 <div className="w-[320px] flex-col flex">
                     
@@ -189,6 +237,10 @@ const PaymentComponent = () => {
                     </div>
                 </div>
             </div>
+                </div>
+             )
+           }
+           
         </div>
     )
 }

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { updateBillAndSendMail } from '~/app/api/bill/bill.api';
+import { cancelBill, updateBillAndSendMail } from '~/app/api/bill/bill.api';
 import { useCartRedux } from '../redux/hook/useCartReducer';
 import { LoadingOutlined } from '@ant-design/icons';
 import SuccessComponent from '../success/success.component';
-import { Spin } from 'antd';
+import { Spin, message } from 'antd';
 import { Link } from 'react-router-dom';
 import { useLocation , useNavigate } from 'react-router-dom';
+import PaymentFailComponent from './component/paymentFail.component';
 const ResultPage = () => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [updateSuccess, setUpdateSuccess] = useState(false);
@@ -13,7 +14,7 @@ const ResultPage = () => {
   const [successData, setSuccessData] = useState<any>({});
   const [billUpdated, setBillUpdated] = useState(false);
   const location = useLocation();
-
+  
   const navigate = useNavigate()
   const dataBill: any = localStorage.getItem('bill_user');
   const ObDataBill = JSON.parse(dataBill)
@@ -23,6 +24,7 @@ const ResultPage = () => {
   console.log('id',billUpdated);
   console.log("idBill12222222",idBill);
   console.log('Result Page', successData);
+
   useEffect(() => {
     const fetchDataAndUpdate = async () => {
       try {
@@ -32,6 +34,7 @@ const ResultPage = () => {
         
         const urlParams = new URLSearchParams(window.location.search);
         const responseCode = urlParams.get('vnp_ResponseCode');
+
 
         
         console.log(1);
@@ -77,8 +80,12 @@ const ResultPage = () => {
             console.log(res.data);
             navigate(urlWithoutQueryParams)
           }
+        } 
+        if( responseCode === "24"){
+          const resCancel = await cancelBill(idBill);
+          message.error(resCancel.data.message);
+          navigate('/fail-payment')
         }
- 
           fetch('http://127.0.0.1:8000/api/rt/seat')
           .then(
               function(response) {
@@ -95,8 +102,6 @@ const ResultPage = () => {
           .catch(err => {
               console.log('Error :-S', err)
           });
-  
-
       //   else{
       //     const urlWithoutQueryParams = location.pathname;
       //     navigate(urlWithoutQueryParams)
@@ -114,6 +119,7 @@ const ResultPage = () => {
     fetchDataAndUpdate();
 
   }, []);
+   
   return (
     <div className=''>
       {isUpdating && (
