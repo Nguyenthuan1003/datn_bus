@@ -10,6 +10,7 @@ export const deleteUser = async (id: any) => {
 }
 
 export const addUser = async (data: any) => {
+    
     return await axiosPrivate.post(`/user/store`,data)
 }
 
