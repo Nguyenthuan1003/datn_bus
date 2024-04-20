@@ -11,6 +11,8 @@ import CarComponent from './car/car.component'
 import SeatComponent from './seat/seat.component'
 import BillComponent from './bill/bill.component'
 import CheckBillComponent from './check-bill/check-bill.component'
+import UserAdminComponent from './user/user-admin.component';
+import ParentType from './type-user/type-user.component';
 export const adminRouter: RouteObject[] = [
   {
     path: '',
@@ -85,6 +87,16 @@ export const adminRouter: RouteObject[] = [
   {
     path: 'check-bill',
     element: <CheckBillComponent />,
+    children: []
+  },
+  {
+    path: 'user',
+    element: <UserAdminComponent />,
+    children: []
+  },
+  {
+    path: 'type-user',
+    element: <ParentType />,
     children: []
   }
 ]
