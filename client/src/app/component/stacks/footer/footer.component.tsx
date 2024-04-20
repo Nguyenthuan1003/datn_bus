@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import logo from '../../../../assets/img/logo_book_bus.png'
-const FooterComponent = () => {
+
+const FooterComponent = ({dataSeatHold}:any) => {
+    console.log('FooterComponent', dataSeatHold);
+    
     return (
 
              <footer className="bg-[#FFF7F5]  mt-10">

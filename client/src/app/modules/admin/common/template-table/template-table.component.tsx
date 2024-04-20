@@ -13,6 +13,7 @@ interface ITemplateTable {
     createFunc?:any
     callBack?:any
     changeFunc?:any
+    dataId?:any
 }
 const TemplateTable:FC<ITemplateTable> = (
     {
@@ -23,19 +24,23 @@ const TemplateTable:FC<ITemplateTable> = (
     createFunc,
     callBack,
     changeFunc,
-    title
+    title,
+    dataId
      }) => {
     const [selectedRowKeys,setSelectedRowKeys] = useState<React.Key[]>([])
     const [isModalOpen, setIsModalOpen ] = useState(false)
     const [type,setType]=useState('CREATE')
     const [defaultValue,setDefaultValue]=useState<any>(null)
     const [form] = Form.useForm()
-
+// const [current, setCurrent] = useState(null);
+// console.log(current)
     const showModal = (typeAction: string, recordTable?: any) => {
         setIsModalOpen(true);
         setType(typeAction)
         if(typeAction=="CHANGE"){
+            // setCurrent(recordTable
             setDefaultValue(recordTable)
+            dataId(recordTable)
             form.setFieldsValue(recordTable)
         }
         else{
@@ -53,7 +58,10 @@ const TemplateTable:FC<ITemplateTable> = (
         //   }
         if(type=='CREATE'){
             form.validateFields().then((value:any)=>{
-                createFunc(value).then((res:any)=>{
+                console.log(value);
+                
+                createFunc(value)
+                .then((res:any)=>{
                     if(res){
                         callBack(res.data)
                        message.success("thêm thành công") 

@@ -1,14 +1,24 @@
-import React from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import { css } from '@emotion/react'
 import { CiCircleInfo } from "react-icons/ci";
-const Costticketcomponent = () => {
+import { getTripId } from '~/app/api/trip/trip.api';
+const Costticketcomponent:FC<any> = ({trip_id,selectData,dataPrice}) => {
+  const [dataChair,setDataChair]=useState<any>()
+  
+    useEffect(()=>{
+        getTripId(trip_id).then((res:any)=>{
+            setDataChair(res?.data)
+        })
+    },[])
+
+    
   return (
     <div css={cssCostTicket} className='bg-white '>
       <h3 className='font-semibold text-[1.5rem] pb-2 flex items-center'>Chi tiết giá <CiCircleInfo color='red' className='ml-1 cursor-pointer'/> </h3>
       <div className="info__body__line">
         <span className="info__body__text-right ">Giá vé lượt đi</span>
         <span className="info__body__price text-red-600">
-          0đ
+        {dataPrice?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}
         </span>
       </div>
       <div className="info__body__line">
@@ -20,7 +30,7 @@ const Costticketcomponent = () => {
       <div className="info__body__line info__body__line__total-price pt-4">
         <span className="info__body__text-right ">Tổng tiền</span>
         <span className="info__body__price text-red-600">
-          0đ
+        {dataPrice?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}
         </span>
       </div>
     </div>
