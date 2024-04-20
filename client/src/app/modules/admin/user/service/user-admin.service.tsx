@@ -1,4 +1,4 @@
-import { axiosPrivate } from "../../../../api/configHTTP"
+import { axiosPrivate, axiosFormData } from "~/app/api/confighHTTp"
 
 
 export const getAllUser = async () => {
@@ -10,10 +10,10 @@ export const deleteUser = async (id: any) => {
 }
 
 export const addUser = async (data: any) => {
-    
-    return await axiosPrivate.post(`/user/store`,data)
+    data.role_id = data.user_type_id;
+    return await axiosFormData.post(`/user/store`,data)
 }
 
 export const updateUser = async (data: any,id:any) => {
-    return await axiosPrivate.put(`/user/update/${id}`,data)
+    return await axiosFormData.put(`/user/update/${id}`,data)
 }
