@@ -75,6 +75,10 @@ const UserAdminComponent = () => {
               <Input />
             </Form.Item>
 
+            <Form.Item label='Password' name='password' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+              <Input />
+            </Form.Item>
+
             <Form.Item
               label='Số điện thoại'
               name='phone_number'
