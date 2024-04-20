@@ -8,34 +8,40 @@ import { adminRouter } from './app/modules/admin/router'
 import { Modal } from 'antd'
 import NotFoundComponent from './app/component/stacks/not-found/not-found.component'
 
-// Tạo một component PrivateRoute
-function PrivateRoute({ children, setIsModalVisible }) {
+function PrivateRoute({ children, setIsModalVisible, setModalContent }) {
   const user = JSON.parse(localStorage.getItem('user'))
 
-  // Kiểm tra nếu user là admin, driver hoặc assistant thì cho phép truy cập, ngược lại hiển thị modal
+  if (!user) {
+    setIsModalVisible(true)
+    setModalContent('Vui lòng đăng nhập')
+    return <Navigate to='/' />
+  }
+
   if (user?.type_user === 'admin' || user?.type_user === 'driver' || user?.type_user === 'assistant') {
     return children
   } else {
     setIsModalVisible(true)
+    setModalContent('Bạn không phải admin, vui lòng đăng nhập với tư cách admin')
     return <Navigate to='/' />
   }
 }
 
 function App() {
   const [isModalVisible, setIsModalVisible] = useState(false)
+  const [modalContent, setModalContent] = useState('')
   const navigate = useNavigate()
   let timeoutId
 
   useEffect(() => {
-    if (isModalVisible) {
+    if (isModalVisible && modalContent === 'Vui lòng đăng nhập') {
       timeoutId = setTimeout(() => {
         setIsModalVisible(false)
-        navigate('/')
+        navigate('/login')
       }, 5000)
     }
 
     return () => clearTimeout(timeoutId)
-  }, [isModalVisible, navigate])
+  }, [isModalVisible, navigate, modalContent])
 
   let element: any = useRoutes([
     {
@@ -50,7 +56,7 @@ function App() {
         {
           path: 'admin',
           element: (
-            <PrivateRoute setIsModalVisible={setIsModalVisible}>
+            <PrivateRoute setIsModalVisible={setIsModalVisible} setModalContent={setModalContent}>
               <DefaulAdmin />
             </PrivateRoute>
           ),
@@ -70,15 +76,16 @@ function App() {
         onOk={() => {
           setIsModalVisible(false)
           clearTimeout(timeoutId)
-          navigate('/')
+          if (modalContent === 'Vui lòng đăng nhập') {
+            navigate('/login')
+          }
         }}
         onCancel={() => {
           setIsModalVisible(false)
           clearTimeout(timeoutId)
-          navigate('/')
         }}
       >
-        <p>Bạn không phải admin, vui lòng đăng nhập với tư cách admin</p>
+        <p>{modalContent}</p>
       </Modal>
     </>
   )
