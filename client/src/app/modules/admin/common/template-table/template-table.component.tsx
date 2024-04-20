@@ -73,12 +73,15 @@ const TemplateTable:FC<ITemplateTable> = (
 
         if (type === 'CHANGE') {
             form.validateFields().then((value: any) => {
+        
               // Kiểm tra xem dữ liệu có thay đổi hay không
               const isDataChanged = Object.keys(value).some(key => value[key] !== defaultValue[key]);
               if (isDataChanged) {
                 // Nếu có thay đổi, thực hiện cập nhật
                 changeFunc(value, defaultValue.id).then((res: any) => {
                   if (res) {
+                    console.log(value);
+                    
                     callBack(res.data);
                     message.success('Cập nhật thành công');
                     

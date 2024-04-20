@@ -81,6 +81,17 @@ export const menuDashBoard = [
     icon: <CiMoneyCheck1 />,
     label: 'Checkin Bill',
     roles: ['admin', 'driver', 'assistant']
+  },
+  {
+    key: '/admin/type-discount',
+    icon: <CiMoneyCheck1 />,
+    label: 'Loại giảm giá',
+    roles: ['admin']
+  },  {
+    key: '/admin/discount-code',
+    icon: <CiMoneyCheck1 />,
+    label: 'Mã giảm giá',
+    roles: ['admin']
   }
 ]
 

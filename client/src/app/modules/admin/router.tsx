@@ -11,6 +11,8 @@ import CarComponent from './car/car.component'
 import SeatComponent from './seat/seat.component'
 import BillComponent from './bill/bill.component'
 import CheckBillComponent from './check-bill/check-bill.component'
+import TypeDiscoutComponent from './typeDiscout/typeDiscout.component'
+import DiscoutCodeComponent from './discount-code/discoutCode.component'
 export const adminRouter: RouteObject[] = [
   {
     path: '',
@@ -86,5 +88,17 @@ export const adminRouter: RouteObject[] = [
     path: 'check-bill',
     element: <CheckBillComponent />,
     children: []
-  }
+  },
+  {
+    path: 'type-discount',
+    element: <TypeDiscoutComponent />,
+    children: []
+  },
+  {
+    path: 'discount-code',
+    element: <DiscoutCodeComponent />,
+    children: []
+  },
+  
+  
 ]
