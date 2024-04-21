@@ -2,7 +2,7 @@ import { HomeOutlined, UserOutlined } from '@ant-design/icons'
 import { SiAdminer } from 'react-icons/si'
 import { PiFlagBannerDuotone } from 'react-icons/pi'
 import { BsTicketPerforated } from 'react-icons/bs'
-import { CiMoneyCheck1 } from "react-icons/ci";
+import { CiMoneyCheck1 } from 'react-icons/ci'
 export const menuDashBoard = [
   {
     key: '/',
@@ -32,6 +32,18 @@ export const menuDashBoard = [
     key: '/admin/parent-location',
     icon: <PiFlagBannerDuotone />,
     label: 'Tỉnh Thành',
+    roles: ['admin']
+  },
+  {
+    key: '/admin/user',
+    icon: <UserOutlined />,
+    label: 'Người dùng',
+    roles: ['admin']
+  },
+  {
+    key: '/admin/type-user',
+    icon: <UserOutlined />,
+    label: 'Khách hàng',
     roles: ['admin']
   },
   {
@@ -102,5 +114,5 @@ export function filterMenuByUserType(type_user) {
 }
 
 // Sử dụng hàm filterMenuByUserType để lấy menu tương ứng với type_user
-const user = JSON.parse(localStorage.getItem('user'));
-const userMenu = filterMenuByUserType(user?.type_user);
+const user = JSON.parse(localStorage.getItem('user'))
+const userMenu = filterMenuByUserType(user?.type_user)

@@ -18,6 +18,8 @@ const MenuAccount = () => {
     }, 3000)
   }
   const [user, setUser] = useState<any>(null)
+  console.log('menuuser',user);
+  
   return (
     <div className='col-span-12 hidden rounded-2xl border p-2 sm:col-span-3 lg:block mt-[89px]'>
       {loading ? (

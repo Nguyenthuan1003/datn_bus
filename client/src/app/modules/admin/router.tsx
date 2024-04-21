@@ -13,6 +13,8 @@ import BillComponent from './bill/bill.component'
 import CheckBillComponent from './check-bill/check-bill.component'
 import TypeDiscoutComponent from './typeDiscout/typeDiscout.component'
 import DiscoutCodeComponent from './discount-code/discoutCode.component'
+import UserAdminComponent from './user/user-admin.component';
+import ParentType from './type-user/type-user.component';
 export const adminRouter: RouteObject[] = [
   {
     path: '',
@@ -99,6 +101,14 @@ export const adminRouter: RouteObject[] = [
     element: <DiscoutCodeComponent />,
     children: []
   },
-  
-  
+  {
+    path: 'user',
+    element: <UserAdminComponent />,
+    children: []
+  },
+  {
+    path: 'type-user',
+    element: <ParentType />,
+    children: []
+  }
 ]
