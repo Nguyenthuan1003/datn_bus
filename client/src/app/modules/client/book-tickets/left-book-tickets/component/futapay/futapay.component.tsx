@@ -5,9 +5,11 @@ import ButtonCanelCompoennt from '~/app/component/parts/button/button-cancel.com
 import ButtonRadiusCompoennt from '~/app/component/parts/button/button.component'
 
 const FutapayComponent:FC<any> = ({dataPrice})=>{
-    const handelCanel = ()=>{
-        window.history.back()
+    const handelCanel = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        window.history.back();
     }
+    
     return (
         <div className='bg-white flex justify-between'>
             < div className='p-4'>
@@ -15,7 +17,7 @@ const FutapayComponent:FC<any> = ({dataPrice})=>{
             </div >
 
             <div className='flex p-4'>
-                <div><ButtonCanelCompoennt content='huỷ' onchange={handelCanel} bgcolor /></div>
+                <div><ButtonCanelCompoennt type="reset" content='huỷ' onchange={handelCanel} bgcolor /></div>
                 <div className='px-4'><ButtonRadiusCompoennt content='thanh toán' /></div>
             </div>
         </div >
