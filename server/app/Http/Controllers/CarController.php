@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Car;
 use App\Models\Seat;
 use App\Models\TypeCar;
+use Illuminate\Support\Facades\Storage;
 
 class CarController extends Controller
 {
@@ -21,7 +22,7 @@ class CarController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'image' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5048',
             'color' => 'nullable|string',
             'description' => 'string',
             'license_plate' => 'required|string',
@@ -36,7 +37,17 @@ class CarController extends Controller
         $car->id_type_car = $request->input('id_type_car');
         $car->license_plate = $request->input('license_plate');
         $car->status = $request->input('status');
-        $car->image = $request->input('image');
+
+        $imageTruePath = "";
+        if ($request->has('image')) {
+            $saveImageTo = 'images/car';
+            $image = $request->file('image');
+
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->storeAs($saveImageTo, $imageName, 'public');
+            $imageTruePath = substr(Storage::url($saveImageTo . '/' . $imageName), 1);
+        }
+        $car->image = $imageTruePath;
 
         $car = collect($car)->toArray();
 
@@ -48,7 +59,7 @@ class CarController extends Controller
 
         $typeSeat =  $query->typeCar->type_seats;
         $totalSeat = $query->typeCar->total_seat;
-        $upFloorAt = 12;
+        $upFloorAt = 18;
 
         $seatRecord = [
             "car_id" => $carId,
@@ -94,7 +105,7 @@ class CarController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'image' => 'nullable|string',
+            'image' => 'nullable',
             'color' => 'nullable|string',
             'description' => 'nullable|string',
             'license_plate' => 'required|string',
@@ -114,7 +125,16 @@ class CarController extends Controller
         $car->id_type_car = $request->input('id_type_car');
         $car->license_plate = $request->input('license_plate');
         $car->status = $request->input('status');
-        $car->image = $request->input('image');
+
+        if ($request->has('image')) {
+            $saveImageTo = 'images/car';
+            $image = $request->file('image');
+
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->storeAs($saveImageTo, $imageName, 'public');
+            $imageTruePath = substr(Storage::url($saveImageTo . '/' . $imageName), 1);
+            $car->image = $imageTruePath;
+        }
 
         $car->save();
 
