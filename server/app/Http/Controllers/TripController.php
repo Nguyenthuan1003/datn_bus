@@ -896,7 +896,7 @@ class TripController extends Controller
                     return !in_array($item['trip_id'], $idsFormatedData);
                 });
 
-                // Limit the array length to 12
+                // Limit the array length to 10
                 $arrayFormatedMoreTripData = array_slice($arrayFormatedMoreTripData, 0, 10);
 
                 // Convert array B back to indexed array
