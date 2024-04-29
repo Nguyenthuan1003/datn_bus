@@ -69,7 +69,7 @@ class LocationController extends Controller
 
     public function update(Request $request, $id)
     {
-        try {
+        try {            
             $request->validate([
                 'name' => 'required|string|max:255',
                 'image' => 'nullable',
