@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use App\Models\Role;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
@@ -51,7 +52,7 @@ class UserController extends Controller
                 'address' => 'nullable',
                 'user_type_id' => 'required|exists:type_users,id|numeric',
                 'description' => 'nullable',
-                // 'avatar' => 'nullable',
+                'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5048',
                 'location' => 'nullable',
             ], $this->getValidationMessages());
 
@@ -60,11 +61,21 @@ class UserController extends Controller
             $user->email = $request->input('email');
             $user->role_id = $request->input('role_id');
             $user->name = $request->input('name');
-            $user->password = $request->input('password');
+            $user->password = Hash::make($request->input('password'));
             $user->phone_number = $request->input('phone_number');
             $user->address = $request->input('address');
             $user->description = $request->input('description');
-            // $user->avatar = $request->input('avatar');
+
+            $imageTruePath = "";
+            if ($request->has('avatar')) {
+                $saveImageTo = 'images/avatar';
+                $image = $request->file('avatar');
+
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $image->storeAs($saveImageTo, $imageName, 'public');
+                $imageTruePath = substr(Storage::url($saveImageTo . '/' . $imageName), 1);
+            }
+            $user->avatar = $imageTruePath;
             $user->location = $request->input('location');
             $user->save();
 
@@ -78,7 +89,7 @@ class UserController extends Controller
     {
         try {
             $request->validate([
-                'name' => 'required',
+                'name' => 'nullable',
                 'email' => [
                     'required',
                     'email',
@@ -86,12 +97,12 @@ class UserController extends Controller
                 ],
                 'phone_number' => 'nullable',
                 'address' => 'nullable',
-                'password' => 'required',
+                'password' => 'nullable',
                 'description' => 'nullable',
-                // 'avatar' => 'nullable',
+                'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5048',
                 'location' => 'nullable',
-                'user_type_id' => 'required|exists:type_users,id|numeric',
-                'role_id' => 'required|numeric',
+                'user_type_id' => 'nullable|exists:type_users,id|numeric',
+                'role_id' => 'nullable|numeric',
             ], $this->getValidationMessages());
 
             $user = User::find($userId);
@@ -100,19 +111,42 @@ class UserController extends Controller
                 return response()->json(['message' => 'User not found'], 404);
             }
 
-            $user->user_type_id = $request->input('user_type_id');
-            $user->email = $request->input('email');
-            $user->role_id = $request->input('role_id');
-            $user->name = $request->input('name');
-            $user->email = $request->input('email');
-            $user->phone_number = $request->input('phone_number');
-            $user->address = $request->input('address');
-            $user->role_id = $request->input('role_id');
-            $user->user_type_id = $request->input('user_type_id');
-            $user->password = $request->input('password');
-            $user->description = $request->input('description');
-            // $user->avatar = $request->input('avatar');
-            $user->location = $request->input('location');
+            if ($request->has('name')) {
+                $user->name = $request->input('name');
+            }
+            if ($request->has('email') && $user->email !== $request->email) {
+                $user->email = $request->input('email');
+            }
+            if ($request->has('phone_number')) {
+                $user->phone_number = $request->input('phone_number');
+            }
+            if ($request->has('address')) {
+                $user->address = $request->input('address');
+            }
+            if ($request->has('role_id')) {
+                $user->role_id = $request->input('role_id');
+            }
+            if ($request->has('user_type_id')) {
+                $user->user_type_id = $request->input('user_type_id');
+            }
+            if ($request->has('password')) {
+                $user->password = Hash::make($request->input('password'));
+            }
+            if ($request->has('description')) {
+                $user->description = $request->input('description');
+            }
+            if ($request->has('avatar')) {
+                $saveImageTo = 'images/avatar';
+                $image = $request->file('avatar');
+
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $image->storeAs($saveImageTo, $imageName, 'public');
+                $imageTruePath = substr(Storage::url($saveImageTo . '/' . $imageName), 1);
+                $user->avatar = $imageTruePath;
+            }
+            if ($request->has('location')) {
+                $user->location = $request->input('location');
+            }
             $user->save();
 
             return response()->json(['message' => 'Cập nhật người dùng thành công', 'uesr' => $user]);
