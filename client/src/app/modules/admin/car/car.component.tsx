@@ -129,7 +129,8 @@ const CarComponent = () => {
                         <Form.Item label='Biển số xe' name='license_plate' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
                             <Input />
                         </Form.Item>
-                        <Form.Item label='Hình ảnh( copy link ảnh )' name='image' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+                        <Form.Item label='Hình ảnh( copy link ảnh )' name='image'>
+                            <h1>Phần update file ảnh đang update</h1>
                             <Input />
                         </Form.Item>
                         <Form.Item label='Kiểu xe' name='id_type_car' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>

@@ -7,13 +7,13 @@ export const menuDashBoard = [
   {
     key: '/',
     icon: <HomeOutlined />,
-    label: 'Trang chủ',
+    label: 'Trang web',
     roles: ['admin', 'driver', 'assistant']
   },
   {
     key: '/admin',
     icon: <SiAdminer />,
-    label: 'Bảng điều kiển',
+    label: 'Trang thống kê',
     roles: ['admin']
   },
   {
@@ -62,12 +62,6 @@ export const menuDashBoard = [
     key: '/admin/car',
     icon: <SiAdminer />,
     label: 'Xe',
-    roles: ['admin']
-  },
-  {
-    key: '/admin/seat',
-    icon: <SiAdminer />,
-    label: 'Chỗ ngồi ',
     roles: ['admin']
   },
   {
