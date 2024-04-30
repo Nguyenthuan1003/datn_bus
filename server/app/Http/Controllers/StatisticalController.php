@@ -32,32 +32,29 @@ class StatisticalController extends Controller
             $currentMonth = $currentDateTime->month;
             $currentYear = $currentDateTime->year;
 
-            //            get total current month
+            //  get total current month
             $tripCountCurrentMonth = Trip::whereMonth('start_time', $currentMonth)
                 ->where('status', 1) // Chỉ lấy các chuyến xe có status = 1
-                ->where('start_time', '<=', $currentDateTime) // Chỉ lấy các chuyến xe có start_time bé hơn hoặc bằng thời điểm hiện tại
                 ->count();
             $userCountCurrentMonth = User::whereMonth('created_at', $currentMonth)->count();
             $totalRevenueCurrentMonth = Bill::whereMonth('created_at', $currentMonth)
                 ->where('status_pay', 1) // Chỉ lấy các bản ghi có status_pay = 1
                 ->sum('total_money_after_discount');
 
-            //            get total current year
+            //  get total current year
             $tripCountCurrentYear = Trip::whereYear('start_time', $currentYear)
                 ->where('status', 1)
-                ->where('start_time', '<=', $currentDateTime)
                 ->count();
             $userCountCurrentYear = User::whereYear('created_at', $currentYear)->count();
             $totalRevenueCurrentYear = Bill::whereYear('created_at', $currentYear)
                 ->where('status_pay', 1) // Chỉ lấy các bản ghi có status_pay = 1
                 ->sum('total_money_after_discount');
 
-            //            get totals by month by year
+            //  get totals by month by year
             $totalStatisticalByYear = [];
 
             $tripCountsByMonth = Trip::whereYear('start_time', $currentYear)
                 ->where('status', 1)
-                ->where('start_time', '<=', $currentDateTime)
                 ->select(DB::raw('MONTH(start_time) AS month'), DB::raw('COUNT(*) AS trip_count'))
                 ->groupBy('month')
                 ->orderBy('month')
