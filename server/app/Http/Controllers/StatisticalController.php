@@ -252,12 +252,12 @@ class StatisticalController extends Controller
                 'end_date' => 'required|date|after:start_time',
             ]);
 
-            $totalStatisticalAbout = [];
+            $statisticalByDays = [];
             $currentDate = Carbon::parse($startDate);
             $endDate = Carbon::parse($endDate);
 
             while ($currentDate->lte($endDate)) {
-                $totalStatisticalAbout[$currentDate->toDateString()] = [
+                $statisticalByDays[$currentDate->toDateString()] = [
                     'trip_count_by_date' => 0,
                     'total_revenue_by_date' => 0
                 ];
@@ -280,27 +280,36 @@ class StatisticalController extends Controller
 
             foreach ($tripCountsByDays as $tripCountByDay) {
                 if ($tripCountByDay->trip_count) {
-                    $totalStatisticalAbout[$tripCountByDay->date]['trip_count_by_date'] = $tripCountByDay->trip_count;
+                    $statisticalByDays[$tripCountByDay->date]['trip_count_by_date'] = $tripCountByDay->trip_count;
                 }
             }
 
             foreach ($totalRevenueByDays as $totalRevenueByDay) {
                 if ($totalRevenueByDay->total_revenue) {
-                    $totalStatisticalAbout[$totalRevenueByDay->date]['total_revenue_by_date'] = $totalRevenueByDay->total_revenue;
+                    $statisticalByDays[$totalRevenueByDay->date]['total_revenue_by_date'] = $totalRevenueByDay->total_revenue;
                 }
             }
 
+            $totalStatisticalDays = [
+                'trip_count_all' => 0,
+                'total_revenue_count_all' => 0
+            ];
+            foreach ($statisticalByDays as $statisticalByDay) {
+                $totalStatisticalDays['trip_count_all'] += $statisticalByDay['trip_count_by_date'];
+                $totalStatisticalDays['total_revenue_count_all'] += $statisticalByDay['total_revenue_by_date'];
+            }
 
             return response()->json([
                 'message' => 'Truy vấn dữ liệu thành công',
-                'total_data' => $totalStatisticalAbout,
+                'statistical_by_days' => $statisticalByDays,
+                'total_statistical_days' => $totalStatisticalDays,
                 'status' => 'success'
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi truy vấn dữ liệu',
                 'status' => 'fail',
-                'error' => $e->getMessage()
+//                'error' => $e->getMessage()
             ]);
         }
     }
