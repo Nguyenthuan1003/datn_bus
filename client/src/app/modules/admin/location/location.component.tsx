@@ -86,9 +86,9 @@ const LocaltionComponent = () => {
                         <Form.Item label='Name' name='name' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
                             <Input />
                         </Form.Item>
-                        <Form.Item label='Copy link ảnh' name='image' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+                        <Form.Item label='image đang update ko gửi link a' name='image'>
                             {/* <input type="file" /> */}
-                            <Input />
+                            {/* <Input /> */}
                         </Form.Item>
 
                         <Form.Item label='description' name='description' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>

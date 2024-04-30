@@ -131,7 +131,7 @@ const CarComponent = () => {
                         </Form.Item>
                         <Form.Item label='Hình ảnh( copy link ảnh )' name='image'>
                             <h1>Phần update file ảnh đang update</h1>
-                            <Input />
+                            {/* <Input /> */}
                         </Form.Item>
                         <Form.Item label='Kiểu xe' name='id_type_car' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
                             <Select placeholder="lựa chọn trạng thái">
