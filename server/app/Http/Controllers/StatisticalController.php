@@ -116,21 +116,37 @@ class StatisticalController extends Controller
     public function general()
     {
         try {
-            $currentDateTime = Carbon::now();
             $totalCarType = TypeCar::count();
             $totalCar = Car::where('status', 1)->count();
             $totalLocation = Location::count();
+            $totalRoute = Route::where('status', 1)->count();
             $totalTrip = Trip::where('status', 1)
-                ->where('start_time', '<=', $currentDateTime)
                 ->count();
-            $top10Car = Car::select('cars.id', 'cars.name', DB::raw('COUNT(trips.id) as total_trip'), DB::raw('SUM(bills.total_money_after_discount) as total_money'), DB::raw('SUM(bills.total_seat) as total_seat'))
-                ->leftJoin('trips', 'cars.id', '=', 'trips.car_id')
-                ->leftJoin('bills', function ($join) {
-                    $join->on('trips.id', '=', 'bills.trip_id')
-                        ->where('bills.status_pay', '=', 1);
-                })
-                ->groupBy('cars.id', 'cars.name')
-                ->orderByDesc('total_money')
+//            $top10Car = Car::select('cars.id', 'cars.name', DB::raw('COUNT(trips.id) as total_trip'),
+//                DB::raw('SUM(bills.total_money_after_discount) as total_money'), DB::raw('SUM(bills.total_seat) as total_seat'))
+//                ->leftJoin('trips', 'cars.id', '=', 'trips.car_id')
+//                ->leftJoin('bills', function ($join) {
+//                    $join->on('trips.id', '=', 'bills.trip_id')
+//                        ->where('bills.status_pay', '=', 1);
+//                })
+//                ->groupBy('cars.id', 'cars.name')
+//                ->orderByDesc('total_money')
+//                ->limit(10)
+//                ->get();
+
+            $top10Car = Car::select('cars.id')
+                ->selectRaw('COALESCE(total_trips.total_trips, 0) AS total_trips')
+                ->selectRaw('COALESCE(total_revenue.total_revenue, 0) AS total_revenue')
+                ->leftJoin(DB::raw('(SELECT trips.car_id, COUNT(*) AS total_trips
+                        FROM trips
+                        WHERE trips.status = 1
+                        GROUP BY trips.car_id) AS total_trips'), 'cars.id', '=', 'total_trips.car_id')
+                ->leftJoin(DB::raw('(SELECT trips.car_id, SUM(bills.total_money_after_discount) AS total_revenue
+                        FROM trips
+                        LEFT JOIN bills ON trips.id = bills.trip_id
+                        WHERE trips.status = 1 AND bills.status_pay = 1
+                        GROUP BY trips.car_id) AS total_revenue'), 'cars.id', '=', 'total_revenue.car_id')
+                ->orderByDesc('total_revenue')
                 ->limit(10)
                 ->get();
 
@@ -139,6 +155,7 @@ class StatisticalController extends Controller
                 'total_car_type' => $totalCarType,
                 'total_car' => $totalCar,
                 'total_location' => $totalLocation,
+                'total_route' => $totalRoute,
                 'total_trip' => $totalTrip,
                 'top_10_Car' => $top10Car,
                 'status' => 'success'
@@ -147,7 +164,7 @@ class StatisticalController extends Controller
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi truy vấn dữ liệu',
                 'status' => 'fail',
-                'error' => $e->getMessage()
+//                'error' => $e->getMessage()
             ]);
         }
     }
