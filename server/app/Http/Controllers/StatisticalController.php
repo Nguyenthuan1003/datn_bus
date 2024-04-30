@@ -158,7 +158,7 @@ class StatisticalController extends Controller
     /**
      * Display statistical for revenue and trip in year
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function revenueTripYear(Request $request)
@@ -224,25 +224,18 @@ class StatisticalController extends Controller
     /**
      * Display statistical for revenue and trip in start time and end time
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function revenueTripAbout(Request  $request)
+    public function revenueTripAbout(Request $request)
     {
         try {
             $startDate = $request->input('start_date');
             $endDate = $request->input('end_date');
-            $currentDateTime = Carbon::now();
-
-            //            if (!$startDate || !$endDate) {
-            //                return response()->json([
-            //                    'message' => 'Không có đủ thông tin trường start_time hoặc end_time'
-            //                ]);
-            //            }
 
             $request->validate([
-                'start_time' => 'required|date',
-                'end_time' => 'required|date|after:start_time',
+                'start_date' => 'required|date',
+                'end_date' => 'required|date|after:start_time',
             ]);
 
             $totalStatisticalAbout = [];
@@ -257,13 +250,13 @@ class StatisticalController extends Controller
                 $currentDate->addDay();
             }
 
-            $tripCountsByDays = Trip::whereBetween('created_at', [$startDate, $endDate])
+            $tripCountsByDays = Trip::whereBetween('start_time', [$startDate, $endDate])
                 ->where('status', 1)
-                ->where('start_time', '<=', $currentDateTime)
                 ->selectRaw('DATE(start_time) as date, COUNT(*) AS trip_count')
                 ->groupBy('date')
                 ->orderBy('date')
                 ->get();
+
             $totalRevenueByDays = Bill::whereBetween('created_at', [$startDate, $endDate])
                 ->selectRaw('DATE(created_at) as date, SUM(total_money_after_discount) as total_revenue')
                 ->where('status_pay', 1)
@@ -293,7 +286,7 @@ class StatisticalController extends Controller
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi truy vấn dữ liệu',
                 'status' => 'fail',
-                //                'error' => $e->getMessage()
+                'error' => $e->getMessage()
             ]);
         }
     }
@@ -391,10 +384,10 @@ class StatisticalController extends Controller
     /**
      * Display statistical for route of year
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function routeForYear(Request  $request)
+    public function routeForYear(Request $request)
     {
         try {
             $request->validate([
