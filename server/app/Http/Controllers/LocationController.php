@@ -32,7 +32,7 @@ class LocationController extends Controller
             $location->name = $request->input('name');
 
             $imageTruePath = "";
-            if ($request->has('image')) {
+            if ($request->hasFile('image')) {
                 $saveImageTo = 'images/location';
                 $image = $request->file('image');
 
@@ -86,7 +86,7 @@ class LocationController extends Controller
             $location->name = $request->input('name');
 
             $imageTruePath = "";
-            if ($request->has('image')) {
+            if ($request->hasFile('image')) {
                 $saveImageTo = 'images/location';
                 $image = $request->file('image');
 

@@ -17,6 +17,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\TypeUserController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\BillController;
+use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\TicketOrderController;
 
 /*
@@ -163,7 +164,7 @@ Route::group(['prefix' => 'ticket'], function () {
     Route::get('edit/{id}', [TicketOrderController::class, 'show']);
     Route::delete('delete/{id}', [TicketOrderController::class, 'destroy']);
     Route::post('checkin', [TicketOrderController::class, 'checkin']);
-    Route::get('find-ticket', [TicketOrderController::class, 'findTicket']);
+    Route::get('find-ticket', [TicketOrderController::class, 'findTicket'])->name('find-ticket-to-checkin');
 });
 
 Route::post('login', [AuthController::class, 'login']);
@@ -176,3 +177,5 @@ Route::post('me', [AuthController::class, 'me']);
 Route::post('forgotpassword', [AuthController::class, 'forgotPasswordSubmit'])->name('forgot.password.submit');
 
 Route::get('rt/seat', [TripController::class, 'realTimeSeat']);
+
+Route::get('getqrcode', [QrCodeController::class, 'generateQRCode']);
