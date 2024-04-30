@@ -390,7 +390,7 @@ class TripController extends Controller
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi xử lý dữ liệu',
                 "status" => "fail",
-//                'error' => $e->getMessage()
+                //                'error' => $e->getMessage()
             ]);
         }
     }
@@ -781,11 +781,13 @@ class TripController extends Controller
                     });
 
                     // format car image url
-                    $carImageName = $trip->car->image;
-                    if ($trip->car->image[0] !== "/") {
-                        $carImageName = "/" . $trip->car->image ?? '';
+                    $carImageName = $trip->car->image ?? "";
+                    if ($trip->car->image) {
+                        if ($trip->car->image[0] !== "/") {
+                            $carImageName = "/" . $trip->car->image ?? '';
+                        }
+                        $carImageName = "http://" . $request->getHttpHost() . $carImageName;
                     }
-                    $carImageName = "http://" . $request->getHttpHost() . $carImageName;
 
                     $formatedData[] = [
                         // trip
@@ -851,11 +853,13 @@ class TripController extends Controller
                     });
 
                     // format car image url
-                    $carImageName = $trip->car->image;
-                    if ($trip->car->image[0] !== "/") {
-                        $carImageName = "/" . $trip->car->image ?? '';
+                    $carImageName = $trip->car->image ?? "";
+                    if ($trip->car->image) {
+                        if ($trip->car->image[0] !== "/") {
+                            $carImageName = "/" . $trip->car->image ?? '';
+                        }
+                        $carImageName = "http://" . $request->getHttpHost() . $carImageName;
                     }
-                    $carImageName = "http://" . $request->getHttpHost() . $carImageName;
 
                     $formatedMoreTripData[] = [
                         // trip
