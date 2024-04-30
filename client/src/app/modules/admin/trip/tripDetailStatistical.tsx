@@ -37,57 +37,75 @@ const TripDetailStatisticalComponent = () => {
         if (dataTrip?.length > 0) {
             Object.keys(dataTrip[0]).forEach((itemKey, key = 0) => {
                 if (!['id', 'car', 'interval_trip', 'created_at', 'updated_at', 'route'].includes(itemKey)) {
-                    columsTemp.push({
-                        title: title[key++],
-                        dataIndex: itemKey,
-                        key: itemKey,
-                        render: (text: any, record: any, index: any) => {
-                            if (itemKey === 'car_id') {
-                                return <>{record?.car?.name ? record?.car?.name : "Not Car"}</>;
+                    console.log(itemKey);
+                    if (itemKey === 'fillRate') {
+                        columsTemp.push({
+                            title: 'Fill Rate', // Tiêu đề cột fillRate
+                            dataIndex: 'fillRate', // Khai báo dataIndex
+                            key: 'fillRate', // Khai báo key
+                            render: (text: any, record: any, index: any) => {
+                                // Xử lý render của cột fillRate ở đây
+                                return (
+                                    <Flex vertical gap="small" style={{ width: 180 }}>
+                                        <Progress percent={record.fillRate} size="small" status="active" />
+                                    </Flex>
+                                );
                             }
-                            if (itemKey === 'status') {
-                                return <Switch
-                                    style={{ background: text ? 'green' : 'red' }}
-                                    checked={text}
-                                    checkedChildren="Đang hoạt động"
-                                    unCheckedChildren="Ngừng hoạt động"
-                                    disabled
-                                />
-                            }
-                            if (itemKey === 'route_id') {
-                                // const nameRoute = record?.route?.name                   
-                                return <h2>{record?.route?.name ? record?.route?.name : "Not route"}</h2>
-                            }
-                            if (itemKey == "trip_price") {
-                                return <div>{record?.trip_price?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</div>
-                            }
-                            if (itemKey == "start_time") {
-                                const utcDateTimeString = record?.start_time;
-                                const localDateTimeString = moment.utc(utcDateTimeString).format('DD/MM/YYYY')
-                                const time = moment.utc(utcDateTimeString).format('HH:mm')
-                                return <div>{`${localDateTimeString} (${time})`}</div>
-                            }
-                            if (itemKey === "fill_unbooked_rate") {
-                                let color = '#52c41a';
-                                if (Number(text) >= 90 && Number(text) <=  100) {
-                                    color = "#faad14";
-                                } else if (Number(text) > 100) {
-                                    color = "#f5222d";
+                        });
+                    }else{
+                        columsTemp.push({
+                            title: title[key++],
+                            dataIndex: itemKey,
+                            key: itemKey,
+                            render: (text: any, record: any, index: any) => {
+                                if (itemKey === 'car_id') {
+                                    return <>{record?.car?.name ? record?.car?.name : "Not Car"}</>;
                                 }
-                              
-                                return    <Flex vertical gap="small" style={{ width: 180 }}>
-                                        <Progress percent={100} size="small" status="active" />
-                                    
-                                    {/* <Text weight={500}>{(text as number) + "%"}
-                                    </Text> */}
-                                </Flex>
-                               
-                                // <Progress percent={Number(text)} showInfo={false} strokeColor={color} />
-
+                                if (itemKey === 'status') {
+                                    return <Switch
+                                        style={{ background: text ? 'green' : 'red' }}
+                                        checked={text}
+                                        checkedChildren="Đang hoạt động"
+                                        unCheckedChildren="Ngừng hoạt động"
+                                        disabled
+                                    />
+                                }
+                                if (itemKey === 'route_id') {
+                                    // const nameRoute = record?.route?.name                   
+                                    return <h2>{record?.route?.name ? record?.route?.name : "Not route"}</h2>
+                                }
+                                if (itemKey == "trip_price") {
+                                    return <div>{record?.trip_price?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</div>
+                                }
+                                if (itemKey == "start_time") {
+                                    const utcDateTimeString = record?.start_time;
+                                    const localDateTimeString = moment.utc(utcDateTimeString).format('DD/MM/YYYY')
+                                    const time = moment.utc(utcDateTimeString).format('HH:mm')
+                                    return <div>{`${localDateTimeString} (${time})`}</div>
+                                }
+                                // if (itemKey === "fill_unbooked_rate") {
+                                //     let color = '#52c41a';
+                                //     if (Number(text) >= 90 && Number(text) <=  100) {
+                                //         color = "#faad14";
+                                //     } else if (Number(text) > 100) {
+                                //         color = "#f5222d";
+                                //     }
+                                  
+                                //     return    <Flex vertical gap="small" style={{ width: 180 }}>
+                                //             <Progress percent={100} size="small" status="active" />
+                                        
+                                //         {/* <Text weight={500}>{(text as number) + "%"}
+                                //         </Text> */}
+                                //     </Flex>
+                                   
+                                //     // <Progress percent={Number(text)} showInfo={false} strokeColor={color} />
+    
+                                // }
+                                return text
                             }
-                            return text
-                        }
-                    })
+                        })
+                    }
+                
                 }
             })
         }

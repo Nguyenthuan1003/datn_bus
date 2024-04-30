@@ -1,5 +1,5 @@
 import React, { FC, Fragment, useEffect, useState } from 'react';
-import { Button, Descriptions, DescriptionsProps, Form, Input, Modal, Popconfirm, Select, Table, message } from 'antd'
+import { Button, Descriptions, DescriptionsProps, Flex, Form, Input, Modal, Popconfirm, Progress, Select, Table, message } from 'antd'
 import TemplateModal from '../template-model/template-model.component';
 import { Option } from 'antd/es/mentions';
 import { IoEyeSharp } from 'react-icons/io5';
@@ -147,6 +147,19 @@ const TemplateTripStatical: FC<ITemplateTable> = (
                 return index + 1; // Sử dụng index để tạo số thứ tự, bắt đầu từ 1
             },
         },
+        {
+            title: 'Fill Rate',
+            dataIndex: 'fillRate',
+            key: 'fillRate',
+            render: (text:any, record:any) => (                
+                <Flex vertical gap="small" style={{ width: 180 }}>
+                <Progress percent={record?.fill_pending_rate} size="small" status="active" />
+                <Progress percent={record?.fill_rate} size="small" status="active" />
+                <Progress percent={record?.fill_unbooked_rate} size="small" status="active" />
+
+              </Flex>
+            ),
+          },
         ...columnTable,
         {
             title: 'Thao tác',
