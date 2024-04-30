@@ -6,10 +6,7 @@ import { DatePicker, Descriptions, DescriptionsProps, Form, Input, Segmented, Se
 
 import { Option } from 'antd/es/mentions';
 import moment, { Moment } from 'moment';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
-import { log } from 'console';
+
 
 // dayjs.extend(utc);
 // dayjs.extend(timezone);
@@ -43,9 +40,9 @@ const TripComponent = () => {
                 setCheckLoad(false);
             }
         })
-        console.log('ressssss');
-    }, [reset])
 
+    }, [reset])
+    console.log('dataTrip',dataTrip.length);
     useEffect(() => {
         getAllTrip().then((res) => {
             if (res) {
@@ -67,7 +64,6 @@ const TripComponent = () => {
                 }
                 
                 // setDataTrip(res.data?.all_trips)
-                console.log('use1');
                 
             }
         })
@@ -80,6 +76,8 @@ const TripComponent = () => {
         getLocationForRoute(selectedRouteId).then((res) => {
             if (res) {
                 setStartLocations(res.data?.start_locations);
+              
+                
             }
 
             if (res) {
@@ -93,6 +91,7 @@ const TripComponent = () => {
             })
         });
     }, [selectedRouteId]);
+    console.log();
 
     const handleRouteChange = (routeId: any) => {
         setSelectedRouteId(routeId);
@@ -167,13 +166,11 @@ const TripComponent = () => {
 
     const fomatCustomCurrent = (data: any) => {
         setCurrent(data)
-        console.log("current", data)
     }
 
     const handleChange = (value: any) => {
         setCurrent(value);
         setChecked(value);
-        console.log(value);
 
     };
 
@@ -181,7 +178,6 @@ const TripComponent = () => {
     const inAcctive = 0
     const handelStatusTrip = (value: any) => {
         setCheckStatus(value)
-        console.log(value);
     }
     
 

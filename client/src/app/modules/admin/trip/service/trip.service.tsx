@@ -14,6 +14,12 @@ export const getLocationForRoute = async (id:any) => {
  
     return await axiosPrivate.get(`/trip/locations-for-route/${id}`)
 }
+export const getTripStatistical = async (startDate: string, endDate: string) => {
+    const queryString = `start_date=${encodeURIComponent(startDate)}&end_date=${encodeURIComponent(endDate)}`;
+    const url = `/trip/statistical/?${queryString}`;
+ 
+    return await axiosPrivate.get(url);
+ }
 
 // const addTripsToDB = (data) => {
 //     return axiosPrivate.post('/trip', data);

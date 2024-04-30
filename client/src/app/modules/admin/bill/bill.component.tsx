@@ -85,7 +85,7 @@ const BillComponent = () => {
     return (
         <div>
             <div>
-                <Button onClick={showModal}>Thêm</Button>
+                {/* <Button onClick={showModal}>Thêm</Button> */}
                 <div>
 
                 </div>
