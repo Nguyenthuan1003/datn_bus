@@ -632,12 +632,13 @@ class TripController extends Controller
             return response()->json([
                 'message' => 'Truy vấn dữ liệu thành công',
                 'trips' => $trips,
+                'trip_total' => count($trips),
                 "status" => "success",
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi truy vấn dữ liệu',
-                //                'error' => $e->getMessage(),
+//                'error' => $e->getMessage(),
                 "status" => "fail"
             ]);
         }
