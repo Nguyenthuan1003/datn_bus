@@ -39,7 +39,7 @@ class CarController extends Controller
         $car->status = $request->input('status');
 
         $imageTruePath = "";
-        if ($request->has('image')) {
+        if ($request->hasFile('image')) {
             $saveImageTo = 'images/car';
             $image = $request->file('image');
 
@@ -126,7 +126,7 @@ class CarController extends Controller
         $car->license_plate = $request->input('license_plate');
         $car->status = $request->input('status');
 
-        if ($request->has('image')) {
+        if ($request->hasFile('image')) {
             $saveImageTo = 'images/car';
             $image = $request->file('image');
 
