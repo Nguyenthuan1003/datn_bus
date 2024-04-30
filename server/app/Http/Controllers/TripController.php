@@ -305,7 +305,7 @@ class TripController extends Controller
 
 
                 $request->validate([
-                    'car_id' => 'required|integer|max:255|exists:cars,id',
+                    'car_id' => 'required|integer|exists:cars,id',
                     //                    'drive_id' => 'required|integer|max:255|exists:users,id',
                     //                    'assistant_car_id' => 'required|integer|max:255|exists:users,id',
                     //                    'start_date' => 'required|date|after_or_equal:today',
@@ -590,13 +590,13 @@ class TripController extends Controller
     {
         try {
             $request->validate([
-                'start_date' => 'required|date',
-                'end_date' => 'required|date',
+                'start_time' => 'required|date',
+                'end_time' => 'required|date',
             ]);
 
             $trips = Trip::with(['car', 'route'])
-                ->where('start_time', '>=', $request->input('start_date'))
-                ->where('start_time', '<=', $request->input('end_date'))
+                ->where('start_time', '>=', $request->input('start_time'))
+                ->where('start_time', '<=', $request->input('end_time'))
                 ->get()->toArray();
 
             foreach ($trips as &$trip) {
@@ -632,12 +632,13 @@ class TripController extends Controller
             return response()->json([
                 'message' => 'Truy vấn dữ liệu thành công',
                 'trips' => $trips,
+                'trip_total' => count($trips),
                 "status" => "success",
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Đã xảy ra lỗi khi truy vấn dữ liệu',
-                //                'error' => $e->getMessage(),
+//                'error' => $e->getMessage(),
                 "status" => "fail"
             ]);
         }
