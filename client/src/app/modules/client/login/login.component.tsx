@@ -126,12 +126,12 @@ const LoginComponent = () => {
           </div>
 
           <div className='flex justify-between'>
-            <div className='flex items-center'>
+            {/* <div className='flex items-center'>
               <span>
                 <input type='checkbox' />{' '}
               </span>
               <p className='px-2'> Đồng ý các điều khoản</p>
-            </div>
+            </div> */}
 
             <a href='/forgot-pass'>Quên mật khẩu?</a>
           </div>
