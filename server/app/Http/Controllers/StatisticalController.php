@@ -418,14 +418,14 @@ class StatisticalController extends Controller
             ]);
 
             $months = range(1, 12);
-            $currentDateTime = Carbon::now();
+//            $currentDateTime = Carbon::now();
             $year = $request->input('year');
             $countAllRouteForYear = Route::whereYear('created_at', $year)
                 ->where('status', 1)
                 ->count();
             $countAllTripForYear = Trip::whereYear('start_time', $year)
                 ->where('status', 1)
-                ->where('start_time', '<=', $currentDateTime)
+//                ->where('start_time', '<=', $currentDateTime)
                 ->count();
             $totalRevenueForYear = Bill::whereYear('created_at', $year)
                 ->where('status_pay', 1)
@@ -436,7 +436,7 @@ class StatisticalController extends Controller
             $dataForChar = [];
             $tripCountsByMonth = Trip::whereYear('start_time', $year)
                 ->where('status', 1)
-                ->where('start_time', '<=', $currentDateTime)
+//                ->where('start_time', '<=', $currentDateTime)
                 ->select(DB::raw('MONTH(start_time) AS month'), DB::raw('COUNT(*) AS trip_count'))
                 ->groupBy('month')
                 ->orderBy('month')
