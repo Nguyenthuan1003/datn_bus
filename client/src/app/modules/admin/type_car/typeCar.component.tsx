@@ -19,8 +19,6 @@ const TypeCarComponent = () => {
     useEffect(() => {
         const columsTemp: any = []
         const title = ['STT', 'tên', 'Mô tả', 'Tổng chỗ ngồi', 'Kiểu ghế ngồi ']
-        console.log('s', columsTemp);
-        console.log('c', dataTypecar);
         if (dataTypecar.length > 0) {
             Object.keys(dataTypecar[0]).forEach((itemKey, key = 0) => {
                 if (!['id', 'created_at', 'updated_at'].includes(itemKey)) {
@@ -74,7 +72,16 @@ const TypeCarComponent = () => {
                             <Input />
                         </Form.Item>
                         <Form.Item label='Kiểu ngồi của xe' name='type_seats' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                            <Input />
+                        <Select >
+                                        {[
+                                            { value: "1", label: "Xe 1 tầng " },
+                                            { value: "2", label: "Xe 2 tầng" }
+                                        ].map((option: any) => (
+                                            <Option key={option?.value} value={option?.value}>
+                                                {option.label}
+                                            </Option>
+                                        ))}
+                                    </Select>
                         </Form.Item>
                     </Fragment>
                 }

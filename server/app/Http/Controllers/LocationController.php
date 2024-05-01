@@ -32,7 +32,7 @@ class LocationController extends Controller
             $location->name = $request->input('name');
 
             $imageTruePath = "";
-            if ($request->has('image')) {
+            if ($request->hasFile('image')) {
                 $saveImageTo = 'images/location';
                 $image = $request->file('image');
 
@@ -69,7 +69,7 @@ class LocationController extends Controller
 
     public function update(Request $request, $id)
     {
-        try {
+        try {            
             $request->validate([
                 'name' => 'required|string|max:255',
                 'image' => 'nullable',
@@ -86,7 +86,7 @@ class LocationController extends Controller
             $location->name = $request->input('name');
 
             $imageTruePath = "";
-            if ($request->has('image')) {
+            if ($request->hasFile('image')) {
                 $saveImageTo = 'images/location';
                 $image = $request->file('image');
 

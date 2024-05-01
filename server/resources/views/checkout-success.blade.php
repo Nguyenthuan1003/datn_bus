@@ -81,10 +81,6 @@
 
 <body>
 <div class="container">
-    <div class="header">
-        <img src="https://raw.githubusercontent.com/hmtuan011103/AirTicket/main/logo_web.png"
-             alt="" style="margin-left: 20px;">
-    </div>
     <div class="content">
         <div class="booking-details">
             <h2>Xin chào, {{ $userName }}!</h2>
@@ -94,7 +90,7 @@
             <div class="py-3">
                 <p class="mb-1"><strong>Mã vé của bạn lần lượt là: </strong>
                 <?php foreach ($codeTickets as $key => $value) : ?>
-                    <br>Vé số {{$key}}: {{$value }}
+                    <br>Vé số {{$key + 1}}: {{$value }}
                 <?php endforeach; ?>
             </p>
                 <p class="mb-1"><strong>Tuyển đường: </strong>
