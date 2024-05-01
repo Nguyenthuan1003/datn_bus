@@ -1,4 +1,4 @@
-import { axiosPrivate } from "~/app/api/confighHTTp"
+import { axiosPrivate, axiosFormData } from "~/app/api/confighHTTp"
 
 
 export const getAllCar = async () => {
@@ -10,9 +10,9 @@ export const deleteCar = async (id: any) => {
 }
 
 export const addCar = async (data: any) => {
-    return await axiosPrivate.post(`/cars/store`,data)
+    return await axiosFormData.post(`/cars/store`,data)
 }
 
 export const updateCar = async (data: any,id:any) => {
-    return await axiosPrivate.put(`/cars/update/${id}`,data)
+    return await axiosFormData.post(`/cars/update/${id}?_method=PUT`,data)
 }

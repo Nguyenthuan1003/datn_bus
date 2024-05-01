@@ -248,7 +248,7 @@ const TripDetailStatisticalComponent = () => {
                         <label className='' htmlFor="">Từ ngày</label>
                         <input className='pl-2' type="date" value={startDate} onChange={handleStartDateChange}/>
                     </div>
-                    <span style={{ display: showCustomDateInput ? 'block' : 'none' }}>=></span>
+                    <span style={{ display: showCustomDateInput ? 'block' : 'none' }}>=</span>
                     <div style={{ display: showCustomDateInput ? 'block' : 'none' }}>
                         <label htmlFor="">Đến ngày </label>
                         <input  className='pl-2' type="date" value={endDate} onChange={handleEndDateChange}  />
