@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import TemplateTable from '../common/template-table/template-table.component'
+
 import { getAllCar, deleteCar, addCar, updateCar } from './service/car.service'
 import { getAllTypeCar } from '../type_car/service/typeCar.service'
 import { Form, Input, Select, Switch } from 'antd'
@@ -8,6 +8,7 @@ import { ColorPicker, Space } from 'antd'
 import { BounceLoader } from 'react-spinners'
 import { DownOutlined } from '@ant-design/icons'
 import { log } from 'console'
+import TemplateTableImgae from '../common/template-table-image/templateTableImage'
 const CarComponent = () => {
   const [column, setColumn] = useState<any>([])
   const [dataCar, setDataCar] = useState<any>([])
@@ -111,7 +112,7 @@ const CarComponent = () => {
         />
     ) : (
     <div>
-      <TemplateTable
+      <TemplateTableImgae
         title={`Danh sách xe `}
         callBack={handelGetList}
         dataTable={dataCar}

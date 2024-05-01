@@ -29,6 +29,14 @@ const TypeCarComponent = () => {
                         title: title[key++],
                         dataIndex: itemKey,
                         key: itemKey,
+                        render: (text: any, record: any, index: any) => {
+                            if (itemKey === 'type_seats') {
+                                return <>
+                                    
+                                </>;
+                            }
+                            return text
+                        }
                     })
                 }
             })

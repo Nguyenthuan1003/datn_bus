@@ -1,10 +1,10 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import TemplateTable from '../common/template-table/template-table.component'
 import { addLocaltion, deleteLocaltion, getAllLocaltion, updateLocaltion } from './service/location.service';
 import { getAllParent } from '../parent-location/service/parent-location.service'
 import { Form, Input, Select, Space, Upload } from 'antd';
 import { Option } from 'antd/es/mentions';
 import { BounceLoader } from 'react-spinners'
+import TemplateTableImgae from '../common/template-table-image/templateTableImage';
 const LocaltionComponent = () => {
     
     const [column, setColumn] = useState<any>([]);
@@ -85,7 +85,7 @@ const LocaltionComponent = () => {
                 style={{position: "absolute", top: "50%", left: "54%"}}
                 />
             ) : (
-            <TemplateTable
+            <TemplateTableImgae
                 title={`Danh sách Địa điểm `}
                 callBack={handelGetList}
                 dataTable={dataLocation}
