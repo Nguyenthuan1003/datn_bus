@@ -8,6 +8,8 @@ const UserAdminComponent = () => {
   const [column, setColumn] = useState<any>([])
   const [dataUser, setDataUser] = useState<any>([])
   const [dataParentType, setDataParentType] = useState<any>([])
+  const [current, setCurrent] = useState<any>(true)
+  const [isEditing, setIsEditing] = useState(false)
 
   useEffect(() => {
     getAllType().then((res) => {
@@ -32,7 +34,9 @@ const UserAdminComponent = () => {
                 return <h2>{ParentType ? ParentType.name : 'Chưa phân loại'}</h2>
               }
               if (itemKey === 'avatar') {
-                return <img src={`http://127.0.0.1:8000/${text}`} alt='avatar' style={{ width: '50px', height: '50px' }} />;
+                return (
+                  <img src={`http://127.0.0.1:8000/${text}`} alt='avatar' style={{ width: '50px', height: '50px' }} />
+                )
               }
               return text
             }
@@ -54,6 +58,12 @@ const UserAdminComponent = () => {
 
   const handelGetList = () => {
     setReset(!reset)
+    setIsEditing(false)
+  }
+
+  const fomatCustomCurrent = (data: any) => {
+    setCurrent(data)
+    setIsEditing(true)
   }
   return (
     <div>
@@ -63,6 +73,7 @@ const UserAdminComponent = () => {
         dataTable={dataUser}
         columnTable={column}
         deleteFunc={deleteUser}
+        dataId={fomatCustomCurrent}
         createFunc={addUser}
         changeFunc={updateUser}
         formEdit={
@@ -75,9 +86,15 @@ const UserAdminComponent = () => {
               <Input />
             </Form.Item>
 
-            <Form.Item label='Password' name='password' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-              <Input />
-            </Form.Item>
+            {!isEditing && (
+              <Form.Item
+                label='Password'
+                name='password'
+                rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}
+              >
+                <Input />
+              </Form.Item>
+            )}
 
             <Form.Item
               label='Số điện thoại'
