@@ -184,7 +184,7 @@ const RegisterComponent = () => {
             {errors && <span className='text-red-600'>{errors.comfirmPassWord?.message}</span>}
           </div>
 
-          <div className=''>
+          {/* <div className=''>
             <div className='flex items-center'>
               <span>
                 <input type='checkbox' required />{' '}
@@ -194,7 +194,7 @@ const RegisterComponent = () => {
                 I agree to all the Terms and Privacy Policies
               </a>
             </div>
-          </div>
+          </div> */}
 
           <div className='text-center my-3'>
             <ButtonRadiusCompoennt type='submit' content='Đăng Ký ' />

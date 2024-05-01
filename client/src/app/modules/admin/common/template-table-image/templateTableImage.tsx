@@ -5,7 +5,7 @@ import { MdOutlineBrowserUpdated } from 'react-icons/md'
 import { UploadOutlined } from '@ant-design/icons'
 import TemplateModal from '../template-model/template-model.component'
 
-interface ITemplateTable {
+interface ITemplateTableImgae {
   title: any
   formEdit?: any
   dataTable?: any
@@ -16,7 +16,7 @@ interface ITemplateTable {
   changeFunc?: any
   dataId?: any
 }
-const TemplateTable: FC<ITemplateTable> = ({
+const TemplateTableImgae: FC<ITemplateTableImgae> = ({
   formEdit,
   dataTable,
   columnTable,
@@ -197,6 +197,16 @@ const TemplateTable: FC<ITemplateTable> = ({
         >
           <Form form={form} layout='vertical' name='form_in_modal'>
             {formEdit}
+            <Form.Item label='Ảnh' name='image' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+              <Upload
+                beforeUpload={(file) => {
+                  setSelectedFile(file) // Save the selected file
+                  return false // Prevent the upload from being handled automatically
+                }}
+              >
+                <Button icon={<UploadOutlined />}>Click to Upload</Button>
+              </Upload>
+            </Form.Item>
           </Form>
         </TemplateModal>
       </div>
@@ -204,4 +214,4 @@ const TemplateTable: FC<ITemplateTable> = ({
   )
 }
 
-export default TemplateTable
+export default TemplateTableImgae
