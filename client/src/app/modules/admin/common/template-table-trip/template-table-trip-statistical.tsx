@@ -1,5 +1,5 @@
 import React, { FC, Fragment, useEffect, useState } from 'react';
-import { Button, Descriptions, DescriptionsProps, Form, Input, Modal, Popconfirm, Select, Table, message } from 'antd'
+import { Form, Progress, Flex, Table, message } from 'antd'
 import TemplateModal from '../template-model/template-model.component';
 import { Option } from 'antd/es/mentions';
 import { IoEyeSharp } from 'react-icons/io5';
@@ -16,8 +16,8 @@ interface ITemplateTable {
     changeFunc?: any
     dataId?: any
     buttonAdd?: any,
-    formDetail?:any,
-    dataDetail?:any
+    formDetail?: any,
+    dataDetail?: any
 }
 const TemplateTripStatical: FC<ITemplateTable> = (
     {
@@ -48,7 +48,7 @@ const TemplateTripStatical: FC<ITemplateTable> = (
         setIsModalOpen(true);
         setType(typeAction)
         if (typeAction == "CHANGE") {
-            console.log('CHANGE'); 
+            console.log('CHANGE');
             setDefaultValue(recordTable)
             dataId(recordTable)
             form.setFieldsValue(recordTable)
@@ -57,8 +57,8 @@ const TemplateTripStatical: FC<ITemplateTable> = (
             form.resetFields()
         }
 
-        if (typeAction == "DETAIL") {    
-            setDetailRecord(recordTable);            
+        if (typeAction == "DETAIL") {
+            setDetailRecord(recordTable);
         }
     };
 
@@ -70,12 +70,12 @@ const TemplateTripStatical: FC<ITemplateTable> = (
         //       images: dataList
         //     })
         //   }
-        if (type == 'CREATE') {            
+        if (type == 'CREATE') {
             form.validateFields().then((value: any) => {
-               
+
                 const data = {
                     ...value,
-                    start_time: dayjs(value?.start_time).format('YYYY-MM-DD HH:mm:ss') 
+                    start_time: dayjs(value?.start_time).format('YYYY-MM-DD HH:mm:ss')
                 }
                 createFunc(data)
                     .then((res: any) => {
@@ -83,7 +83,7 @@ const TemplateTripStatical: FC<ITemplateTable> = (
                             callBack(res.data)
                             message.success(res.data.message)
                             console.log(res);
-                        }else{
+                        } else {
                             message.error(res.data.message)
                         }
 
@@ -94,18 +94,18 @@ const TemplateTripStatical: FC<ITemplateTable> = (
 
         if (type === 'CHANGE') {
             console.log('change');
-            
+
             form.validateFields().then((value: any) => {
                 // Kiểm tra xem dữ liệu có thay đổi hay không
                 const isDataChanged = Object.keys(value).some(key => value[key] !== defaultValue[key]);
                 if (isDataChanged) {
                     // Nếu có thay đổi, thực hiện cập nhật
                     changeFunc(value, defaultValue.id).then((res: any) => {
-                        if (res?.data?.status == "success") {                   
+                        if (res?.data?.status == "success") {
                             callBack(res.data);
                             message.success('Cập nhật thành công');
-                            console.log('value',value);
-                        }else{
+                            console.log('value', value);
+                        } else {
                             message.error(res.data.message)
                         }
                     });
@@ -147,6 +147,7 @@ const TemplateTripStatical: FC<ITemplateTable> = (
                 return index + 1; // Sử dụng index để tạo số thứ tự, bắt đầu từ 1
             },
         },
+
         ...columnTable,
         {
             title: 'Thao tác',
@@ -180,7 +181,7 @@ const TemplateTripStatical: FC<ITemplateTable> = (
         selectedRowKeys,
         onChange: onSelectChange,
     };
-    const handleSelectChange = (value:any) => {
+    const handleSelectChange = (value: any) => {
         setSelectedOption(value);
         setShowCustomDateInput(value === 'Ngày tự chọn');
     };
@@ -196,20 +197,20 @@ const TemplateTripStatical: FC<ITemplateTable> = (
                     Thêm mới +
                 </button>
             )}
-       
-            <Table  columns={columns} dataSource={dataTable} />
+
+            <Table columns={columns} dataSource={dataTable} />
             <div className=''>
                 <TemplateModal
                     title={type === "CREATE" ? 'Thêm mới' : type === "CHANGE" ? 'Cập nhật' : 'Chi tiết'} isModalOpen={isModalOpen} handleOk={handleOk} handleCancel={handleCancel}
-                    actionType={type} 
+                    actionType={type}
                 >
                     {
                         type == 'DETAIL' ? (
-                                <div>
-                                      {/* <Descriptions title="THÔNG TIN XE " items={items} /> */}
-                                      {/* <DetailForm onRef={(ref) => this.onRef(ref)}/> */}
-                                      <DetailComponent data={detailRecord} />
-                                </div>
+                            <div>
+                                {/* <Descriptions title="THÔNG TIN XE " items={items} /> */}
+                                {/* <DetailForm onRef={(ref) => this.onRef(ref)}/> */}
+                                <DetailComponent data={detailRecord} />
+                            </div>
                         ) : (
                             <Form form={form} layout='vertical' name='form_in_modal'>
                                 {formEdit}
