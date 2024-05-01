@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { useCartRedux } from '../../redux/hook/useCartReducer'
-import { cancelBill, paymentVNP } from '~/app/api/bill/bill.api'
-import { Spin, message } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons';
+import { Spin, message } from 'antd';
+import { useEffect, useState } from 'react';
+import { cancelBill, paymentVNP } from '~/app/api/bill/bill.api';
+import { useCartRedux } from '../../redux/hook/useCartReducer';
 const LeftComponent = () => {
     
     const [isLoading, setIsLoading] = useState(false);
@@ -37,7 +37,7 @@ const LeftComponent = () => {
                     localStorage.removeItem("bill_user")
                     localStorage.removeItem("cart")
 
-                fetch('http://127.0.0.1:8000/api/rt/seat')
+                fetch('http://192.168.1.7:8000/api/rt/seat')
                 .then(
                     function(response) {
                     if (response.status !== 200) {

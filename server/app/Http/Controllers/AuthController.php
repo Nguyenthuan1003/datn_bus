@@ -236,7 +236,7 @@ class AuthController extends Controller
 
         if ($status === Password::PASSWORD_RESET) {
 
-            return redirect()->to('http://127.0.0.1:3000?notifyresetpassword=ok');
+            return redirect()->to('http://192.168.1.7:3000?notifyresetpassword=ok');
         }
 
         return back()->withErrors(['email' => [__($status)]]);

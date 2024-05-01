@@ -8,9 +8,17 @@ use App\Mail\SendEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
+use App\Services\GetQrCodeService;
 
 class BillController extends Controller
 {
+    private $getQrCodeService;
+
+    public function __construct(GetQrCodeService $getQrCodeService)
+    {
+        $this->getQrCodeService = $getQrCodeService;
+    }
+
     public function index()
     {
         try {
@@ -106,6 +114,8 @@ class BillController extends Controller
             ]);
 
             $bill = Bill::find($id);
+            // create qr code
+            $getQrCodeData = $this->getQrCodeService->createQrCode($id);
 
             if (!$bill) {
                 return response()->json(['message' => 'Bill not found'], 404);
@@ -126,11 +136,21 @@ class BillController extends Controller
 
             $bill->save();
             $getBill = Bill::with('discountCode', 'seat', 'trip.route', 'user', 'ticketOrder')->find($bill->id);
+            // assign bill qrcode
+            $getBill['bill_url'] = $getQrCodeData['bill']['bill_url'];
+            $getBill['bill_qr_code_image'] = $getQrCodeData['bill']['qr_code_image'];
+
             $tickets = $getBill->ticketOrder;
             $codeTicket = [];
-            foreach ($tickets as $ticket) {
+            foreach ($tickets as $key => $ticket) {
                 array_push($codeTicket, $ticket->code_ticket);
+
+                // assign ticket qrcode
+                $ticket['ticket_url'] = $getQrCodeData['tickets'][$key]['ticket_url'];
+                $ticket['qr_code_image'] =  $getQrCodeData['tickets'][$key]['qr_code_image'];
             }
+
+            // send email
             Mail::to($getBill->email)->send(new SendEmail(
                 $request->input('full_name'),
                 'Thanh toán vé xe thành công',
@@ -142,8 +162,11 @@ class BillController extends Controller
                 $request->input('pay_location'),
                 $request->input('start_time'),
                 $request->input('code_seat'),
-                $codeTicket
+                $codeTicket,
+                $getQrCodeData
             ));
+
+            // return result
             return response()->json(['message' => 'Cập nhật đơn hàng thành công', 'bill' => $getBill]);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Đã xảy ra lỗi khi cập nhật hóa đơn', 'error' => $e->getMessage()]);

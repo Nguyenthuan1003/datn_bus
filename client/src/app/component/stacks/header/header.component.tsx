@@ -1,11 +1,11 @@
+import { css } from '@emotion/react'
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { css } from '@emotion/react'
 import logo from '../../../../assets/img/logo_book_bus.png'
 // import { profileUser } from '~/app/api/auth/auth.api';
-import { DownOutlined, UserOutlined } from '@ant-design/icons'
+import { UserOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
-import { Button, Dropdown, message, Space, Tooltip } from 'antd'
+import { Dropdown, message } from 'antd'
 
 const HeaderComponent = () => {
   // const token: any = getDecodedAccessToken();
@@ -97,7 +97,7 @@ const HeaderComponent = () => {
     onClick: handleMenuClick
   }
 
-  const url = 'http://localhost:8000/'
+  const url = 'http://192.168.1.7:8000/'
 
   return (
     <>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { css } from '@emotion/react'
 import { Controller, useForm } from 'react-hook-form'
 import ButtonRadiusCompoennt from '~/app/component/parts/button/button.component'
@@ -14,10 +14,26 @@ const CheckBillComponent = () => {
   const {
     handleSubmit,
     control,
-    formState: { errors }
+    formState: { errors },
+    setValue
   } = useForm({
     resolver: yupResolver(validateCheckBill)
   })
+
+  useEffect(() => {
+    // Get the URLSearchParams object from the URL
+    const params = new URLSearchParams(window.location.search)
+
+    // Get the value of the 'phone_number' parameter
+    const phoneNumber = params.get('phone_number')
+
+    // Get the value of the 'code_ticket' parameter
+    const codeBill = params.get('code_bill')
+
+    // Set the values of the input fields using setValue
+    setValue('phoneNumber', phoneNumber || '') // If phoneNumber is null, set an empty string
+    setValue('bill', codeBill || '') // If codeTicket is null, set an empty string
+  }, [setValue]) // Dependency array includes setValue to ensure it's called only once after the component mounts
 
   const [errorMessage, setErrorMessage] = useState(null)
   const [showModal, setShowModal] = React.useState(false)
@@ -123,6 +139,7 @@ const CheckBillComponent = () => {
           <Controller
             control={control}
             name='phoneNumber'
+            defaultValue='' // Set default value to an empty string
             render={({ field: { onChange, value, ref }, fieldState: { error } }) => (
               <input
                 placeholder='Vui lòng nhập số điện thoại'
@@ -141,6 +158,7 @@ const CheckBillComponent = () => {
           <Controller
             control={control}
             name='bill'
+            defaultValue='' // Set default value to an empty string
             render={({ field: { onChange, value, ref }, fieldState: { error } }) => (
               <input
                 placeholder='Vui lòng nhập mã vé'
@@ -237,7 +255,7 @@ const CheckBillComponent = () => {
               >
                 <path d='M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 0 0-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z'></path>
               </svg>
-              Checkin
+              Checkin toàn bộ vé
             </button>
           )}
         </div>

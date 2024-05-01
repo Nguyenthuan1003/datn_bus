@@ -177,5 +177,3 @@ Route::post('me', [AuthController::class, 'me']);
 Route::post('forgotpassword', [AuthController::class, 'forgotPasswordSubmit'])->name('forgot.password.submit');
 
 Route::get('rt/seat', [TripController::class, 'realTimeSeat']);
-
-Route::get('getqrcode', [QrCodeController::class, 'generateQRCode']);

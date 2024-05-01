@@ -1,9 +1,9 @@
-import React, { Fragment, useEffect, useState } from 'react'
-import TemplateTableUser from '../common/template-table-user/template-table-user.component'
-import { addUser, deleteUser, getAllUser, updateUser } from './service/user-admin.service'
-import { getAllType } from '../type-user/service/type-user.service'
-import { Form, Input, Select, Space, Upload } from 'antd'
+import { Form, Input, Select } from 'antd'
 import { Option } from 'antd/es/mentions'
+import { Fragment, useEffect, useState } from 'react'
+import TemplateTableUser from '../common/template-table-user/template-table-user.component'
+import { getAllType } from '../type-user/service/type-user.service'
+import { addUser, deleteUser, getAllUser, updateUser } from './service/user-admin.service'
 const UserAdminComponent = () => {
   const [column, setColumn] = useState<any>([])
   const [dataUser, setDataUser] = useState<any>([])
@@ -32,7 +32,7 @@ const UserAdminComponent = () => {
                 return <h2>{ParentType ? ParentType.name : 'Chưa phân loại'}</h2>
               }
               if (itemKey === 'avatar') {
-                return <img src={`http://127.0.0.1:8000/${text}`} alt='avatar' style={{ width: '50px', height: '50px' }} />;
+                return <img src={`http://192.168.1.7:8000/${text}`} alt='avatar' style={{ width: '50px', height: '50px' }} />;
               }
               return text
             }
