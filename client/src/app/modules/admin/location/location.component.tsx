@@ -34,9 +34,12 @@ const LocaltionComponent = () => {
                         render: (text: any, record: any, index: any) => {
                             if (itemKey == 'image') {
                                 const image = record?.image
-                                console.log('link image',image);
-                                return <img src={image} alt="" className='w-[100px]' />
-                            }
+                                const baseUrl = 'http://127.0.0.1:8000/'
+                                const imageUrl = `${baseUrl}${image}`
+                              
+                                console.log('link image', imageUrl);
+                                return <img src={imageUrl} alt="" className='w-[100px]' />
+                              }
                             if (itemKey === 'parent_location_id') {
                                 // Find the corresponding parent_location object
                                 const parentLocation = dataParentLocation.find((parent: any) => parent.id === text);
@@ -68,7 +71,7 @@ const LocaltionComponent = () => {
     }
     const fomatCustomCurrent=(data:any)=>{
         setCurrent(data)
-    }
+    } 
 
     return (
         <div>
@@ -86,11 +89,6 @@ const LocaltionComponent = () => {
                         <Form.Item label='Name' name='name' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
                             <Input />
                         </Form.Item>
-                        <Form.Item label='image đang update ko gửi link a' name='image'>
-                            {/* <input type="file" /> */}
-                            {/* <Input /> */}
-                        </Form.Item>
-
                         <Form.Item label='description' name='description' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
                             <Input />
                         </Form.Item>
