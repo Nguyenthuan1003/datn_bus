@@ -4,6 +4,7 @@ import {getAllSeat,deleteSeat,addSeat,updateSeat} from './service/seat.serice';
 import  { getAllCar } from '../car/service/car.service'
 import { Form, Input, Select, Switch } from 'antd';
 import { Option } from 'antd/es/mentions';
+import { BounceLoader } from 'react-spinners'
 import { log } from 'console';
 const SeatComponent = () => {
     
@@ -11,6 +12,7 @@ const SeatComponent = () => {
     const [dataSeat, setDataSeat] = useState<any>([]);
     const [dataCurrent, setDataCurrent] = useState<any>({});
     const [dataCar, setDataCar] = useState<any>([]);
+    const [loading, setLoading] = useState(true);
     console.log('s',dataSeat);
     console.log('d',dataCar);
     
@@ -18,6 +20,7 @@ const SeatComponent = () => {
         getAllCar().then((res) => {
             if (res) {
                 setDataCar(res?.data)
+                setLoading(false);
             }
         })
     }, [])
@@ -56,6 +59,7 @@ const SeatComponent = () => {
         getAllSeat().then((res) => {
             if (res) {
                 setDataSeat(res?.data?.seats)
+                setLoading(false);
             }
         })
     }, [reset])
@@ -71,6 +75,12 @@ const SeatComponent = () => {
           }
     return (
         <div>
+            {loading ? (
+                <BounceLoader
+                color="#36d7b7"
+                style={{position: "absolute", top: "50%", left: "54%"}}
+                />
+            ) : (
             <TemplateTable
                 title={`Danh sách ghế ngồi  `}
                 callBack={handelGetList}
@@ -99,6 +109,7 @@ const SeatComponent = () => {
                     </Fragment>
                 }       
             />
+            )}
         </div >
     )
 }

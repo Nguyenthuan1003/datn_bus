@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { getTripStatistical } from './service/trip.service';
 import TemplateTableTrip from '../common/template-table-trip/template-table-trip.component'
 import { Switch, Select, Button, Progress, Flex, } from 'antd';
+import { BounceLoader } from 'react-spinners'
 
 import { Option } from 'antd/es/mentions';
 import moment, { Moment } from 'moment';
@@ -14,6 +15,7 @@ const TripDetailStatisticalComponent = () => {
     const [showCustomDateInput, setShowCustomDateInput] = useState<any>(false);
     const todayDate = new  Date().toLocaleDateString()
     const [startDate, setStartDate] = useState<any>();
+    const [loading, setLoading] = useState(true);
     console.log("todayDate",todayDate);
 
 //     const dayToday = todayDate.getDate(); 
@@ -178,6 +180,7 @@ const TripDetailStatisticalComponent = () => {
             .then((res) => {
                 if (res) {
                     setDataTrip(res.data.trips);
+                    setLoading(false);
                 }
             });
     };
@@ -186,6 +189,7 @@ const TripDetailStatisticalComponent = () => {
             .then((res) => {
                 if (res) {
                     setDataTrip(res.data.trips);
+                    setLoading(false);
                 }
             });
     };
@@ -246,7 +250,15 @@ const TripDetailStatisticalComponent = () => {
         setEndDate(e.target.value);
     };
     return (
+        <>
+        {loading ? (
+            <BounceLoader
+              color="#36d7b7"
+              style={{position: "absolute", top: "50%", left: "54%"}}
+            />
+          ) : (
         <div>
+            
             <div className='flex mb-4 mt-4'>
 
                 <div className='px-3'>
@@ -302,6 +314,8 @@ const TripDetailStatisticalComponent = () => {
 
             />
         </div >
+        )}
+        </>
     )
 }
 

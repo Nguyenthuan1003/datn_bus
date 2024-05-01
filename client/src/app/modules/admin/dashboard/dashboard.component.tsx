@@ -7,17 +7,20 @@ import RevenueRouteChartByYear from './service/component/revenue_route_chart_by_
 import PieChartCar from './service/component/PieChartCar'
 import BarChartTripComponent from './service/component/BarChartTrip'
 import { Link } from 'react-router-dom'
+import { BounceLoader } from 'react-spinners'
 
 const DashboardComponent = () => {
   const [data , setData] = useState<any>()
   const [totalTrip , setTotalTrip] = useState<any>()
   const [dataRoute, setDataRoute] = useState<any>()
+  const [loading, setLoading] = useState(true);
   // Fetch data from API here.
   useEffect(()=>{
     getStatisticalGeneral()
     .then((res:any) => {
       if (res.data.status === "success") {
         setData(res.data)
+        setLoading(false);
       } else {
         console.log('Error : ', res.data.message)
       }
@@ -25,6 +28,7 @@ const DashboardComponent = () => {
     .then((res: any)=>{
       if(res.data.status === "success"){
         setDataRoute(res.data)
+        setLoading(false);
       }else {
         console.log('Error : ', res.data.message)
       }
@@ -32,6 +36,7 @@ const DashboardComponent = () => {
   })
   getTrip().then((trip: any) => {
     setTotalTrip(trip?.data?.all_trips.length)
+    setLoading(false);
   })
 },[])
 
@@ -40,6 +45,13 @@ const DashboardComponent = () => {
  const dataRouteTop10= dataRoute?.top_10_routes
 
   return (
+    <>
+    {loading ? (
+        <BounceLoader
+        color="#36d7b7"
+        style={{position: "absolute", top: "50%", left: "54%"}}
+        />
+    ) : (
     <div>
         <div>
         <h1 className="text-[30px] mb-4">Trang quản trị</h1>
@@ -101,9 +113,9 @@ const DashboardComponent = () => {
 
       </div>
       </div>
-
-      
    </div>
+    )}
+    </>
   )
 }
 

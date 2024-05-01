@@ -4,15 +4,18 @@ import { getAllTypeCar , addTypeCar , deleteTypeCar, updateTypeCar } from './ser
 // import { getAllParent } from '../parent-location/service/parent-location.service'
 import { Form, Input, Select, Space, Upload } from 'antd';
 import { Option } from 'antd/es/mentions';
+import { BounceLoader } from 'react-spinners'
 const TypeCarComponent = () => {
     
     const [column, setColumn] = useState<any>([]);
     const [dataTypecar, setDataTypecar] = useState<any>([]);
     const [dataCurrent, setDataCurrent] = useState<any>({});    
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
         getAllTypeCar().then((res) => {
             if (res) {
                 setDataTypecar(res.data?.type_car)
+                setLoading(false);
             }
         })
     }, [])
@@ -38,6 +41,7 @@ const TypeCarComponent = () => {
         getAllTypeCar().then((res) => {
             if (res) {
                 setDataTypecar(res?.data?.type_car)
+                setLoading(false);
             }
         })
     }, [reset])
@@ -51,6 +55,12 @@ const TypeCarComponent = () => {
           }
     return (
         <div>
+            {loading ? (
+                <BounceLoader
+                color="#36d7b7"
+                style={{position: "absolute", top: "50%", left: "54%"}}
+                />
+            ) : (
             <TemplateTable
                 title={`Danh sách Loại xe `}
                 callBack={handelGetList}
@@ -86,6 +96,7 @@ const TypeCarComponent = () => {
                     </Fragment>
                 }
             />
+            )}
         </div >
     )
 }

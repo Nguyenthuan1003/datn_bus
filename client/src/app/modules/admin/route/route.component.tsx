@@ -6,12 +6,14 @@ import {getAllParent} from '../parent-location/service/parent-location.service'
 import CustomSwitchs from './component/CustomSwitchs.component'
 import { Option } from 'antd/es/mentions';
 import { Link } from 'react-router-dom'
+import { BounceLoader } from 'react-spinners'
 const Route= () => {
     const [column, setColumn] = useState<any>([]);
     const [dataRoute, setRoute] = useState<any>([]);
     const [dataParentLocation, setDataParentLocation] = useState<any>([]);
     console.log('ss',dataParentLocation);
     console.log('dataRoute',dataRoute);
+    const [loading, setLoading] = useState(true);
     
     const [checked, setChecked] = useState<any>();
     const [current, setCurrent] = useState<any>(true);
@@ -26,6 +28,7 @@ const Route= () => {
         getAllRoute().then((res) => {
             if (res) {
                 setRoute(res.data?.routes)
+                setLoading(false);
             }
         })
     }, [reset])
@@ -33,6 +36,7 @@ const Route= () => {
         getAllParent().then((res) => {
             if (res) {
                 setDataParentLocation(res.data?.parent_location)
+                setLoading(false);
             }
         })
     }, [])
@@ -83,6 +87,12 @@ const Route= () => {
           const inAcctive = 0;
     return (
         <div>
+            {loading ? (
+                <BounceLoader
+                color="#36d7b7"
+                style={{position: "absolute", top: "50%", left: "54%"}}
+                />
+            ) : (
             <TemplateTable
                 title={`Danh sách Tuyến đường  `}
                 callBack={handelGetList}
@@ -125,6 +135,7 @@ const Route= () => {
                         </Form.Item>
                     </Fragment>
                 } />
+            )}
         </div>
     )
 }

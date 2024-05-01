@@ -5,6 +5,7 @@ import { Button, Flex, Form, Input, Progress, Segmented, Select, Spin, Switch, S
 import { Option } from 'antd/es/mentions';
 import moment, { Moment } from 'moment';
 import dayjs from 'dayjs';
+import { BounceLoader } from 'react-spinners'
 
 const TripComponent = () => {
     const [column, setColumn] = useState<any>([]);
@@ -524,9 +525,11 @@ const TripComponent = () => {
                 )}
             </div>
 
-            {
-                isLoading ? (
-                    <Skeleton ></Skeleton>
+            {isLoading ? (
+                    <BounceLoader
+                    color="#36d7b7"
+                    style={{position: "absolute", top: "50%", left: "54%"}}
+                    />
                 ) : (
                     <TemplateTableTrip
                         title={`Danh sách chuyến đi `}
