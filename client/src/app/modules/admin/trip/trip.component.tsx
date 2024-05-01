@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import TemplateTableTrip from '../common/template-table-trip/template-table-trip.component'
 import { getAllTrip, addTrip, deleteTrip, updateTrip, getCarTrip, getRouteTrip, getLocationForRoute, getTripStatistical, } from './service/trip.service'
-import { Button, Flex, Form, Input, Progress, Segmented, Select, Spin, Switch, Skeleton } from 'antd';
+import { Button, Flex, Form, Input, Progress, Segmented, Select, Spin, Switch, Skeleton, message } from 'antd';
 import { Option } from 'antd/es/mentions';
 import moment, { Moment } from 'moment';
 import dayjs from 'dayjs';
@@ -161,9 +161,13 @@ const TripComponent = () => {
         // Gọi API với startTime và endTime
         getTripStatistical(startTimeDate, endTimeDate)
             .then((res) => {
+              try {
                 if (res) {
-                    setDataTrip(res.data.trips?.sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()));
+                    setDataTrip(res?.data?.trips?.sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()));
                 }
+              } catch (error) {
+                message.error("Lỗi lấy data")
+              }
 
             });
     };
@@ -353,8 +357,12 @@ const TripComponent = () => {
         }
         getTripStatistical(formattedStartTime, formattedEndTime)
             .then((res) => {
-                if (res) {
-                    setDataTrip(res.data.trips);
+                try {
+                    if (res) {
+                        setDataTrip(res?.data?.trips);
+                    }
+                } catch (error) {
+                    message.error("Lỗi lấy dữ liệu")
                 }
             });
     };

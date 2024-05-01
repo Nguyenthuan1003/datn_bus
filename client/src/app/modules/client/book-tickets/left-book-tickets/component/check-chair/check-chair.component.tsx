@@ -1,124 +1,228 @@
 import { css } from '@emotion/react';
+import { Spin } from 'antd';
 import { log } from 'console';
 import { FC, useEffect, useState } from 'react';
 import { getTripId } from '~/app/api/trip/trip.api';
 import ChairUiComponent from '~/app/component/parts/chair-ui/chair-ui.component';
 import tripSlice from '~/app/modules/client/redux/reducer/tripSlice/tripSlice';
 
-const CheckChaircomponent:FC<any> = ({trip_id, setSelectData, setDataPrice ,dataSeatHold}) => {
-    const [data, setData] = useState<any>();    
+const CheckChaircomponent: FC<any> = ({ trip_id, setSelectData, setDataPrice, dataSeatHold }) => {
+    const [data, setData] = useState<any>();
     const [dataChair, setDataChair] = useState<any>();
     const [dataTrips, setDataTrips] = useState<any>();
     const [selectData1, setSelectData1] = useState<any>([]);
-    const [seatHold , setSeathold]= useState<any>({})
-    const [seatSold , setSeatSold]= useState<any>({})
-    
-  
+    const [seatHold, setSeathold] = useState<any>({})
+    const [seatSold, setSeatSold] = useState<any>({})
+    const [isLoading, setIsLoading] = useState<any>(false)
+    const [isLoadFetch, setIsLoadFetch] = useState<any>(true);
     useEffect(() => {
+        setIsLoadFetch(true)
         getTripId(trip_id).then((res: any) => {
             if (res) {
                 setDataChair(res?.data?.seats);
                 setDataTrips(res?.data?.trip);
                 setData(res?.data);
-  
+                setIsLoading(true)
+                setTimeout(function () {
+                    setIsLoading(false)
+                }, 2000)
             }
-            setSeathold(dataSeatHold?.map((item:any)=> item).find((trip:any)=> trip.trip_id == trip_id ))
-            setSeatSold(dataSeatHold?.map((item:any)=> item).find((trip:any)=> trip.trip_id == trip_id))
-        })
-        
-    }, [trip_id,dataSeatHold]);
-    
-  
-    const tripDataPrice=dataTrips?.trip_price
-    const seatCodeHole = seatHold?.array_seat_code_hold?.map((item:string)=> item ) || []
-    const seatCodeSold = seatSold?.array_seat_code_sold?.map((item:string)=> item ) || []
+            setSeathold(dataSeatHold?.map((item: any) => item).find((trip: any) => trip.trip_id == trip_id))
+            setSeatSold(dataSeatHold?.map((item: any) => item).find((trip: any) => trip.trip_id == trip_id))
+            setIsLoadFetch(false)
+        });
+
+    }, [trip_id, dataSeatHold]);
+
+
+    const tripDataPrice = dataTrips?.trip_price
+    const seatCodeHole = seatHold?.array_seat_code_hold?.map((item: string) => item) || []
+    const seatCodeSold = seatSold?.array_seat_code_sold?.map((item: string) => item) || []
 
     const handelSelecttion = (seat: any) => {
-        const seatCode=seat?.code_seat
+        const seatCode = seat?.code_seat
         const seat_id = seat?.id
         const status = seat?.status
         if (status === 1) {
             return;
         }
-        const index=selectData1?.indexOf(seatCode)
-        
-        if (index==-1) {
-            setSelectData1([...selectData1,seat?.code_seat])
-            setSelectData([...selectData1,seat?.code_seat])
-            setDataPrice((prewPrice:any)=>prewPrice+Number(tripDataPrice))
+        const index = selectData1?.indexOf(seatCode)
+
+        if (index == -1) {
+            setSelectData1([...selectData1, seat?.code_seat])
+            setSelectData([...selectData1, seat?.code_seat])
+            setDataPrice((prewPrice: any) => prewPrice + Number(tripDataPrice))
             localStorage.setItem('seat_id', JSON.stringify(seat_id));
         }
         else {
-            const newSelectSeat=[...selectData1]            
-            
-            newSelectSeat?.splice(index,1)
-            setDataPrice((prewPrice:any)=>prewPrice-Number(tripDataPrice))
-            setSelectData1(selectData1?.filter((item:any)=>item!=seat?.code_seat))
-            setSelectData(selectData1?.filter((item:any)=>item!=seat?.code_seat))
+            const newSelectSeat = [...selectData1]
+
+            newSelectSeat?.splice(index, 1)
+            setDataPrice((prewPrice: any) => prewPrice - Number(tripDataPrice))
+            setSelectData1(selectData1?.filter((item: any) => item != seat?.code_seat))
+            setSelectData(selectData1?.filter((item: any) => item != seat?.code_seat))
         }
     }
     const upperArray = dataChair?.filter((item: any) => item?.code_seat?.startsWith('F1'))
     const lowarArray = dataChair?.filter((item: any) => item?.code_seat?.startsWith('F2'))
+    const totalSeat = dataChair?.length
+    const typeCar = data?.type_car?.type_seats
+
+    console.log("typeCar", typeCar);
+
+    // > 36 => 4 hang
+
     return (
-        <div css={checkChairCss} className='py-4'>
+      <>
+         {isLoadFetch && (
+        <div className="fixed inset-0 z-50 bg-black opacity-50"></div>
+      )}
+      {
+        isLoadFetch ? (
+            <div className="fixed z-50 transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+            <Spin />
+          </div>
+        ) : (
+            <div>
+                  <div css={checkChairCss} className='py-4'>
             <div className='chair p-4 bg-white'>
                 <div className='grid grid-cols-3'>
                     <div className='font-semibold text-[18px]'>
                         Chọn ghế
-                    </div>      
+                    </div>
                 </div>
 
                 <div className='py-3'>
                     <div className='grid grid-cols-3'>
-                        <div>
-                            <div>
-                                <h3 className='font-medium py-2'>Tầng dưới</h3>
-                            </div>
-
-                            <div className='flex-wrap grid grid-cols-3'>
-                                {upperArray?.map((item: any,index: number) => (
-                                    <div className='my-4'onClick={()=>handelSelecttion(item)}>
-                                        {/* <ChairUiComponent key={index} children={item?.code_seat?.slice(0,2)} /> */}
-                                        <ChairUiComponent 
-                                        // seatCode={item.code_seat} 
-                                        // isBooked={item.isBooked} 
-                                        // price={item.price}
-                                        // dataSeatHold={seatHold?.map((item:any)=> item).find((trip:any)=> trip.trip_id == trip_id )}
-                                         key={index} 
-                                         dataSeatHold={seatHold} 
-                                         children={item?.code_seat} 
-                                         status={item?.status} 
-                                         checkSeatHold={seatCodeHole}
-                                         seatSold={seatCodeSold}
-                                         />
+                        {
+                            totalSeat == 36 ? (
+                                <div>
+                                    <div>
+                                        {
+                                            typeCar === "1" ? (
+                                                <div></div>
+                                            ) : (
+                                                <div>
+                                                    <h3 className='font-medium py-2'>Tầng dưới</h3>
+                                                </div>
+                                            )
+                                        }
                                     </div>
-                                ))}
-                            </div>
-                        </div>
+
+                                    <div className='flex-wrap grid grid-cols-3'>
+                                        {upperArray?.map((item: any, index: number) => (
+                                            <div className='my-4' onClick={() => handelSelecttion(item)}>
+                                                {/* <ChairUiComponent key={index} children={item?.code_seat?.slice(0,2)} /> */}
+                                                <ChairUiComponent
+                                                    // seatCode={item.code_seat} 
+                                                    // isBooked={item.isBooked} 
+                                                    // price={item.price}
+                                                    // dataSeatHold={seatHold?.map((item:any)=> item).find((trip:any)=> trip.trip_id == trip_id )}
+                                                    key={index}
+                                                    dataSeatHold={seatHold}
+                                                    children={item?.code_seat}
+                                                    status={item?.status}
+                                                    checkSeatHold={seatCodeHole}
+                                                    seatSold={seatCodeSold}
+                                                    isloading= {isLoading}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ) : (
+                                <div>
+                                    <div>
+                                        {
+                                            typeCar === "1" ? (
+                                                <div></div>
+                                            ) : (
+                                                <div>
+                                                    <h3 className='font-medium py-2'>Tầng dưới</h3>
+                                                </div>
+                                            )
+                                        }
+                                    </div>
+
+                                    <div className='flex-wrap grid grid-cols-4'>
+                                        {upperArray?.map((item: any, index: number) => (
+                                            <div className='my-2' onClick={() => handelSelecttion(item)}>
+                                                {/* <ChairUiComponent key={index} children={item?.code_seat?.slice(0,2)} /> */}
+                                                <ChairUiComponent
+                                                    // seatCode={item.code_seat} 
+                                                    // isBooked={item.isBooked} 
+                                                    // price={item.price}
+                                                    // dataSeatHold={seatHold?.map((item:any)=> item).find((trip:any)=> trip.trip_id == trip_id )}
+                                                    key={index}
+                                                    dataSeatHold={seatHold}
+                                                    children={item?.code_seat}
+                                                    status={item?.status}
+                                                    checkSeatHold={seatCodeHole}
+                                                    seatSold={seatCodeSold}
+                                                    isloading= {isLoading}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )
+                        }
 
                         <div className='px-3'>
                             <div>
                                 {
                                     lowarArray?.length == 0 ? "" : (
-                                        <h3 className='font-medium py-2'>Tầng trên</h3>
+                                        <div>
+                                            {
+                                                typeCar === "1" ? (
+                                                    <div></div>
+                                                ) : (
+                                                    <div>
+                                                        <h3 className='font-medium py-2'>Tầng trên</h3>
+                                                    </div>
+                                                )
+                                            }
+                                        </div>
+
                                     )
                                 }
                             </div>
 
-                            <div className='flex-wrap grid grid-cols-3'>
-                                {lowarArray?.map((item: any,index: number) => (
-                                    <div className='my-4'onClick={()=>handelSelecttion(item)}>
-                                    <ChairUiComponent 
-                                        key={index} 
-                                        children={item?.code_seat} 
-                                        status={item?.status}
-                                        checkSeatHold={seatCodeHole}
-                                        seatSold={seatCodeSold}
-                                    />
+                          {
+                            totalSeat === 36 ? (
+                                <div className='flex-wrap grid grid-cols-3'>
+                                {lowarArray?.map((item: any, index: number) => (
+                                    <div className='my-4' onClick={() => handelSelecttion(item)}>
+                                        <ChairUiComponent
+                                            key={index}
+                                            children={item?.code_seat}
+                                            status={item?.status}
+                                            checkSeatHold={seatCodeHole}
+                                            seatSold={seatCodeSold}
+                                            isloading= {isLoading}
+                                        />
                                     </div>
                                 ))}
 
                             </div>
+                            ) : (
+                                <div className='flex-wrap grid grid-cols-4'>
+                                {lowarArray?.map((item: any, index: number) => (
+                                    <div className='my-4' onClick={() => handelSelecttion(item)}>
+                                        <ChairUiComponent
+                                            key={index}
+                                            children={item?.code_seat}
+                                            status={item?.status}
+                                            checkSeatHold={seatCodeHole}
+                                            seatSold={seatCodeSold}
+                                            isloading= {isLoading}
+                                        />
+                                    </div>
+                                ))}
+
+                            </div>
+                            )
+                          }
                         </div>
 
                         <div className='py-3'>
@@ -138,7 +242,7 @@ const CheckChaircomponent:FC<any> = ({trip_id, setSelectData, setDataPrice ,data
                             </span>
                             <span className='flex items-center py-4'>
                                 <div className='mr-2 h-4 w-4 rounded bg-[#FFFF66] border-[#C0C6CC]'></div>
-                                Ghế đang được giữ 
+                                Ghế đang được giữ
                             </span>
                         </div>
                     </div>
@@ -146,6 +250,10 @@ const CheckChaircomponent:FC<any> = ({trip_id, setSelectData, setDataPrice ,data
                 </div>
             </div>
         </div>
+            </div>
+        )
+      }
+      </>
     );
 };
 
