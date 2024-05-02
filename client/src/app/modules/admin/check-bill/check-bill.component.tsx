@@ -14,12 +14,12 @@ const CheckBillComponent = () => {
   const {
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors }, 
     setValue
   } = useForm({
     resolver: yupResolver(validateCheckBill)
   })
-
+  
   useEffect(() => {
     // Get the URLSearchParams object from the URL
     const params = new URLSearchParams(window.location.search)
@@ -132,14 +132,14 @@ const CheckBillComponent = () => {
     }
   }
   return (
-    <div css={ticketCss} className='w-[1128px] mx-auto mt-[50px] mb-[20px]'>
+    <div css={ticketCss} className='w-full mx-auto mt-[50px] mb-[20px]'>
       <h2>TRA CỨU THÔNG TIN ĐẶT VÉ</h2>
-      <form onSubmit={handleSubmit(onSubmit)} className='w-[600px] m-auto'>
+      <form onSubmit={handleSubmit(onSubmit)} className='w-[600px] m-auto max-lg:w-full'>
         <div className=''>
           <Controller
             control={control}
             name='phoneNumber'
-            defaultValue='' // Set default value to an empty string
+            defaultValue=''
             render={({ field: { onChange, value, ref }, fieldState: { error } }) => (
               <input
                 placeholder='Vui lòng nhập số điện thoại'
@@ -158,7 +158,7 @@ const CheckBillComponent = () => {
           <Controller
             control={control}
             name='bill'
-            defaultValue='' // Set default value to an empty string
+            defaultValue=''
             render={({ field: { onChange, value, ref }, fieldState: { error } }) => (
               <input
                 placeholder='Vui lòng nhập mã vé'
@@ -178,12 +178,12 @@ const CheckBillComponent = () => {
         </div>
       </form>
       {billData && (
-        <div className='border-[2px] border-gray-200 mt-5 rounded-[10px] overflow-hidden grid grid-cols-2 gap-4 justify-items-center mx-auto'>
+        <div className='border-[2px] border-gray-200 mt-5 rounded-[10px] overflow-hidden md:grid grid-cols-2 gap-4 justify-items-center mx-auto'>
           <h2 className='text-[25px] font-bold py-4 text-center col-span-2'>Thông tin vé</h2>
           {billData.map((ticket, index) => (
             <div className='flex my-10 gap-10 justify-center w-full sm:w-auto'>
               <div className='relative'>
-                <div className='flex-col border-[2px] rounded-[8px] border-gray-200 pt-4 w-full sm:w-[380px]'>
+                <div className='flex-col border-[2px] rounded-[8px] border-gray-200 pt-4 w-full sm:w-full'>
                   <div className='flex'>
                     <div className='mt-3 mx-auto'>
                       <p className='font-semibold text-[18px] text-center'>Mã vé {ticket.code_ticket}</p>
@@ -240,7 +240,7 @@ const CheckBillComponent = () => {
           ))}
           {billData && billData.some((ticket) => ticket.status !== 1 || ticket.status_pay !== 1) && (
             <button
-              className='my-4 flex bg-[#fbeeea]  py-3 px-12 text-[#e48666] font-bold rounded-full col-span-2'
+              className='my-4 flex bg-[#fbeeea] max-md:mx-auto py-3 px-12 text-[#e48666] font-bold rounded-full col-span-2'
               onClick={handleAllCheckIn}
             >
               <svg
@@ -255,7 +255,7 @@ const CheckBillComponent = () => {
               >
                 <path d='M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 0 0-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z'></path>
               </svg>
-              Checkin toàn bộ vé
+              Checkin all
             </button>
           )}
         </div>
@@ -264,7 +264,7 @@ const CheckBillComponent = () => {
         <div
           id='popup-modal'
           tabindex='-1'
-          class={`overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 mt-28 ml-[640px] z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full ${
+          class={`overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 bottom-0 z-50 flex justify-center items-center ${
             showModal ? '' : 'hidden'
           }`}
         >
@@ -329,7 +329,7 @@ const CheckBillComponent = () => {
         <div
           id='success-modal'
           tabindex='-1'
-          class={`overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 mt-28 ml-[640px] z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full ${
+          class={`overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 bottom-0 z-50 flex justify-center items-center ${
             showSuccessModal ? '' : 'hidden'
           }`}
         >
@@ -429,5 +429,12 @@ const ticketCss = css`
     z-index: 2; /* make sure it's above other content */
     text-align: center;
     width: 100%;
+  }
+  @media (max-width: 768px) {
+    .used-ticket-overlay {
+      position: absolute;
+      margin-top: 300px;
+      margin-left: 10px;
+    }
   }
 `

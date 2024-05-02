@@ -107,9 +107,9 @@ const CheckTicketComponent = () => {
   }
 
   return (
-    <div css={ticketCss} className='w-[1128px] mx-auto mt-[50px] mb-[20px]'>
+    <div css={ticketCss} className='w-full mx-auto mt-[50px] mb-[20px]'>
       <h2>TRA CỨU THÔNG TIN ĐẶT VÉ</h2>
-      <form onSubmit={handleSubmit(onSubmit)} className='w-[600px] m-auto'>
+      <form onSubmit={handleSubmit(onSubmit)} className='w-[600px] m-auto max-lg:w-full'>
         <div className=''>
           <Controller
             control={control}
@@ -232,7 +232,7 @@ const CheckTicketComponent = () => {
         <div
           id='popup-modal'
           tabindex='-1'
-          class={`overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 mt-28 ml-[640px] z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full ${
+          class={`overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 bottom-0 z-50 flex justify-center items-center ${
             showModal ? '' : 'hidden'
           }`}
         >
@@ -297,7 +297,7 @@ const CheckTicketComponent = () => {
         <div
           id='success-modal'
           tabindex='-1'
-          class={`overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 mt-28 ml-[640px] z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full ${
+          class={`overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 bottom-0 z-50 flex justify-center items-center ${
             showSuccessModal ? '' : 'hidden'
           }`}
         >
@@ -400,5 +400,12 @@ const ticketCss = css`
     padding: 10px;
     text-align: center;
     width: 100%;
+  }
+  @media (max-width: 768px) {
+    .used-ticket-overlay {
+      position: absolute;
+      margin-top: 350px;
+      margin-left: 10px;
+    }
   }
 `

@@ -83,13 +83,13 @@ const LoginComponent = () => {
     }
   }
   return (
-    <div css={loginCss} className='w-[1128px] m-auto flex '>
-      <div>
+    <div css={loginCss} className='w-full m-auto flex '>
+      <div className="max-lg:hidden ml-40">
         <img src='https://storage.googleapis.com/futa-busline-cms-dev/TVC_00aa29ba5b/TVC_00aa29ba5b.svg' alt='' />
       </div>
 
-      <div className='pl-[10px]'>
-        <h2 className='font-bold text-[20px]'>Sign In</h2>
+      <div className='pl-[10px] max-lg:mx-auto'>
+        <h2 className='font-bold text-[20px] max-lg:text-center max-lg:'>Sign In</h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className='w-[400px] m-auto mt-4'>
           <div className=''>

@@ -6,8 +6,8 @@ const FooterComponent = ({dataSeatHold}:any) => {
     
     return (
 
-             <footer className="bg-[#FFF7F5]  mt-10">
-            <div className="w-[1128px] m-auto  max-w-screen-xl space-y-8 px-4 py-16 sm:px-6 lg:space-y-16 lg:px-8">
+             <footer className="bg-[#FFF7F5]  mt-10 w-full">
+            <div className="w-full m-auto  max-w-screen-xl space-y-8 px-4 py-16 sm:px-6 lg:space-y-16 lg:px-8">
                 <div className="flex justify-between">
                     <div className="">
                         <a href="/" className="flex items-center  max-w-[50px]">
@@ -87,7 +87,7 @@ const FooterComponent = ({dataSeatHold}:any) => {
                         </ul>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-8  lg:grid-cols-2 ">
+                    <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 ">
                         <div>
                             <p className="font-medium text-gray-900">Liên hệ</p>
 
