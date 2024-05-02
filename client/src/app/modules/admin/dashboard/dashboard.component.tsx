@@ -50,9 +50,8 @@ const DashboardComponent = () => {
             <h1 className="text-[22px]">Tổng  chuyến đi </h1>
           </div>
           <div>
-            <span className="text-[22px] font-bold">{totalTrip || 0}</span>
+            <span className="text-[22px] font-bold">{data?.total_trip || 0}</span>
           </div>
-          <span><Link to={`trip-statistical`} >View Details</Link></span>
         </div>
         <div className=" rounded-lg bg-yellow-900 text-white border text-center py-10">
           <div className=" ">
@@ -64,7 +63,7 @@ const DashboardComponent = () => {
         </div>
         <div className=" rounded-lg bg-[#00d27a] text-white border text-center py-10">
           <div className=" ">
-            <h1 className="text-[22px]">Tuyến Đường</h1>
+            <h1 className="text-[22px]">Địa điểm</h1>
           </div>
           <div>
             <span className="text-[22px] font-bold">{data?.total_location || 0}</span>
@@ -72,10 +71,10 @@ const DashboardComponent = () => {
         </div>
         <div className=" rounded-lg bg-red-800 text-white border text-center py-10">
           <div className=" ">
-            <h1 className="text-[22px]">Tổng sản phẩm</h1>
+            <h1 className="text-[22px]">Tổng số tuyến đường</h1>
           </div>
           <div>
-            <span className="text-[22px] font-bold">{ 0}</span>
+            <span className="text-[22px] font-bold">{data?.total_route || 0}</span>
           </div>
         </div>
       

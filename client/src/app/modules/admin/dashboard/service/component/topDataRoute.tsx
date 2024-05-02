@@ -15,9 +15,9 @@ const TopDataRoute = ({ item, index }: any) => {
   <td className="px-4 py-2 text-gray-700 whitespace-nowrap">
       {item?.total_tickets || 0}
   </td>
-  {/* <td className="px-4 py-2 text-gray-700 whitespace-nowrap">
+  <td className="px-4 py-2 text-gray-700 whitespace-nowrap">
       {item?.total_trips || 0}
-  </td> */}
+  </td>
   
 </tr>;
 }
