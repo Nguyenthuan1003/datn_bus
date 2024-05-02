@@ -13,7 +13,7 @@ const BusSearchResults = () => {
           <FilterDataComponent />
         </div>
         <div className='px-6'>
-          <div className='flex mt-3'>
+          {/* <div className='flex mt-3'>
             <div className='text-2lg flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-md border px-4 py-1 icon-orange border-[#FCDACE] bg-[#FEF6F3] text-orange'>
               <img src='	https://futabus.vn/images/icons/save_money.svg' alt='' />
               Giá rẻ bất ngờ
@@ -29,7 +29,7 @@ const BusSearchResults = () => {
               <img src='https://futabus.vn/images/icons/seat.svg' alt='' />
               Ghế trống
             </div>
-          </div>
+          </div> */}
           <MainSearchResults />
         </div>
       </div>

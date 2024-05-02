@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import ButtonRadiusCompoennt from '~/app/component/parts/button/button.component'
 import { useTripRedux } from '../../../redux/hook/useTripReducer'
 import moment from 'moment'
+import logo from '../../../../../../assets/img/A-car-B-removebg-preview.png'
 import 'moment/locale/vi' // Import locale của bạn nếu cần thiết
 import LocationScheduleComponent from '../location-schedule/location-schedule.component'
 import { Link, useLocation, useParams } from 'react-router-dom'
@@ -93,13 +94,13 @@ const MainSearchResults = () => {
                         <div className='text-[15px]  font-bold mx-6'>
                           Loại xe
                           <br />
-                          <span className='font-medium flex justify-center mt-3'>{item?.car?.name}</span>
+                          <span className='font-medium flex justify-center -ml-4 mt-3'>{item?.car_name}</span>
                         </div>
 
                         <div className='text-[15px]  font-bold mx-6'>
                           Chỗ ngồi
                           <br />
-                          <span className='font-medium flex justify-center mt-3'>8gio</span>
+                          <span className='font-medium flex justify-center mt-3'>{item?.total_seat}</span>
                         </div>
                       </div>
                     </div>
@@ -109,43 +110,42 @@ const MainSearchResults = () => {
                       <div className=''>
                         <img
                           className='w-[200px] '
-                          src='../../../../../../assets/img/A-car-B-removebg-preview.png'
+                          src={logo}
                           alt=''
                         />
                       </div>
                       <div className='font-medium'>{item?.end_location}</div>
 
-                      <div className='text-[20px] font-bold text-[var(--color-orange)] px-6'>{item?.trip_price}đ</div>
+                      
                     </div>
 
                     <hr />
 
                     <div className='flex justify-between mt-4'>
-                      <div className='flex'>
-                        <div
-                          className={`font-medium ${activeData[item.id] == 1 ? 'active' : ''}`}
-                          onClick={() => setActiveToTrips(item.id, 1)}
-                        >
-                          Chọn ghế
-                        </div>
-                        <div
-                          className={`font-medium px-3 ${activeData[item.id] == 2 ? 'active' : ''}`}
-                          onClick={() => setActiveToTrips(item.id, 2)}
-                        >
-                          Lịch trình
-                        </div>
-                        <div
-                          className={`font-medium px-3 ${activeData[item.id] == 4 ? 'active' : ''}`}
-                          onClick={() => setActiveToTrips(item.id, 4)}
-                        >
-                          Chính sách
-                        </div>
-                      </div>
-                      <div>
+                    <div>
                         <Link to={`/book-tickets/${item?.trip_id}`}>
                           <ButtonRadiusCompoennt content='chọn chuyến' />
                         </Link>
                       </div>
+                      <div className='flex'>
+                        {/* <div
+                          className={`font-medium text-white ${activeData[item.id] == 1 ? 'active' : ''}`}
+                        >
+                          Chọn ghế
+                        </div>
+                        <div
+                          className={`font-medium px-3 text-white ${activeData[item.id] == 2 ? 'active' : ''}`}
+                        >
+                          Lịch trình
+                        </div>
+                        <div
+                          className={`font-medium text-white px-3 ${activeData[item.id] == 4 ? 'active' : ''}`}
+                        >
+                          Chính sách
+                        </div> */}
+                        <div className='text-[20px] font-bold text-[var(--color-orange)] pt-1 px-6'>{item?.trip_price}đ</div>
+                      </div> 
+
                     </div>
                   </div>
                   <div>

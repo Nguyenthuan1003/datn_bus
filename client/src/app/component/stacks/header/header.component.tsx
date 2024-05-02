@@ -75,7 +75,7 @@ const HeaderComponent = () => {
       icon: <UserOutlined />
     },
     {
-      label: 'Logout',
+      label: 'Đăng xuất',
       key: '3',
       style: { color: 'red', fontSize: '16px', cursor: 'pointer', padding: '20px' },
       icon: <UserOutlined />,

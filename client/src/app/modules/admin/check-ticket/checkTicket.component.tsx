@@ -170,7 +170,7 @@ const CheckTicketComponent = () => {
                 </div>
               </div>
               {ticketData.ticket.status_pay === 1 && ticketData.ticket.status === 1 && (
-                <div className='used-ticket-overlay'>đã in vé</div>
+                <div className='used-ticket-overlay'>đã checkin</div>
               )}
             </div>
           </div>
