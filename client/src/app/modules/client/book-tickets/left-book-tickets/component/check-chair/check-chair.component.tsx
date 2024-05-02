@@ -16,6 +16,21 @@ const CheckChaircomponent: FC<any> = ({ trip_id, setSelectData, setDataPrice, da
     const [isLoading, setIsLoading] = useState<any>(false)
     const [isLoadFetch, setIsLoadFetch] = useState<any>(true);
     useEffect(() => {
+
+        getTripId(trip_id).then((res: any) => {
+            if (res) {
+                setDataChair(res?.data?.seats);
+                setDataTrips(res?.data?.trip);
+                setData(res?.data);
+          
+            }
+            setSeathold(dataSeatHold?.map((item: any) => item).find((trip: any) => trip.trip_id == trip_id))
+            setSeatSold(dataSeatHold?.map((item: any) => item).find((trip: any) => trip.trip_id == trip_id))
+     
+        });
+
+    }, [trip_id, dataSeatHold]);
+    useEffect(() => {
         setIsLoadFetch(true)
         getTripId(trip_id).then((res: any) => {
             if (res) {
@@ -27,13 +42,10 @@ const CheckChaircomponent: FC<any> = ({ trip_id, setSelectData, setDataPrice, da
                     setIsLoading(false)
                 }, 2000)
             }
-            setSeathold(dataSeatHold?.map((item: any) => item).find((trip: any) => trip.trip_id == trip_id))
-            setSeatSold(dataSeatHold?.map((item: any) => item).find((trip: any) => trip.trip_id == trip_id))
             setIsLoadFetch(false)
         });
 
-    }, [trip_id, dataSeatHold]);
-
+    }, [trip_id]);
 
     const tripDataPrice = dataTrips?.trip_price
     const seatCodeHole = seatHold?.array_seat_code_hold?.map((item: string) => item) || []
