@@ -1,16 +1,18 @@
 import { css } from '@emotion/react';
 import React, { FC, useState } from 'react';
 import imgSeatH from '../../../../assets/img/icons/seat/seat_hold.svg'
+import { Skeleton } from 'antd';
 interface IChair {
     children?: any;
     status?: number; 
     seatHold?:any;
     dataSeatHold?:any,
     checkSeatHold?:any,
-    seatSold?:any
+    seatSold?:any,
+    isloading?:any
 }
 
-const ChairUiComponent: FC<IChair> = ({ children, status , seatHold,dataSeatHold,checkSeatHold,seatSold}) => {
+const ChairUiComponent: FC<IChair> = ({ children, status , seatHold,dataSeatHold,checkSeatHold,seatSold,isloading}) => {
     // Sử dụng state để lưu trạng thái đã chọn của ghế
     const [selected, setSelected] = useState(false);
     const isSold = status === 1 ;
@@ -36,12 +38,20 @@ const ChairUiComponent: FC<IChair> = ({ children, status , seatHold,dataSeatHold
         seatImage = "https://futabus.vn/images/icons/seat_active.svg"; // Ghế còn trống
     }
     return (
-        <div css={chairUiCss} className="container py-1"  onClick={handleSeatClick}>
+        <>
+        {
+            isloading ? (
+                <Skeleton></Skeleton>
+            ) : (
+                <div css={chairUiCss} className="container py-1"  onClick={handleSeatClick}>
             <div className="position-relative bg-inherit">
             <img src={seatImage} alt="Seat" style={{ cursor: status === 1 ? 'not-allowed' : 'pointer' }} />
                 <div className='seat-number'>{children.slice(3,5)}</div>
             </div>
         </div>
+            )
+        }
+        </>
     )
 }
 
