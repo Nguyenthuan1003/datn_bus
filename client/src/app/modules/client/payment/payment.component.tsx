@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react'
-import LeftComponent from '../payment/component/left.component'
-import { useCartRedux } from '../redux/hook/useCartReducer'
-import { cancelBill } from '~/app/api/bill/bill.api'
-import moment from 'moment-timezone'
 import { Button, Modal } from 'antd'
+import moment from 'moment-timezone'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { cancelBill } from '~/app/api/bill/bill.api'
+import LeftComponent from '../payment/component/left.component'
 
 const PaymentComponent = () => {
     // const {data:{cart}}=useCartRedux()
@@ -71,7 +70,7 @@ const PaymentComponent = () => {
                 setOrderCancelled(true);
                 // Sau khi xóa đơn hàng thành công, điều hướng về trang chủ
                 window.location.href = '/';
-                 fetch('http://127.0.0.1:8000/api/rt/seat')
+                 fetch('http://172.20.10.7:8000/api/rt/seat')
                 .then(
                     function(response) {
                     if (response.status !== 200) {

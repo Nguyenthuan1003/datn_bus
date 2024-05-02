@@ -22,6 +22,7 @@ class SendEmail extends Mailable
     public $seats;
     public $content;
     public $codeTickets;
+    public $getQrCodeData;
 
     /**
      * Create a new content instance.
@@ -39,7 +40,8 @@ class SendEmail extends Mailable
         $payLocation,
         $startTime,
         $seats,
-        $codeTickets
+        $codeTickets,
+        $getQrCodeData
     )
     {
         $this->userName = $userName;
@@ -53,6 +55,7 @@ class SendEmail extends Mailable
         $this->seats = $seats;
         $this->content = $content;
         $this->codeTickets = $codeTickets;
+        $this->getQrCodeData = $getQrCodeData;
     }
 
     /**

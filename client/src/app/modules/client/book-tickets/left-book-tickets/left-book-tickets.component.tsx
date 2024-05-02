@@ -1,20 +1,20 @@
+import { LoadingOutlined } from '@ant-design/icons';
 import { css } from '@emotion/react';
-import CheckChaircomponent from './component/check-chair/check-chair.component';
-import CustomerInformation from './component/customer-information/customer-information.component';
-import Reception from './component/reception/reception.component';
-import FutapayComponent from './component/futapay/futapay.component';
-import BreadCrumb from '~/app/component/parts/BreadCrumb/BreadCrumb';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { Spin, message } from 'antd';
 import { FC, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { validateTicket } from '~/app/utils/validateForm';
-import { addBill } from '~/app/api/bill/bill.api';
-import { Spin, message } from 'antd';
-import { useCartRedux } from '../../redux/hook/useCartReducer';
 import { useNavigate } from 'react-router-dom';
-import { getTripId } from '~/app/api/trip/trip.api';
 import { getOneUser } from '~/app/api/auth/auth.api';
-import { LoadingOutlined } from '@ant-design/icons';
+import { addBill } from '~/app/api/bill/bill.api';
+import { getTripId } from '~/app/api/trip/trip.api';
+import BreadCrumb from '~/app/component/parts/BreadCrumb/BreadCrumb';
+import { validateTicket } from '~/app/utils/validateForm';
+import { useCartRedux } from '../../redux/hook/useCartReducer';
+import CheckChaircomponent from './component/check-chair/check-chair.component';
+import CustomerInformation from './component/customer-information/customer-information.component';
+import FutapayComponent from './component/futapay/futapay.component';
+import Reception from './component/reception/reception.component';
 
 const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, selectData, dataPrice, seat_id ,dataSeatHold}) => {
     const accsetoken: any = localStorage.getItem('token')
@@ -48,7 +48,7 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
     // const dataSeatHold = dataRT?.map((item:any)=> item).find((trip:any)=> trip.trip_id == trip_id )?.trip_id
     
     useEffect(()=>{
-        fetch('http://127.0.0.1:8000/api/rt/seat')
+        fetch('http://172.20.10.7:8000/api/rt/seat')
         .then(
             function(response) {
             if (response.status !== 200) {
@@ -167,7 +167,7 @@ const LeftBookTickets: FC<any> = ({ trip_id, setSelectData, setDataPrice, select
 
                 await addBill(billData);
 
-                fetch('http://127.0.0.1:8000/api/rt/seat')
+                fetch('http://172.20.10.7:8000/api/rt/seat')
                 .then(
                     function(response) {
                     if (response.status !== 200) {

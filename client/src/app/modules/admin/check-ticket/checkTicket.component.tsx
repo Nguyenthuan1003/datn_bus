@@ -1,23 +1,37 @@
-import React, { useState } from 'react'
 import { css } from '@emotion/react'
-import { Controller, useForm } from 'react-hook-form'
-import ButtonRadiusCompoennt from '~/app/component/parts/button/button.component'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { validateCheckTicket } from '../../../utils/validateForm'
-import { toast, ToastContainer } from 'react-toastify'
+import React, { useEffect, useState } from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { axiosPrivate } from '~/app/api/confighHTTp'
-import { Link } from 'react-router-dom'
-import { AiOutlineCheck } from 'react-icons/ai'
+import ButtonRadiusCompoennt from '~/app/component/parts/button/button.component'
+import { validateCheckTicket } from '../../../utils/validateForm'
 
 const CheckTicketComponent = () => {
   const {
     handleSubmit,
     control,
-    formState: { errors }
+    formState: { errors },
+    setValue
   } = useForm({
     resolver: yupResolver(validateCheckTicket)
   })
+
+  useEffect(() => {
+    // Get the URLSearchParams object from the URL
+    const params = new URLSearchParams(window.location.search)
+
+    // Get the value of the 'phone_number' parameter
+    const phoneNumber = params.get('phone_number')
+
+    // Get the value of the 'code_ticket' parameter
+    const codeTicket = params.get('code_ticket')
+
+    // Set the values of the input fields using setValue
+    setValue('phoneNumber', phoneNumber || '') // If phoneNumber is null, set an empty string
+    setValue('ticket', codeTicket || '') // If codeTicket is null, set an empty string
+  }, [setValue]) // Dependency array includes setValue to ensure it's called only once after the component mounts
 
   const [errorMessage, setErrorMessage] = useState(null)
   const [showModal, setShowModal] = React.useState(false)
@@ -91,6 +105,7 @@ const CheckTicketComponent = () => {
       setErrorMessage(error.response.data.message)
     }
   }
+
   return (
     <div css={ticketCss} className='w-[1128px] mx-auto mt-[50px] mb-[20px]'>
       <h2>TRA CỨU THÔNG TIN ĐẶT VÉ</h2>
@@ -99,6 +114,7 @@ const CheckTicketComponent = () => {
           <Controller
             control={control}
             name='phoneNumber'
+            defaultValue='' // Set default value to an empty string
             render={({ field: { onChange, value, ref }, fieldState: { error } }) => (
               <input
                 placeholder='Vui lòng nhập số điện thoại'
@@ -117,6 +133,7 @@ const CheckTicketComponent = () => {
           <Controller
             control={control}
             name='ticket'
+            defaultValue='' // Set default value to an empty string
             render={({ field: { onChange, value, ref }, fieldState: { error } }) => (
               <input
                 placeholder='Vui lòng nhập mã vé'
@@ -177,20 +194,20 @@ const CheckTicketComponent = () => {
           <div className='flex justify-center mb-10'>
             {ticketData.ticket.status_pay === 1 && ticketData.ticket.status !== 1 && isTicketCheckedIn === 0 ? (
               <button className='bg-[#fbeeea] rounded-full py-3 px-12 flex mr-5' onClick={handleCheckIn}>
-              <svg
-                className='w-5 h-5'
-                stroke='currentColor'
-                fill='#e48666'
-                stroke-width='0'
-                viewBox='0 0 1024 1024'
-                height='1em'
-                width='1em'
-                xmlns='http://www.w3.org/2000/svg'
-              >
-                <path d='M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 0 0-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z'></path>
-              </svg>
-              <p className='ml-2 text-[#e48666] font-bold'>Checkin</p>
-            </button>
+                <svg
+                  className='w-5 h-5'
+                  stroke='currentColor'
+                  fill='#e48666'
+                  stroke-width='0'
+                  viewBox='0 0 1024 1024'
+                  height='1em'
+                  width='1em'
+                  xmlns='http://www.w3.org/2000/svg'
+                >
+                  <path d='M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 0 0-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z'></path>
+                </svg>
+                <p className='ml-2 text-[#e48666] font-bold'>Checkin</p>
+              </button>
             ) : ticketData.ticket.status_pay === 0 ? (
               <button className='bg-gray-400 rounded-full py-3 px-12 flex mr-5' disabled>
                 <svg
