@@ -14,7 +14,7 @@ const CheckBillComponent = () => {
   const {
     handleSubmit,
     control,
-    formState: { errors }    
+    formState: { errors }, 
     setValue
   } = useForm({
     resolver: yupResolver(validateCheckBill)
