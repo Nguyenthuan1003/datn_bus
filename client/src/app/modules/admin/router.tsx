@@ -35,11 +35,11 @@ export const adminRouter: RouteObject[] = [
     ),
     children: []
   },
-  {
-    path: 'banner',
-    element: <BannerAdmin />,
-    children: []
-  },
+  // {
+  //   path: 'banner',
+  //   element: <BannerAdmin />,
+  //   children: []
+  // },
   {
     path: 'parent-location',
     element: <ParentLocaltion />,
