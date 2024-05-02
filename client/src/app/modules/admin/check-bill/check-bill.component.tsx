@@ -212,7 +212,7 @@ const CheckBillComponent = () => {
                     </div>
                   </div>
                   <div className='used-ticket-overlay'>
-                    {ticket.status === 1 && ticket.status_pay === 1 && <div>đã in vé</div>}
+                    {ticket.status === 1 && ticket.status_pay === 1 && <div>đã checkin</div>}
                   </div>
                 </div>
                 {!(ticket.status === 1 && ticket.status_pay === 1) && (

@@ -115,20 +115,6 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
   const handleCancel = () => {
     setIsModalOpen(false)
   }
-
-  const confirmDelete = (itemId: any) => {
-    deleteFunc(itemId).then((res: any) => {
-      if (res) {
-        callBack(res.data.message)
-        message.success('xoá thành công')
-      } else {
-        message.error('xoá thất bại')
-      }
-    })
-  }
-  const cancel = (e: any) => {
-    message.info('huỷ xoá')
-  }
   const onHandleSearch = async (value: any) => {
     try {
       const searchOptions: any = {
@@ -149,7 +135,7 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
       title: 'Chuyến đi',
       key: 'trip_id',
       render: (_: any, record: any) => {
-        return <span>{record?.trip.route.name}</span>
+        return <span>{record?.trip?.route?.name}</span>
       }
     },
     {
@@ -183,19 +169,6 @@ const TemplateModelBill: FC<ITemplateModelBill> = ({ dataTable, title, deleteFun
       key: 'action',
       render: (_: any, record: any) => (
         <div className='flex'>
-          <Popconfirm
-            title='xác nhận xoá'
-            description='bạn có chắc chắn muốn xoá không ?'
-            onConfirm={() => confirmDelete(record.id)}
-            onCancel={cancel}
-            okText='Yes'
-            cancelText='No'
-          >
-            {' '}
-            <button className='text-[23px] text-red-600' title={`Xoá theo ID: ${record.id}`}>
-              <MdDeleteForever />
-            </button>
-          </Popconfirm>
           <IoEyeSharp
             onClick={() => showModal(record)}
             className='text-[23px] cursor-pointer text-green-500 hover:text-green-700 dark:hover:text-green-800 ml-4'

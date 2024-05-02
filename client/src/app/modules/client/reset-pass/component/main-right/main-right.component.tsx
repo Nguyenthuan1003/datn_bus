@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import ButtonRadiusCompoennt from '~/app/component/parts/button/button.component'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { validateForgot } from '~/app/utils/validateForm'
+import { validateResetPass } from '~/app/utils/validateForm'
 import { css } from '@emotion/react'
 import { Link } from 'react-router-dom'
-import { message } from 'antd'
+import { message, Spin } from 'antd'
 import { axiosPrivate } from '~/app/api/confighHTTp'
+import { data } from 'autoprefixer'
+import Swal from 'sweetalert2'
 
 const MainRight = () => {
   const {
@@ -14,26 +16,10 @@ const MainRight = () => {
     control,
     formState: { errors }
   } = useForm({
-    resolver: yupResolver(validateForgot)
+    resolver: yupResolver(validateResetPass)
   })
   const onSubmit = async (data: any) => {
-    try {
-      const response = await axiosPrivate.post('/forgotpassword', {
-        email: data.email
-      });
-
-      if (response.status === 200) {
-        message.success(response.data.data.status);
-      } else {
-        message.error(response.data.message);
-      }
-    } catch (error) {
-      if (error.response && error.response.data && error.response.data.message) {
-        message.error(error.response.data.message);
-      } else {
-        console.error(error);
-      }
-    }
+    console.log(data)
   }
   return (
     <div css={loginCss}>
@@ -51,27 +37,22 @@ const MainRight = () => {
           </Link>
         </div>
       </div>
-      <div className='m-auto flex '>
+      <div className='m-auto'>
         <div className='ml-12 mt-[20px]'>
           <h2 className='font-bold text-[20px] mb-5 ml-72'>Đặt lại mật khẩu</h2>
 
-          <p className='text-center py-4 mx-auto text-[18px]'>
-            Chỉ cần nhập địa chỉ email của bạn dưới đây và chúng tôi sẽ gửi cho bạn một liên kết để đặt lại mật khẩu của
-            bạn!
-          </p>
-
-          <form onSubmit={handleSubmit(onSubmit)} class='max-w-sm mx-auto'>
-            <div class='mb-5'>
+          <form onSubmit={handleSubmit(onSubmit)} className='mx-32 mt-4'>
+            <div className=''>
               <Controller
                 control={control}
-                name='email'
+                name='password'
                 render={({ field: { onChange, value, ref }, fieldState: { error } }) => (
                   <div>
-                    <label>Nhập Email</label>
+                    <label>Mật khẩu cũ</label>
                     <input
-                      placeholder='Vui lòng nhập email'
-                      className='shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[400px] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light'
-                      type='text'
+                      placeholder='Vui lòng nhập mật khẩu cũ'
+                      className=''
+                      type='password'
                       value={value}
                       onChange={onChange}
                       ref={ref}
@@ -79,10 +60,52 @@ const MainRight = () => {
                   </div>
                 )}
               />
-              {errors && <span className='text-red-600'>{errors.email?.message}</span>}
+              {errors && <span className='text-red-600'>{errors.password?.message}</span>}
             </div>
-            <div className='text-center my-3'>
-              <ButtonRadiusCompoennt type='submit' content='Đổi mật khẩu ' />
+
+            <div className='my-5'>
+              <Controller
+                control={control}
+                name='newpassword'
+                render={({ field: { onChange, value, ref }, fieldState: { error } }) => (
+                  <div>
+                    <label>Mật khẩu mới</label>
+                    <input
+                      placeholder='Vui lòng nhập mât khẩu mới'
+                      className=''
+                      type='password'
+                      value={value}
+                      onChange={onChange}
+                      ref={ref}
+                    />
+                  </div>
+                )}
+              />
+              {errors && <span className='text-red-600'>{errors.newpassword?.message}</span>}
+            </div>
+
+            <div className='my-5'>
+              <Controller
+                control={control}
+                name='confirmpassword'
+                render={({ field: { onChange, value, ref }, fieldState: { error } }) => (
+                  <div>
+                    <label>Xác nhận mật khẩu</label>
+                    <input
+                      placeholder='Vui lòng nhập xác nhận mật khẩu'
+                      className=''
+                      type='password'
+                      value={value}
+                      onChange={onChange}
+                      ref={ref}
+                    />
+                  </div>
+                )}
+              />
+              {errors && <span className='text-red-600'>{errors.confirmpassword?.message}</span>}
+            </div>
+            <div className='mx-40'>
+              <ButtonRadiusCompoennt type='submit' content='Đổi mật khẩu' />
             </div>
           </form>
         </div>
@@ -95,15 +118,15 @@ export default MainRight
 
 const loginCss = css`
   input {
-    width: '100%';
-    padding: '6px 12px';
-    borderradius: '8px';
-    border: '1px solid #dde2e8';
-    outline: 'none';
+    width: 100%;
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid #dde2e8;
+    outline: none;
   }
 
   input:focus {
-    bordercolor: 'orange';
-    outline: 'none';
+    border-color: orange;
+    outline: none;
   }
 `

@@ -107,27 +107,6 @@ const LeftComponent = () => {
 
             <div className="text-xl font-medium"> Chọn phương thức thanh toán</div>
             <div className="ant-radio-group ant-radio-group-outline">
-                {/* 
-                <label className="ant-radio-wrapper m-0 flex items-center border-b py-3" style={{ border: 'none' }}>
-                    <span className="ant-radio">
-                        <input type="radio" className="ant-radio-input" value="8"  />
-                        <span className="ant-radio-inner"></span>
-                    </span>
-                    
-                    <span>
-                        <div className="flex w-full items-center" >
-                            <img className="ml-4 mr-4 w-[40px]"
-                                src="https://storage.googleapis.com/futa-busline-web-cms-prod/vnpay_fdc107eeec/vnpay_fdc107eeec.svg" alt="" />
-                            <div className="flex w-full flex-col">
-                                <div className="flex w-52 items-end justify-between">
-                                    <span className="text-base text-black">VNPay</span>
-
-                                </div>
-                                <span className="whitespace-pre-wrap text-xs font-medium text-orange"></span>
-                            </div>
-                        </div>
-                    </span>
-                </label> */}
                 <label className="ant-radio-wrapper m-0 flex items-center border-b py-3" style={{ border: 'none' }}>
                     <span className="ant-radio">
                         <input type="radio" className="ant-radio-input" value="vnpay" onChange={() => handlePaymentSelection('vnpay')} />
@@ -145,9 +124,6 @@ const LeftComponent = () => {
                         </div>
                     </span>
                 </label>
-                {/* Thêm các label khác ở đây */}
-
-                {/* Nút thanh toán chỉ hiển thị khi có phương thức thanh toán được chọn */}
                 {selectedPayment && (
                     <button className="bg-blue-500 text-white px-4 py-2 mt-4 rounded" onClick={handlePayment}>Thanh toán</button>
                 )}
