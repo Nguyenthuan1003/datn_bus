@@ -19,3 +19,6 @@ export const getDataChartRoute = async (value:any) => {
 export const getDataChartTrip = async () => {
     return await axiosPrivate.put(`/statistical/revenue-trip-year/`)
 }
+export const getDataHome = async () => {
+    return await axiosPrivate.get(`/statistical/home`)
+}
