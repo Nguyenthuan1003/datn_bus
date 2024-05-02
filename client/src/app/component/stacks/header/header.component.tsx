@@ -103,33 +103,33 @@ const HeaderComponent = () => {
     <>
       <header
         css={headerCss}
-        className=' bg-gradient-to-b from-bgHeader to-primary h-[120px] fixed w-full z-20 top-0 left-0 '
+        className=' bg-gradient-to-b from-bgHeader to-primary h-[120px] fixed w-full z-20 top-0 left-0'
       >
-        <div className='header-container w-[1128px] m-auto py-6'>
+        <div className='header-container w-[1128px] max-lg:w-full m-auto py-6'>
           <div className='header__logo '>
-            <Link className='flex justify-center items-center' to='/'>
+            <Link className='flex justify-center items-center max-lg:ml-28' to='/'>
               <img className='w-[70px]' src={logo} alt='BookBus Logo' />{' '}
               <h3 className='ml-2 font-semibold text-[20px]'>LetGo5</h3>
             </Link>
           </div>
           <nav>
             <ul className='navMenu__list'>
-              <li className='navMenu__list-link hover-underline-animation underline-animation--active'>
+              <li className='navMenu__list-link hover-underline-animation underline-animation--active hide-on-mobile'>
                 <Link to={'/'}>Trang chủ</Link>
               </li>
-              <li className='navMenu__list-link hover-underline-animation'>
+              <li className='navMenu__list-link hover-underline-animation hide-on-mobile'>
                 <Link to={'/route-schedule'}>Lịch trình</Link>
               </li>
-              <li className='navMenu__list-link hover-underline-animation'>
+              <li className='navMenu__list-link hover-underline-animation hide-on-mobile'>
                 <Link to={'/check-ticket'}>Tra cứu vé</Link>
               </li>
-              <li className='navMenu__list-link hover-underline-animation'>
+              <li className='navMenu__list-link hover-underline-animation hide-on-mobile'>
                 <Link to={'/'}>Hóa đơn</Link>
               </li>
-              <li className='navMenu__list-link hover-underline-animation'>
+              <li className='navMenu__list-link hover-underline-animation hide-on-mobile'>
                 <Link to={'/contact'}>Liên hệ</Link>
               </li>
-              <li className='navMenu__list-link hover-underline-animation'>
+              <li className='navMenu__list-link hover-underline-animation hide-on-mobile'>
                 <Link to={'/about'}>Về chúng tôi</Link>
               </li>
             </ul>
@@ -162,7 +162,7 @@ const HeaderComponent = () => {
                 </div>
               </Dropdown>
             ) : (
-              <div className='btn text-[12px]'>
+              <div className='btn text-[12px] max-lg:mr-28'>
                 <Link to={'/register'}>Đăng kí</Link>/ <Link to={'/login'}>Đăng nhập</Link>
               </div>
             )}
@@ -259,6 +259,16 @@ const headerCss = css`
     &:disabled {
       opacity: 0.5;
       cursor: not-allowed;
+    }
+  }
+  @media (max-width: 768px) {
+    .header-container {
+      flex-direction: row;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .hide-on-mobile {
+      display: none;
     }
   }
 `

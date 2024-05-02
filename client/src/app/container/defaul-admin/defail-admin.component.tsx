@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import { Layout, Menu, Button, theme } from 'antd'
 import { css } from '@emotion/react'
@@ -20,9 +20,33 @@ const DefaulAdmin = () => {
   const handleClickMenuDashboard = (data: any) => {
     navigate(data.key)
   }
+
+  useEffect(() => {
+    const handleResize = () => {
+      setCollapsed(window.innerWidth < 768)
+    }
+
+    // Call handleResize right away to set the initial value of collapsed
+    handleResize()
+
+    window.addEventListener('resize', handleResize)
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sider trigger={null} collapsible collapsed={collapsed}>
+      <Sider
+        trigger={null}
+        collapsible
+        collapsed={collapsed}
+        breakpoint='md'
+        collapsedWidth='0'
+        onBreakpoint={(broken) => {
+          setCollapsed(broken)
+        }}
+      >
         <div css={cssLogoAdmin} className='flex justify-center'>
           <img src={logo} alt='' width={70} height={70} />
         </div>
@@ -32,7 +56,7 @@ const DefaulAdmin = () => {
             <Menu.Item key={menu.key}>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 {menu.icon}
-                <span style={{marginLeft: "10px"}}>{menu.label}</span>
+                <span style={{ marginLeft: '10px' }}>{menu.label}</span>
               </div>
             </Menu.Item>
           ))}
