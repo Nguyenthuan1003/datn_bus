@@ -70,7 +70,7 @@ const PaymentComponent = () => {
                 setOrderCancelled(true);
                 // Sau khi xóa đơn hàng thành công, điều hướng về trang chủ
                 window.location.href = '/';
-                 fetch('http://192.168.1.7:8000/api/rt/seat')
+                 fetch('http://172.20.10.7:8000/api/rt/seat')
                 .then(
                     function(response) {
                     if (response.status !== 200) {

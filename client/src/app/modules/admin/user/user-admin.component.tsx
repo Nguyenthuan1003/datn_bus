@@ -32,7 +32,7 @@ const UserAdminComponent = () => {
                 return <h2>{ParentType ? ParentType.name : 'Chưa phân loại'}</h2>
               }
               if (itemKey === 'avatar') {
-                return <img src={`http://192.168.1.7:8000/${text}`} alt='avatar' style={{ width: '50px', height: '50px' }} />;
+                return <img src={`http://172.20.10.7:8000/${text}`} alt='avatar' style={{ width: '50px', height: '50px' }} />;
               }
               return text
             }

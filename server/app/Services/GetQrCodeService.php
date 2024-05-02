@@ -8,7 +8,7 @@ use App\Models\TicketOrder;
 
 class GetQrCodeService
 {
-     public const SERVER_HOST = "192.168.1.7";
+     public const SERVER_HOST = "172.20.10.7";
 
      public function createQrCode($billId)
      {

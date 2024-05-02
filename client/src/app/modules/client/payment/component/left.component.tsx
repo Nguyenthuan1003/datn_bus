@@ -37,7 +37,7 @@ const LeftComponent = () => {
                     localStorage.removeItem("bill_user")
                     localStorage.removeItem("cart")
 
-                fetch('http://192.168.1.7:8000/api/rt/seat')
+                fetch('http://172.20.10.7:8000/api/rt/seat')
                 .then(
                     function(response) {
                     if (response.status !== 200) {

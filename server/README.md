@@ -1,7 +1,7 @@
 127.0.0.1
 
 ipconfig
-ipv4: 192.168.1.7
+ipv4: 172.20.10.7
 
 ...
 setup local email (mailhog)
@@ -13,8 +13,8 @@ APP_NAME=busletgo5
 APP_ENV=local
 APP_KEY=base64:/loC7TnfW1jh/ld5Y6ELjGn4XAtMDGKYb42AcOM7+es=
 APP_DEBUG=true
-APP_URL=http://192.168.1.7
-SERVER_HOST=192.168.1.7
+APP_URL=http://172.20.10.7
+SERVER_HOST=172.20.10.7
 SERVER_PORT=8000
 
 LOG_CHANNEL=stack

@@ -97,7 +97,7 @@ const HeaderComponent = () => {
     onClick: handleMenuClick
   }
 
-  const url = 'http://192.168.1.7:8000/'
+  const url = 'http://172.20.10.7:8000/'
 
   return (
     <>

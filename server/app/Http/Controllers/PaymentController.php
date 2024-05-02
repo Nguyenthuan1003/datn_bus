@@ -14,7 +14,7 @@ class PaymentController extends Controller
         $vnp_TmnCode = "KLSAK0A5";
         $vnp_HashSecret = "WQIPRYGSBDEMGHDRTKVVLWMIZAGZIOWB"; //Chuỗi bí mật
         $vnp_Url = "http://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        $vnp_Returnurl = "http://192.168.1.7:3000/result-payment";
+        $vnp_Returnurl = "http://172.20.10.7:3000/result-payment";
         $vnp_TxnRef = $request->input('code_bill');
         $vnp_OrderInfo = "Thanh toán mua vé xe";
         $vnp_OrderType = 'billpayment';

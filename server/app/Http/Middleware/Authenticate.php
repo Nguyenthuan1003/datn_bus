@@ -15,7 +15,7 @@ class Authenticate extends Middleware
     protected function redirectTo($request)
     {
         if (!$request->expectsJson()) {
-            return 'http://192.168.1.7:3000/';
+            return 'http://172.20.10.7:3000/';
         }
     }
 }
