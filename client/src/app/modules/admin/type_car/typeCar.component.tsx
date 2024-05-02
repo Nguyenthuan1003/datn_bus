@@ -4,23 +4,24 @@ import { getAllTypeCar , addTypeCar , deleteTypeCar, updateTypeCar } from './ser
 // import { getAllParent } from '../parent-location/service/parent-location.service'
 import { Form, Input, Select, Space, Upload } from 'antd';
 import { Option } from 'antd/es/mentions';
+import { BounceLoader } from 'react-spinners'
 const TypeCarComponent = () => {
     
     const [column, setColumn] = useState<any>([]);
     const [dataTypecar, setDataTypecar] = useState<any>([]);
     const [dataCurrent, setDataCurrent] = useState<any>({});    
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
         getAllTypeCar().then((res) => {
             if (res) {
                 setDataTypecar(res.data?.type_car)
+                setLoading(false);
             }
         })
     }, [])
     useEffect(() => {
         const columsTemp: any = []
         const title = ['STT', 'tên', 'Mô tả', 'Tổng chỗ ngồi', 'Kiểu ghế ngồi ']
-        console.log('s', columsTemp);
-        console.log('c', dataTypecar);
         if (dataTypecar.length > 0) {
             Object.keys(dataTypecar[0]).forEach((itemKey, key = 0) => {
                 if (!['id', 'created_at', 'updated_at'].includes(itemKey)) {
@@ -28,6 +29,14 @@ const TypeCarComponent = () => {
                         title: title[key++],
                         dataIndex: itemKey,
                         key: itemKey,
+                        render: (text: any, record: any, index: any) => {
+                            if (itemKey === 'type_seats') {
+                                return <>
+                                    
+                                </>;
+                            }
+                            return text
+                        }
                     })
                 }
             })
@@ -40,6 +49,7 @@ const TypeCarComponent = () => {
         getAllTypeCar().then((res) => {
             if (res) {
                 setDataTypecar(res?.data?.type_car)
+                setLoading(false);
             }
         })
     }, [reset])
@@ -53,6 +63,12 @@ const TypeCarComponent = () => {
           }
     return (
         <div>
+            {loading ? (
+                <BounceLoader
+                color="#36d7b7"
+                style={{position: "absolute", top: "50%", left: "54%"}}
+                />
+            ) : (
             <TemplateTable
                 title={`Danh sách Loại xe `}
                 callBack={handelGetList}
@@ -74,11 +90,21 @@ const TypeCarComponent = () => {
                             <Input />
                         </Form.Item>
                         <Form.Item label='Kiểu ngồi của xe' name='type_seats' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                            <Input />
+                        <Select >
+                                        {[
+                                            { value: "1", label: "Xe 1 tầng " },
+                                            { value: "2", label: "Xe 2 tầng" }
+                                        ].map((option: any) => (
+                                            <Option key={option?.value} value={option?.value}>
+                                                {option.label}
+                                            </Option>
+                                        ))}
+                                    </Select>
                         </Form.Item>
                     </Fragment>
                 }
             />
+            )}
         </div >
     )
 }

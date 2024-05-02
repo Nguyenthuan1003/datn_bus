@@ -1,18 +1,24 @@
-import { Form, Input, Select } from 'antd'
+import { Form, Input, Select, Space, Upload } from 'antd'
 import { Option } from 'antd/es/mentions'
 import { Fragment, useEffect, useState } from 'react'
 import TemplateTableUser from '../common/template-table-user/template-table-user.component'
 import { getAllType } from '../type-user/service/type-user.service'
 import { addUser, deleteUser, getAllUser, updateUser } from './service/user-admin.service'
+import { BounceLoader } from 'react-spinners'
+
 const UserAdminComponent = () => {
   const [column, setColumn] = useState<any>([])
   const [dataUser, setDataUser] = useState<any>([])
   const [dataParentType, setDataParentType] = useState<any>([])
+  const [current, setCurrent] = useState<any>(true)
+  const [isEditing, setIsEditing] = useState(false)
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getAllType().then((res) => {
       if (res) {
         setDataParentType(res.data?.typeUsers)
+        setLoading(false);
       }
     })
   }, [])
@@ -48,21 +54,35 @@ const UserAdminComponent = () => {
     getAllUser().then((res) => {
       if (res) {
         setDataUser(res?.data?.uesrs)
+        setLoading(false);
       }
     })
   }, [reset])
 
   const handelGetList = () => {
     setReset(!reset)
+    setIsEditing(false)
+  }
+
+  const fomatCustomCurrent = (data: any) => {
+    setCurrent(data)
+    setIsEditing(true)
   }
   return (
     <div>
+     {loading ? (
+        <BounceLoader
+          color="#36d7b7"
+          style={{position: "absolute", top: "50%", left: "54%"}}
+        />
+      ) : (
       <TemplateTableUser
         title={`Danh sách thành viên `}
         callBack={handelGetList}
         dataTable={dataUser}
         columnTable={column}
         deleteFunc={deleteUser}
+        dataId={fomatCustomCurrent}
         createFunc={addUser}
         changeFunc={updateUser}
         formEdit={
@@ -75,9 +95,15 @@ const UserAdminComponent = () => {
               <Input />
             </Form.Item>
 
-            <Form.Item label='Password' name='password' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-              <Input />
-            </Form.Item>
+            {!isEditing && (
+              <Form.Item
+                label='Password'
+                name='password'
+                rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}
+              >
+                <Input />
+              </Form.Item>
+            )}
 
             <Form.Item
               label='Số điện thoại'
@@ -115,6 +141,7 @@ const UserAdminComponent = () => {
           </Fragment>
         }
       />
+      )}
     </div>
   )
 }

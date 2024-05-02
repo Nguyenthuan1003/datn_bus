@@ -15,6 +15,7 @@ import TypeDiscoutComponent from './typeDiscout/typeDiscout.component'
 import DiscoutCodeComponent from './discount-code/discoutCode.component'
 import UserAdminComponent from './user/user-admin.component';
 import ParentType from './type-user/type-user.component';
+import TripDetailStatisticalComponent from './trip/tripDetailStatistical'
 export const adminRouter: RouteObject[] = [
   {
     path: '',
@@ -109,6 +110,11 @@ export const adminRouter: RouteObject[] = [
   {
     path: 'type-user',
     element: <ParentType />,
+    children: []
+  },
+  {
+    path: 'trip-statistical',
+    element: <TripDetailStatisticalComponent />,
     children: []
   }
 ]

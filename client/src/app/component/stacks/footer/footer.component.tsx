@@ -99,9 +99,7 @@ const FooterComponent = ({dataSeatHold}:any) => {
 
                                 <li>
                                     Điện thoại: 
-                                    <a href="#" className="text-gray-700 transition hover:opacity-75">
-                                       0123456789
-                                    </a>
+                                    <p>Call a customer support rep at <a href="tel:0906198183">0906198183</a>.</p>
                                 </li>
 
                                 <li>
@@ -113,9 +111,7 @@ const FooterComponent = ({dataSeatHold}:any) => {
 
                                 <li>
                                     Email:
-                                    <a href="#" className="text-gray-700 transition hover:opacity-75">
-                                        email@gmail.com
-                                    </a>
+                                    <a href="mailto:linhdaoq@gmail.com">linhdaoq@gmail.com</a>
                                 </li>
                             </ul>
                         </div>

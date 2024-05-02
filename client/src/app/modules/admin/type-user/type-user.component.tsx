@@ -2,10 +2,12 @@ import React, { Fragment, useEffect, useState } from 'react'
 import TemplateTable from '../common/template-table/template-table.component'
 import { Form, Input } from 'antd'
 import { addType, deleteType, getAllType, updateType } from './service/type-user.service'
+import { BounceLoader } from 'react-spinners'
 
 const ParentType = () => {
     const [column, setColumn] = useState<any>([]);
     const [dataType, setDataType] = useState<any>([]);
+    const [loading, setLoading] = useState(true);
     
     const [reset, setReset] = useState<any>([]);
     console.log('reset',column);
@@ -13,6 +15,7 @@ const ParentType = () => {
         getAllType().then((res) => {
             if (res) {
                 setDataType(res.data?.typeUsers)
+                setLoading(false);
             }
         })
     }, [reset])
@@ -40,6 +43,12 @@ const ParentType = () => {
     }
     return (
         <div>
+            {loading ? (
+                <BounceLoader
+                color="#36d7b7"
+                style={{position: "absolute", top: "50%", left: "54%"}}
+                />
+            ) : (
             <TemplateTable
                 title={`Thành viên `}
                 callBack={handelGetList}
@@ -55,6 +64,7 @@ const ParentType = () => {
                         </Form.Item>
                     </Fragment>
                 } />
+            )}
         </div>
     )
 }

@@ -4,8 +4,7 @@ import { createBill, deleteBill, getAllBill } from './service/bill.service'
 // import  { getAllTypeCar } from '../type_car/service/typeCar.service'
 import { Button, DatePicker, Form, Input, Modal, Select, Skeleton, Switch, Tag, TimePicker, message } from 'antd';
 import TemplateModelBill from '../common/template-model-bill/template-model-bill.component';
-
-
+import { BounceLoader } from 'react-spinners'
 
 const BillComponent = () => {
 
@@ -85,7 +84,7 @@ const BillComponent = () => {
     return (
         <div>
             <div>
-                <Button onClick={showModal}>Thêm</Button>
+                {/* <Button onClick={showModal}>Thêm</Button> */}
                 <div>
 
                 </div>
@@ -123,8 +122,12 @@ const BillComponent = () => {
                     </Form>
                 </Modal>
             </div>
-            {
-                isLoading ? <Skeleton /> : (
+            {isLoading ? (
+                <BounceLoader
+                color="#36d7b7"
+                style={{position: "absolute", top: "50%", left: "54%"}}
+                />
+            ) : (
                     <TemplateModelBill
                         title={`Danh sách hóa đơn `}
                         dataTable={dataBill}

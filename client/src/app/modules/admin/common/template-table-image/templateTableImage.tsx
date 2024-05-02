@@ -5,18 +5,18 @@ import { MdOutlineBrowserUpdated } from 'react-icons/md'
 import { UploadOutlined } from '@ant-design/icons'
 import TemplateModal from '../template-model/template-model.component'
 
-interface ITemplateTableUser {
+interface ITemplateTableImgae {
   title: any
   formEdit?: any
   dataTable?: any
   columnTable?: any
   deleteFunc?: any
   createFunc?: any
-  callBack?: any
+  callBack?: any 
   changeFunc?: any
   dataId?: any
 }
-const TemplateTableUser: FC<ITemplateTableUser> = ({
+const TemplateTableImgae: FC<ITemplateTableImgae> = ({
   formEdit,
   dataTable,
   columnTable,
@@ -40,7 +40,6 @@ const TemplateTableUser: FC<ITemplateTableUser> = ({
     setType(typeAction)
     if (typeAction == 'CHANGE') {
       setDefaultValue(recordTable)
-      console.log(recordTable)
       dataId(recordTable)
       form.setFieldsValue(recordTable)
     } else {
@@ -52,46 +51,47 @@ const TemplateTableUser: FC<ITemplateTableUser> = ({
   const handleOk = () => {
     if (type == 'CREATE') {
       form.validateFields().then((value: any) => {
-        value.role_id = value.user_type_id
         const formData = new FormData()
         Object.keys(value).forEach((key) => {
           formData.append(key, value[key])
         })
         if (selectedFile) {
-          formData.append('avatar', selectedFile)
+          formData.append('image', selectedFile)
         }
-        createFunc(formData).then((res: any) => {
-          if (res) {
-            callBack(res.data)
-            message.success('thêm thành công')
-          }
-        })
+        if (createFunc) {
+          createFunc(formData).then((res: any) => {
+            if (res) {
+              callBack(res.data)
+              message.success('thêm thành công')
+            }
+          }).catch((error) => {
+            console.error('Error:', error)
+          })
+        } else {
+          console.error('createFunc is not defined')
+        }
         form.resetFields()
       })
     }
-
     if (type === 'CHANGE') {
       form.validateFields().then((value: any) => {
         // Kiểm tra xem dữ liệu có thay đổi hay không
-        value.role_id = value.user_type_id
         const isDataChanged = Object.keys(value).some((key) => value[key] !== defaultValue[key])
-        if (isDataChanged || selectedFile) {
-          // Check if data or file has changed
+        if (isDataChanged || selectedFile) { // Check if data or file has changed
           // Nếu có thay đổi, thực hiện cập nhật
           const formData = new FormData()
           Object.keys(value).forEach((key) => {
-            if (key !== 'avatar' || selectedFile) {
-              // Only append 'avatar' if a new file was selected
+            if (key !== 'image' || selectedFile) { // Only append 'image' if a new file was selected
               formData.append(key, value[key])
             }
           })
           if (selectedFile) {
-            formData.append('avatar', selectedFile)
+            formData.append('image', selectedFile)
           }
           changeFunc(formData, defaultValue.id).then((res: any) => {
             if (res) {
               console.log(value)
-
+    
               callBack(res.data)
               message.success('Cập nhật thành công')
             }
@@ -197,18 +197,16 @@ const TemplateTableUser: FC<ITemplateTableUser> = ({
         >
           <Form form={form} layout='vertical' name='form_in_modal'>
             {formEdit}
-            {type === 'CREATE' && (
-              <Form.Item label='Avatar' name='avatar'>
-                <Upload
-                  beforeUpload={(file) => {
-                    setSelectedFile(file) // Save the selected file
-                    return false // Prevent the upload from being handled automatically
-                  }}
-                >
-                  <Button icon={<UploadOutlined />}>Click to Upload</Button>
-                </Upload>
-              </Form.Item>
-            )}
+            <Form.Item label='Ảnh' name='image' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
+              <Upload
+                beforeUpload={(file) => {
+                  setSelectedFile(file) // Save the selected file
+                  return false // Prevent the upload from being handled automatically
+                }}
+              >
+                <Button icon={<UploadOutlined />}>Click to Upload</Button>
+              </Upload>
+            </Form.Item>
           </Form>
         </TemplateModal>
       </div>
@@ -216,4 +214,4 @@ const TemplateTableUser: FC<ITemplateTableUser> = ({
   )
 }
 
-export default TemplateTableUser
+export default TemplateTableImgae

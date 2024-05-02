@@ -15,5 +15,5 @@ export const addUser = async (data: any) => {
 }
 
 export const updateUser = async (data: any,id:any) => {
-    return await axiosFormData.put(`/user/update/${id}`,data)
+    return await axiosPrivate.put(`/user/update/${id}`,data)
 }

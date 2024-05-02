@@ -1,4 +1,4 @@
-import { axiosPrivate } from "~/app/api/confighHTTp"
+import { axiosPrivate, axiosFormData } from "~/app/api/confighHTTp"
 
 
 export const getAllLocaltion = async () => {
@@ -10,9 +10,9 @@ export const deleteLocaltion = async (id: any) => {
 }
 
 export const addLocaltion = async (data: any) => {
-    return await axiosPrivate.post(`/locations/store`,data)
+    return await axiosFormData.post(`/locations/store`,data)
 }
 
-export const updateLocaltion = async (data: any,id:any) => {
-    return await axiosPrivate.put(`/locations/update/${id}`,data)
+export const updateLocaltion = async (data: any, id: any) => {
+    return await axiosFormData.post(`/locations/update/${id}?_method=PUT`, data)
 }

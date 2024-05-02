@@ -1,21 +1,24 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import TemplateTable from '../common/template-table/template-table.component'
 import { addLocaltion, deleteLocaltion, getAllLocaltion, updateLocaltion } from './service/location.service';
 import { getAllParent } from '../parent-location/service/parent-location.service'
 import { Form, Input, Select, Space, Upload } from 'antd';
 import { Option } from 'antd/es/mentions';
+import { BounceLoader } from 'react-spinners'
+import TemplateTableImgae from '../common/template-table-image/templateTableImage';
 const LocaltionComponent = () => {
     
     const [column, setColumn] = useState<any>([]);
     const [dataLocation, setDataLocation] = useState<any>([]);
     const [dataParentLocation, setDataParentLocation] = useState<any>([]);
     const [current, setCurrent] = useState<any>(true);
+    const [loading, setLoading] = useState(true);
     console.log(dataParentLocation);
     
     useEffect(() => {
         getAllParent().then((res) => {
             if (res) {
                 setDataParentLocation(res.data?.parent_location)
+                setLoading(false);
             }
         })
     }, [])
@@ -34,9 +37,12 @@ const LocaltionComponent = () => {
                         render: (text: any, record: any, index: any) => {
                             if (itemKey == 'image') {
                                 const image = record?.image
-                                console.log('link image',image);
-                                return <img src={image} alt="" className='w-[100px]' />
-                            }
+                                const baseUrl = 'http://127.0.0.1:8000/'
+                                const imageUrl = `${baseUrl}${image}`
+                              
+                                console.log('link image', imageUrl);
+                                return <img src={imageUrl} alt="" className='w-[100px]' />
+                              }
                             if (itemKey === 'parent_location_id') {
                                 // Find the corresponding parent_location object
                                 const parentLocation = dataParentLocation.find((parent: any) => parent.id === text);
@@ -58,6 +64,7 @@ const LocaltionComponent = () => {
         getAllLocaltion().then((res) => {
             if (res) {
                 setDataLocation(res?.data?.Locations)
+                setLoading(false);
             }
         })
     }, [reset])
@@ -68,11 +75,17 @@ const LocaltionComponent = () => {
     }
     const fomatCustomCurrent=(data:any)=>{
         setCurrent(data)
-    }
+    } 
 
     return (
         <div>
-            <TemplateTable
+            {loading ? (
+                <BounceLoader
+                color="#36d7b7"
+                style={{position: "absolute", top: "50%", left: "54%"}}
+                />
+            ) : (
+            <TemplateTableImgae
                 title={`Danh sách Địa điểm `}
                 callBack={handelGetList}
                 dataTable={dataLocation}
@@ -86,11 +99,6 @@ const LocaltionComponent = () => {
                         <Form.Item label='Name' name='name' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
                             <Input />
                         </Form.Item>
-                        <Form.Item label='Copy link ảnh' name='image' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
-                            {/* <input type="file" /> */}
-                            <Input />
-                        </Form.Item>
-
                         <Form.Item label='description' name='description' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
                             <Input />
                         </Form.Item>
@@ -105,6 +113,7 @@ const LocaltionComponent = () => {
                     </Fragment>
                 }
             />
+            )}
         </div >
     )
 }
