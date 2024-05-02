@@ -51,6 +51,8 @@ const TemplateTableImgae: FC<ITemplateTableImgae> = ({
   const handleOk = () => {
     if (type == 'CREATE') {
       form.validateFields().then((value: any) => {
+        console.log("value",value);
+        
         const formData = new FormData()
         Object.keys(value).forEach((key) => {
           formData.append(key, value[key])

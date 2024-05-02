@@ -12,17 +12,18 @@ const TopcarComponent = ({ datacar }: any) => {
                                 Top
                             </th>
                             <th className="px-4 py-2 text-xl font-bold text-gray-900 whitespace-nowrap">
-                                Tên xe
+                               Tên xe 
+                            </th>
+                            <th className="px-4 py-2 text-xl font-bold text-gray-900 whitespace-nowrap">
+                                Tổng số chuyến 
                             </th>
                             <th className="px-4 py-2 text-xl font-bold text-gray-900 whitespace-nowrap">
                                 Doanh Thu <span className='text-sm font-mono'>(đ)</span>
                             </th>
-                            <th className="px-4 py-2 text-xl font-bold text-gray-900 whitespace-nowrap">
-                                số vé đã bán 
-                            </th>
-                            <th className="px-4 py-2 text-xl font-bold text-gray-900 whitespace-nowrap">
+                    
+                            {/* <th className="px-4 py-2 text-xl font-bold text-gray-900 whitespace-nowrap">
                                 Tổng số chuyến
-                            </th>
+                            </th> */}
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">

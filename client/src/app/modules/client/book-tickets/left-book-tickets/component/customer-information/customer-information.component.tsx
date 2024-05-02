@@ -79,9 +79,9 @@ const CustomerInformation: FC<any> = ({ control, errors }) => {
 
                 <div className='w-[45%]'>
                     <h2 className='py-3 font-semibold text-[18px] text-orange-600'>ĐIỀU KHOẢN & LƯU Ý</h2>
-                    <p className='text-[14px] font-semibold'>(*) Quý khách vui lòng có mặt tại bến xuất phát của xe trước ít nhất 30 phút giờ xe khởi hành, mang theo thông báo đã thanh toán vé thành công có chứa mã vé được gửi từ hệ thống FUTA BUS LINE. Vui lòng liên hệ Trung tâm tổng đài  <span className='text-orange-600'>1900 6918</span> để được hỗ trợ.</p> <br />
+                    <p className='text-[14px] font-semibold'>(*) Quý khách vui lòng có mặt tại bến xuất phát của xe trước ít nhất 30 phút giờ xe khởi hành, mang theo thông báo đã thanh toán vé thành công có chứa mã vé được gửi từ hệ thống Letgo 5. Vui lòng liên hệ  <span className='text-orange-600'>0906198183</span> để được hỗ trợ.</p> <br />
 
-                    <p className='text-[14px] font-semibold'>(*) Nếu quý khách có nhu cầu trung chuyển, vui lòng liên hệ Tổng đài trung chuyển <span className='text-orange-600'>1900 6918</span> trước khi đặt vé. Chúng tôi không đón/trung chuyển tại những điểm xe trung chuyển không thể tới được.</p>
+                    <p className='text-[14px] font-semibold'>(*) Nếu quý khách có nhu cầu trung chuyển, vui lòng liên hệ Tổng đài trung chuyển <span className='text-orange-600'>0906198183</span> trước khi đặt vé. Chúng tôi không đón/trung chuyển tại những điểm xe trung chuyển không thể tới được.</p>
                 </div>
             </div>
             {/* <div className=''>  

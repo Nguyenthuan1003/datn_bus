@@ -16,7 +16,8 @@ const FooterComponent = ({dataSeatHold}:any) => {
                         </a>
 
                         <p className="mt-4 max-w-xs text-gray-500">
-                            6s Shoes - Website bán lẻ & phân phối thương hiệu các mặt hàng về giày với chất lượng hàng đầu tại Việt Nam.
+                           Let go 5 - website đặt vé xe khách giá rẻ , chuyến đi nhanh và tiện lơi . chúng tôi mang đến cho bạn chuyến đi an toàn và thoải mái  <br />
+                           Booking-bus 2024
                         </p>
 
                         <ul className="mt-8 flex gap-6">

@@ -10,14 +10,17 @@ const TopDataCar = ({ item, index }: any) => {
       {item?.name}
   </td>
   <td className="px-4 py-2 text-gray-700 whitespace-nowrap">
-      {item?.total_money?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) || 0}
+      {item?.total_trips}
   </td>
   <td className="px-4 py-2 text-gray-700 whitespace-nowrap">
+      {item?.total_revenue?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) || 0}
+  </td>
+  {/* <td className="px-4 py-2 text-gray-700 whitespace-nowrap">
       {item?.total_seat || 0}
   </td>
   <td className="px-4 py-2 text-gray-700 whitespace-nowrap">
       {item?.total_trip}
-  </td>
+  </td> */}
   
 </tr>;
 }

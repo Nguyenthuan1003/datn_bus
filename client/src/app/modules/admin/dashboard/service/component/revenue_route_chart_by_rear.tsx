@@ -133,7 +133,7 @@ const RevenueRouteChartByYear = () => {
             <div>
                 <div className=" rounded-lg bg-blue-500 text-white border text-center py-5">
                     <div className=" ">
-                        <h1 className="text-[18px]">Tổng chuyến đi  trong năm {selectedYear}</h1>
+                        <h1 className="text-[18px]">Tuyến xe trong năm {selectedYear}</h1>
                         {/* <Line data={chartDataTotalTrip} options={{ maintainAspectRatio: true }} /> */}
                         
                     </div>
@@ -143,7 +143,7 @@ const RevenueRouteChartByYear = () => {
                 </div>
                 <div className=" rounded-lg bg-blue-500 text-white border text-center py-5">
                     <div className=" ">
-                        <h1 className="text-[18px]">Tổng số vé đã bán trong năm {selectedYear} </h1>
+                        <h1 className="text-[18px]">Số vé bán trong năm {selectedYear} </h1>
                     </div>
                     <div>
                         <span className="text-[22px] font-bold">{countData?.count_all_ticket_for_year || 0}</span>
@@ -151,7 +151,7 @@ const RevenueRouteChartByYear = () => {
                 </div>
                 <div className=" rounded-lg bg-blue-500 text-white border text-center py-5">
                     <div className=" ">
-                        <h1 className="text-[18px]">Tổng chuyến đi trong năm {selectedYear} </h1>
+                        <h1 className="text-[18px]">Chuyến đi trong năm {selectedYear} </h1>
                     </div>
                     <div>
                         <span className="text-[22px] font-bold">{countData?.count_all_trip_for_year || 0}</span>
@@ -159,7 +159,7 @@ const RevenueRouteChartByYear = () => {
                 </div>
                 <div className=" rounded-lg bg-blue-500 text-white border text-center py-5">
                     <div className=" ">
-                        <h1 className="text-[18px]">Tổng doanh thu trong năm {selectedYear} </h1>
+                        <h1 className="text-[18px]">Doanh thu trong năm {selectedYear} </h1>
                     </div>
                     <div>
                         <span className="text-[22px] font-bold">{countData?.total_revenue_for_year?.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }) || 0}</span>
