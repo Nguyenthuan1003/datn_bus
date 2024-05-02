@@ -134,12 +134,12 @@ const CarComponent = () => {
             <Form.Item label='Màu xe' name='color' rules={[{ required: true, message: 'Đây là trường bắt buộc' }]}>
               <ColorPicker
                 defaultValue='#1677ff'
-                showText={(color) => color.metaColor.toHex()}
+                showText={(color) => color.metaColor.toHexString()}
                 format='hex'
-                onChange={(color) => {
-                  console.log(color)
-                  setSelectedColor(color.metaColor.toHex())
-                }}
+                // onChange={(color) => {
+                //   console.log(color)
+                //   setSelectedColor(color.metaColor.toHex())
+                // }}
               />
             </Form.Item>
             <Form.Item
