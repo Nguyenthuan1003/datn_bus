@@ -5,6 +5,7 @@ import { getAllTypeCar } from '../type_car/service/typeCar.service'
 import { Form, Input, Select, Switch } from 'antd'
 import { Option } from 'antd/es/mentions'
 import { ColorPicker, Space } from 'antd'
+import { BounceLoader } from 'react-spinners'
 import { DownOutlined } from '@ant-design/icons'
 import { log } from 'console'
 import TemplateTableImgae from '../common/template-table-image/templateTableImage'
@@ -16,6 +17,7 @@ const CarComponent = () => {
   const [current, setCurrent] = useState<any>()
   const [selectedColor, setSelectedColor] = useState<string>('#1677ff')
   const [form] = Form.useForm()
+  const [loading, setLoading] = useState(true);
   const handleChange = (value: any) => {
     setCurrent(value)
   }
@@ -24,6 +26,7 @@ const CarComponent = () => {
     getAllTypeCar().then((res) => {
       if (res) {
         setDataTypecar(res.data?.type_car)
+        setLoading(false);
       }
     })
   }, [])
@@ -81,6 +84,7 @@ const CarComponent = () => {
           (a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         )
         setDataCar(sortedData)
+        setLoading(false);
       }
     })
   }, [reset])
@@ -100,6 +104,13 @@ const CarComponent = () => {
   const acctive = 1
   const inAcctive = 0
   return (
+    <>
+    {loading ? (
+        <BounceLoader
+        color="#36d7b7"
+        style={{position: "absolute", top: "50%", left: "54%"}}
+        />
+    ) : (
     <div>
       <TemplateTableImgae
         title={`Danh sách xe `}
@@ -174,6 +185,8 @@ const CarComponent = () => {
         }
       />
     </div>
+    )}
+    </>
   )
 }
 

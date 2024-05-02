@@ -2,11 +2,13 @@ import React, { Fragment, useEffect, useState } from 'react'
 import TemplateTable from '../common/template-table/template-table.component'
 import { Form, Input } from 'antd'
 import { addParent, deleteParent, getAllParent, updateParent } from './service/parent-location.service'
+import { BounceLoader } from 'react-spinners'
 
 const ParentLocaltion = () => {
     const [column, setColumn] = useState<any>([]);
     const [dataParent, setDataParen] = useState<any>([]);
     const [current, setCurrent] = useState<any>(true);
+    const [loading, setLoading] = useState(true);
 
     console.log(dataParent,"asdasd");
     
@@ -16,6 +18,7 @@ const ParentLocaltion = () => {
         getAllParent().then((res) => {
             if (res) {
                 setDataParen(res.data?.parent_location)
+                setLoading(false);
             }
         })
     }, [reset])
@@ -46,6 +49,12 @@ const ParentLocaltion = () => {
     }
     return (
         <div>
+            {loading ? (
+                <BounceLoader
+                color="#36d7b7"
+                style={{position: "absolute", top: "50%", left: "54%"}}
+                />
+            ) : (
             <TemplateTable
                 title={`Danh sách tỉnh thành `}
                 callBack={handelGetList}
@@ -62,6 +71,7 @@ const ParentLocaltion = () => {
                         </Form.Item>
                     </Fragment>
                 } />
+            )}
         </div>
     )
 }

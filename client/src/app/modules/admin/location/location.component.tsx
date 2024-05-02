@@ -3,6 +3,7 @@ import { addLocaltion, deleteLocaltion, getAllLocaltion, updateLocaltion } from 
 import { getAllParent } from '../parent-location/service/parent-location.service'
 import { Form, Input, Select, Space, Upload } from 'antd';
 import { Option } from 'antd/es/mentions';
+import { BounceLoader } from 'react-spinners'
 import TemplateTableImgae from '../common/template-table-image/templateTableImage';
 const LocaltionComponent = () => {
     
@@ -10,12 +11,14 @@ const LocaltionComponent = () => {
     const [dataLocation, setDataLocation] = useState<any>([]);
     const [dataParentLocation, setDataParentLocation] = useState<any>([]);
     const [current, setCurrent] = useState<any>(true);
+    const [loading, setLoading] = useState(true);
     console.log(dataParentLocation);
     
     useEffect(() => {
         getAllParent().then((res) => {
             if (res) {
                 setDataParentLocation(res.data?.parent_location)
+                setLoading(false);
             }
         })
     }, [])
@@ -61,6 +64,7 @@ const LocaltionComponent = () => {
         getAllLocaltion().then((res) => {
             if (res) {
                 setDataLocation(res?.data?.Locations)
+                setLoading(false);
             }
         })
     }, [reset])
@@ -75,6 +79,12 @@ const LocaltionComponent = () => {
 
     return (
         <div>
+            {loading ? (
+                <BounceLoader
+                color="#36d7b7"
+                style={{position: "absolute", top: "50%", left: "54%"}}
+                />
+            ) : (
             <TemplateTableImgae
                 title={`Danh sách Địa điểm `}
                 callBack={handelGetList}
@@ -103,6 +113,7 @@ const LocaltionComponent = () => {
                     </Fragment>
                 }
             />
+            )}
         </div >
     )
 }

@@ -3,6 +3,7 @@ import TemplateTableUser from '../common/template-table-user/template-table-user
 import { addUser, deleteUser, getAllUser, updateUser } from './service/user-admin.service'
 import { getAllType } from '../type-user/service/type-user.service'
 import { Form, Input, Select, Space, Upload } from 'antd'
+import { BounceLoader } from 'react-spinners'
 import { Option } from 'antd/es/mentions'
 const UserAdminComponent = () => {
   const [column, setColumn] = useState<any>([])
@@ -10,11 +11,13 @@ const UserAdminComponent = () => {
   const [dataParentType, setDataParentType] = useState<any>([])
   const [current, setCurrent] = useState<any>(true)
   const [isEditing, setIsEditing] = useState(false)
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getAllType().then((res) => {
       if (res) {
         setDataParentType(res.data?.typeUsers)
+        setLoading(false);
       }
     })
   }, [])
@@ -52,6 +55,7 @@ const UserAdminComponent = () => {
     getAllUser().then((res) => {
       if (res) {
         setDataUser(res?.data?.uesrs)
+        setLoading(false);
       }
     })
   }, [reset])
@@ -67,6 +71,12 @@ const UserAdminComponent = () => {
   }
   return (
     <div>
+     {loading ? (
+        <BounceLoader
+          color="#36d7b7"
+          style={{position: "absolute", top: "50%", left: "54%"}}
+        />
+      ) : (
       <TemplateTableUser
         title={`Danh sách thành viên `}
         callBack={handelGetList}
@@ -132,6 +142,7 @@ const UserAdminComponent = () => {
           </Fragment>
         }
       />
+      )}
     </div>
   )
 }

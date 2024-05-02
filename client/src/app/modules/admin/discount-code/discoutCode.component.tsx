@@ -4,12 +4,14 @@ import { addDiscountCode, deleteDiscountCode, getAllDiscountCode, updateDiscount
 import { Form, Input, Select } from 'antd';
 import { getAllTypeDiscountCode } from '../typeDiscout/service/typeDiscount.service';
 import { Option } from 'antd/es/mentions';
+import { BounceLoader } from 'react-spinners'
 
 const DiscoutCodeComponent = () => {
   const [column, setColumn] = useState<any>([]);
     const [dataDiscountCode, setDataDiscountCode] = useState<any>([]);
     const [dataTypeDiscount, setDataTypeDiscount] = useState<any>([]);
-    const [dataCurrent, setDataCurrent] = useState<any>({});    
+    const [dataCurrent, setDataCurrent] = useState<any>({}); 
+    const [loading, setLoading] = useState(true);   
     console.log('dataTypeDiscount',dataTypeDiscount);
     console.log('dataDiscountCode',dataDiscountCode);
 
@@ -18,11 +20,13 @@ const DiscoutCodeComponent = () => {
         getAllDiscountCode().then((res) => {
             if (res) {
               setDataDiscountCode(res?.data?.discounts)
+              setLoading(false);
             }
         })
         getAllTypeDiscountCode().then((res) => {
           if (res) {
               setDataTypeDiscount(res?.data?.type_discounts)
+              setLoading(false);
           }
       })
     }, [])
@@ -55,6 +59,7 @@ const DiscoutCodeComponent = () => {
         getAllDiscountCode().then((res) => {
             if (res) {
                 setDataDiscountCode(res?.data?.discounts)
+                setLoading(false);
             }
         })
     }, [reset])
@@ -67,7 +72,13 @@ const DiscoutCodeComponent = () => {
         setDataCurrent(data)
           }
   return (
-   <> 
+   <>
+    {loading ? (
+        <BounceLoader
+        color="#36d7b7"
+        style={{position: "absolute", top: "50%", left: "54%"}}
+        />
+    ) : ( 
     <TemplateTable
       title={`Mã giảm giá `}
       dataTable={dataDiscountCode}
@@ -111,7 +122,7 @@ const DiscoutCodeComponent = () => {
         </Fragment>
       }
      />
-   
+    )}
    </>
   )
 }
