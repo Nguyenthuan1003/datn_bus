@@ -7,6 +7,9 @@ const TopDataCar = ({ item, index }: any) => {
       {index + 1}
   </td>
   <td className="px-4 py-2 text-gray-700 whitespace-nowrap">
+      {item?.name}
+  </td>
+  <td className="px-4 py-2 text-gray-700 whitespace-nowrap">
       {item?.total_trips}
   </td>
   <td className="px-4 py-2 text-gray-700 whitespace-nowrap">

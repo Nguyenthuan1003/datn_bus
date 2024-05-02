@@ -22,12 +22,12 @@ export const menuDashBoard = [
     label: 'Loại xe',
     roles: ['admin']
   },
-  {
-    key: '/admin/banner',
-    icon: <PiFlagBannerDuotone />,
-    label: 'Banner',
-    roles: ['admin']
-  },
+  // {
+  //   key: '/admin/banner',
+  //   icon: <PiFlagBannerDuotone />,
+  //   label: 'Banner',
+  //   roles: ['admin']
+  // },
   {
     key: '/admin/parent-location',
     icon: <PiFlagBannerDuotone />,
@@ -43,7 +43,7 @@ export const menuDashBoard = [
   {
     key: '/admin/type-user',
     icon: <UserOutlined />,
-    label: 'Khách hàng',
+    label: 'Vai trò',
     roles: ['admin']
   },
   {
