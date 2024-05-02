@@ -1,6 +1,5 @@
-import { Upload, Modal, Button, Form, Input, message } from 'antd'
-import React, { useState, useRef, useEffect } from 'react'
-import ButtonRadiusCompoennt from '~/app/component/parts/button/button.component'
+import { Button, Form, Input, Modal, message } from 'antd'
+import { useEffect, useRef, useState } from 'react'
 import { axiosFormData } from '~/app/api/confighHTTp'
 
 const MainRight = () => {
@@ -74,7 +73,7 @@ const MainRight = () => {
     setUserData((prevState) => ({ ...prevState, [name]: value }))
   }
 
-  const url = 'http://localhost:8000/'
+  const url = 'http://172.20.10.7:8000/'
 
   return (
     <div>

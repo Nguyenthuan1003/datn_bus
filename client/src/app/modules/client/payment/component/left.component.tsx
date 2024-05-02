@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { useCartRedux } from '../../redux/hook/useCartReducer'
-import { cancelBill, paymentVNP } from '~/app/api/bill/bill.api'
-import { Spin, message } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons';
+import { Spin, message } from 'antd';
+import { useEffect, useState } from 'react';
+import { cancelBill, paymentVNP } from '~/app/api/bill/bill.api';
+import { useCartRedux } from '../../redux/hook/useCartReducer';
 const LeftComponent = () => {
     
     const [isLoading, setIsLoading] = useState(false);
@@ -37,7 +37,7 @@ const LeftComponent = () => {
                     localStorage.removeItem("bill_user")
                     localStorage.removeItem("cart")
 
-                fetch('http://127.0.0.1:8000/api/rt/seat')
+                fetch('http://172.20.10.7:8000/api/rt/seat')
                 .then(
                     function(response) {
                     if (response.status !== 200) {
@@ -107,27 +107,6 @@ const LeftComponent = () => {
 
             <div className="text-xl font-medium"> Chọn phương thức thanh toán</div>
             <div className="ant-radio-group ant-radio-group-outline">
-                {/* 
-                <label className="ant-radio-wrapper m-0 flex items-center border-b py-3" style={{ border: 'none' }}>
-                    <span className="ant-radio">
-                        <input type="radio" className="ant-radio-input" value="8"  />
-                        <span className="ant-radio-inner"></span>
-                    </span>
-                    
-                    <span>
-                        <div className="flex w-full items-center" >
-                            <img className="ml-4 mr-4 w-[40px]"
-                                src="https://storage.googleapis.com/futa-busline-web-cms-prod/vnpay_fdc107eeec/vnpay_fdc107eeec.svg" alt="" />
-                            <div className="flex w-full flex-col">
-                                <div className="flex w-52 items-end justify-between">
-                                    <span className="text-base text-black">VNPay</span>
-
-                                </div>
-                                <span className="whitespace-pre-wrap text-xs font-medium text-orange"></span>
-                            </div>
-                        </div>
-                    </span>
-                </label> */}
                 <label className="ant-radio-wrapper m-0 flex items-center border-b py-3" style={{ border: 'none' }}>
                     <span className="ant-radio">
                         <input type="radio" className="ant-radio-input" value="vnpay" onChange={() => handlePaymentSelection('vnpay')} />
@@ -145,9 +124,6 @@ const LeftComponent = () => {
                         </div>
                     </span>
                 </label>
-                {/* Thêm các label khác ở đây */}
-
-                {/* Nút thanh toán chỉ hiển thị khi có phương thức thanh toán được chọn */}
                 {selectedPayment && (
                     <button className="bg-blue-500 text-white px-4 py-2 mt-4 rounded" onClick={handlePayment}>Thanh toán</button>
                 )}

@@ -134,7 +134,7 @@ class StatisticalController extends Controller
 //                ->limit(10)
 //                ->get();
 
-            $top10Car = Car::select('cars.id')
+            $top10Car = Car::select('cars.id', 'cars.name')
                 ->selectRaw('COALESCE(total_trips.total_trips, 0) AS total_trips')
                 ->selectRaw('COALESCE(total_revenue.total_revenue, 0) AS total_revenue')
                 ->leftJoin(DB::raw('(SELECT trips.car_id, COUNT(*) AS total_trips

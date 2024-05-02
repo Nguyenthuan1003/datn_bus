@@ -8,7 +8,7 @@ export const menuDashBoard = [
     key: '/',
     icon: <HomeOutlined />,
     label: 'Trang web',
-    roles: ['admin', 'driver', 'assistant']
+    roles: ['admin']
   },
   {
     key: '/admin',
@@ -80,13 +80,13 @@ export const menuDashBoard = [
     key: '/admin/check-ticket',
     icon: <BsTicketPerforated />,
     label: 'Checkin Ticket',
-    roles: ['admin', 'driver', 'assistant']
+    roles: ['admin', 'driver']
   },
   {
     key: '/admin/check-bill',
     icon: <CiMoneyCheck1 />,
     label: 'Checkin Bill',
-    roles: ['admin', 'driver', 'assistant']
+    roles: ['admin', 'driver']
   },
   {
     key: '/admin/type-discount',

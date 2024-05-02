@@ -126,6 +126,7 @@ const FormToFromComponent = () => {
       )
 
       setLoading(false)
+      window.location.reload()
     } catch (error) {
       console.log('Failed to fetch data:', error)
       setLoading(false)
@@ -139,7 +140,7 @@ const FormToFromComponent = () => {
           <div>
             <Radio.Group onChange={onChange} value={value}>
               <Radio value={1}>Một chiều</Radio>
-              <Radio value={2}>Khứ hồi</Radio>
+              {/* <Radio value={2}>Khứ hồi</Radio> */}
             </Radio.Group>
           </div>
           <Link to='' className='text-orange-600'>
@@ -203,7 +204,7 @@ const FormToFromComponent = () => {
               />
             </p>
           </div>
-          {value === 2 && (
+          {/* {value === 2 && (
             <div>
               <div className='mb-2 font-semibold text'>ngày về</div>
               <p className='input-search font-semibold'>
@@ -221,7 +222,7 @@ const FormToFromComponent = () => {
                 />
               </p>
             </div>
-          )}
+          )} */}
 
           <div>
             <div className='mb-2 font-semibold text'>số vé</div>
@@ -239,7 +240,7 @@ const FormToFromComponent = () => {
           </div>
         </div>
 
-        <div className='mt-3 '>
+        {/* <div className='mt-3 '>
           <div className='font-semibold text'>Tìm kiếm gần đây</div>
           <div className='flex gap-5'>
             {Array.isArray(searchResults) &&
@@ -255,9 +256,9 @@ const FormToFromComponent = () => {
                 </div>
               ))}
           </div>
-        </div>
+        </div> */}
 
-        <div className='button-wrapper'>
+        <div className='button-wrapper pt-3'>
           <ButtonRadiusCompoennt content='Tìm chuyến xe' onClick={handleSubmit} />
         </div>
       </div>

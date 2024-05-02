@@ -25,27 +25,37 @@ const LoginComponent = () => {
   const onSubmit = async (value: any) => {
     setIsLoading(true)
     try {
-      const data:any = await login(value)
-        if (data) {
-          if(data.data.message === "ok"){
+      const data: any = await login(value)
+      if (data) {
+        if (data.data.message === 'ok') {
           localStorage.setItem('token', data?.data?.data?.jwt?.original?.access_token)
           localStorage.setItem('user', JSON.stringify(data?.data?.data?.user))
           setTimeout(() => {
             setShowSuccessMessage(true)
             setIsLoading(false) // Đặt isLoading về false để dừng loading spinner
           }, 2000)
-                  // Kiểm tra type_user và navigate đến trang tương ứng
+          // Kiểm tra type_user và navigate đến trang tương ứng
           const type_user = data?.data?.data?.user?.type_user
-          if (type_user === 'admin' || type_user === 'driver' || type_user === 'assistant') {
+          if (type_user === 'admin') {
             setOpen(true)
-              Swal.fire({
-                position: 'top',
-                icon: 'success',
-                title: `Chào Mừng bạn quay lại trang quản trị!`,
-                showConfirmButton: false,
-                timer: 1000
-              })
-                navigate('/admin')
+            Swal.fire({
+              position: 'top',
+              icon: 'success',
+              title: `Chào Mừng bạn quay lại trang quản trị!`,
+              showConfirmButton: false,
+              timer: 1000
+            })
+            navigate('/admin')
+          } else if (type_user === 'driver') {
+            setOpen(true)
+            Swal.fire({
+              position: 'top',
+              icon: 'success',
+              title: `Chào Mừng bạn quay lại trang quản trị!`,
+              showConfirmButton: false,
+              timer: 1000
+            })
+            navigate('/admin/check-ticket')
           } else if (type_user === 'user') {
             setOpen(true)
             Swal.fire({
@@ -58,19 +68,18 @@ const LoginComponent = () => {
             navigate('/')
             setTimeout(() => {
               window.location.reload()
-            }, 1000);
+            }, 1000)
           }
-          }else{
-            if(data.error){
-              message.warning("Tài khoản hoặc mật khẩu sai!")
+        } else {
+          if (data.error) {
+            message.warning('Tài khoản hoặc mật khẩu sai!')
             setIsLoading(false)
-            }
-          }     
-        } 
-    
-    } catch (error:any) {
-       message.error(error.response.data.error)
-       setIsLoading(false)
+          }
+        }
+      }
+    } catch (error: any) {
+      message.error(error.response.data.error)
+      setIsLoading(false)
     }
   }
   return (
